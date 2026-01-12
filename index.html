@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1R3FLY Industries — The AI-Native Layer 1 for Verifiable Web3 and Agentic Systems</title>
+    <title>F1R3FLY.IO — The AI-Native Layer 1 for Verifiable Web3 and Agentic Systems</title>
     <meta name="description" content="F1R3FLY is an AI-native Layer 1 built on Rholang and validator nodes. Connect AI agents, Web3, and real-world data into verifiable, concurrent workflows without global state bottlenecks.">
     
     <!-- Adobe Fonts -->
@@ -249,27 +249,124 @@
             position: relative;
             background: #000;
             overflow: hidden;
-            scroll-margin-top: 0;
+            width: 100vw;
+            max-width: 100vw;
+            margin-left: 50%;
+            transform: translateX(-50%);
         }
 
-        .hero-video {
+        /* Parallax Forest Background Layer */
+        .hero-parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-image: url('parallex images for claude/New Background_layer starry background..png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        /* Pines layer - mid ground */
+        .hero-parallax-pines {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background-image: url('parallex images for claude/New Background_pines layer.png');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        /* Branches layer - foreground */
+        .hero-parallax-branches {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-image: url('parallex images for claude/New Background_layer branches..png');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            z-index: 2;
+            will-change: transform;
+        }
+
+        /* Dark overlay for readability */
+        .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: 0;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 0, 0, 0.3) 0%, 
+                rgba(0, 0, 0, 0.5) 50%,
+                rgba(0, 0, 0, 0.7) 100%);
+            z-index: 1;
+        }
+
+        /* Bottom fade to black */
+        .hero-bottom-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 0, 0, 0.5) 40%,
+                #000 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Fireflies Canvas Layer */
+        .hero-fireflies {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            will-change: transform;
+            overflow: hidden;
+            scroll-margin-top: 0;
+        }
+
+        .hero-video {
+            display: none; /* Replaced by parallax layers */
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 3;
             max-width: 800px;
             margin: 0 auto;
             text-decoration: none;
             cursor: pointer;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .hero-logo-group {
+            transform: translateY(-20px);
+        }
+
+        .hero-bottom-group {
+            transform: translateY(20px);
         }
 
         .hero-logo {
@@ -307,7 +404,8 @@
             font-weight: 330;
             letter-spacing: 1.47px;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-top: 8px;
+            margin-bottom: 0;
         }
 
         .hero-company-name {
@@ -317,7 +415,7 @@
             letter-spacing: 4.5px;
             text-transform: uppercase;
             color: #fff;
-            margin: 0 0 20px 0;
+            margin: 0 0 0 0;
         }
 
         .hero-arrow {
@@ -712,7 +810,7 @@
         /* Team Parallax Section */
         .team-parallax {
             height: 400px;
-            background-image: url('images/Math.jpg');
+            background-image: url('parallex images for claude/Math.jpg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
@@ -1368,7 +1466,7 @@
         <div class="nav-container">
             <a href="#home" class="nav-logo">
                 <img src="images/Logo Icon.svg" alt="F1R3FLY" class="nav-logo-icon">
-                <span class="nav-logo-text">F1R3FLY INDUSTRIES</span>
+                <span class="nav-logo-text">F1R3FLY.IO</span>
             </a>
             <ul class="nav-links">
                 <li><a href="#technology">Technology</a></li>
@@ -1409,17 +1507,33 @@
 
     <!-- Intro Section -->
     <section id="intro" class="hero">
-        <video class="hero-video" autoplay muted loop playsinline>
-            <source src="images/FIREFLY ANIMATION_4.mov" type="video/quicktime">
-        </video>
+        <!-- Parallax Background Layers -->
+        <div class="hero-parallax-bg" id="heroBg"></div>
+        <div class="hero-parallax-pines" id="heroPines"></div>
+        <div class="hero-parallax-branches" id="heroBranches"></div>
+        
+        <!-- Dark Overlay -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Fireflies Canvas Layer -->
+        <canvas class="hero-fireflies" id="fireflyCanvas"></canvas>
+        
+        <!-- Bottom Fade to Black -->
+        <div class="hero-bottom-fade"></div>
+        
         <a href="#home" class="hero-content">
-            <div class="hero-logo">
-                <img src="images/Logo Brand Vertical Option with Text.svg" alt="F1R3FLY INDUSTRIES">
+            <div class="hero-logo-group">
+                <div class="hero-logo">
+                    <img src="images/Logo Brand Vertical Option with Text.svg" alt="F1R3FLY.IO">
+                </div>
+                <h1 class="hero-company-name">F1R3FLY.IO</h1>
+                <p class="hero-tagline-small">The Feeling of Freedom and Speed</p>
             </div>
-            <h1 class="hero-company-name">F1R3FLY INDUSTRIES</h1>
-            <p class="hero-tagline">The AI-native infrastructure for verifiable, concurrent, multi-agent applications.</p>
-            <div class="hero-arrow">
-                <img src="images/Arrow.svg" alt="Scroll down">
+            <div class="hero-bottom-group">
+                <p class="hero-tagline">The AI-native infrastructure for verifiable, concurrent, multi-agent applications.</p>
+                <div class="hero-arrow">
+                    <img src="images/Arrow.svg" alt="Scroll down">
+                </div>
             </div>
         </a>
     </section>
@@ -2097,7 +2211,7 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
                 </a>
             </div>
-            <p>&copy; 2025 F1R3FLY INDUSTRIES. All rights reserved.</p>
+            <p>&copy; 2025 F1R3FLY.IO. All rights reserved.</p>
         </div>
     </footer>
 
@@ -2253,6 +2367,212 @@
 
         window.addEventListener('scroll', revealAnimatedElements);
         window.addEventListener('load', revealAnimatedElements);
+
+        // =============================================
+        // PARALLAX HERO + FIREFLIES ANIMATION
+        // =============================================
+        
+        const fireflyCanvas = document.getElementById('fireflyCanvas');
+        const ctx = fireflyCanvas.getContext('2d');
+        const heroBg = document.getElementById('heroBg');
+        const heroPines = document.getElementById('heroPines');
+        const heroBranches = document.getElementById('heroBranches');
+        const heroSection = document.querySelector('.hero');
+
+        // Setup canvas for high DPI and full viewport width
+        function setupFireflyCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const width = window.innerWidth;
+            const height = heroSection.offsetHeight;
+            fireflyCanvas.width = width * dpr;
+            fireflyCanvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            fireflyCanvas.style.width = width + 'px';
+            fireflyCanvas.style.height = height + 'px';
+        }
+        setupFireflyCanvas();
+        window.addEventListener('resize', setupFireflyCanvas);
+
+        // Firefly class
+        class Firefly {
+            constructor(initialSpawn = false) {
+                this.reset(initialSpawn);
+            }
+
+            reset(initialSpawn = false) {
+                const width = window.innerWidth;
+                const height = heroSection.offsetHeight;
+                
+                if (initialSpawn) {
+                    // On first load, scatter across the screen
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    // Random direction
+                    const goingRight = Math.random() > 0.5;
+                    this.speedX = goingRight ? (0.3 + Math.random() * 0.4) : -(0.3 + Math.random() * 0.4);
+                } else {
+                    // After traveling off-screen, respawn from edge
+                    const startFromLeft = Math.random() > 0.5;
+                    this.x = startFromLeft ? -20 : width + 20;
+                    this.y = Math.random() * height;
+                    this.speedX = startFromLeft ? (0.3 + Math.random() * 0.4) : -(0.3 + Math.random() * 0.4);
+                }
+                
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                
+                this.size = 2 + Math.random() * 3;
+                this.baseAlpha = 0.4 + Math.random() * 0.6;
+                this.alpha = 0;
+                this.pulseSpeed = 0.008 + Math.random() * 0.015;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+                this.wobbleX = Math.random() * Math.PI * 2;
+                this.wobbleY = Math.random() * Math.PI * 2;
+                this.wobbleSpeedX = 0.015 + Math.random() * 0.02;
+                this.wobbleSpeedY = 0.01 + Math.random() * 0.015;
+                this.wobbleAmplitude = 0.8 + Math.random() * 1.2;
+                // Color variation - 70% golden yellow, 30% white
+                const isWhite = Math.random() < 0.3;
+                if (isWhite) {
+                    this.hue = 60;
+                    this.saturation = 10;
+                    this.lightness = 90;
+                } else {
+                    this.hue = 40 + Math.random() * 20;
+                    this.saturation = 80 + Math.random() * 20;
+                    this.lightness = 55 + Math.random() * 20;
+                }
+            }
+
+            update() {
+                const width = window.innerWidth;
+                const height = heroSection.offsetHeight;
+                
+                // Center fade zone (where logo/text is) - expanded with buffer
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const fadeZoneWidth = 700;  // Wider exclusion
+                const fadeZoneHeight = 620; // Taller exclusion
+                
+                // Gentle wobble movement
+                this.wobbleX += this.wobbleSpeedX;
+                this.wobbleY += this.wobbleSpeedY;
+                
+                let moveX = this.speedX + Math.sin(this.wobbleX) * this.wobbleAmplitude;
+                let moveY = this.speedY + Math.sin(this.wobbleY) * (this.wobbleAmplitude * 0.7);
+                
+                this.x += moveX;
+                this.y += moveY;
+
+                // Calculate distance from center for fading
+                const distFromCenterX = Math.abs(this.x - centerX);
+                const distFromCenterY = Math.abs(this.y - centerY);
+                
+                // Fade based on proximity to center zone - completely invisible in inner zone
+                let fadeFactor = 1;
+                const innerZoneWidth = 450;  // Completely invisible inside this
+                const innerZoneHeight = 400;
+                
+                if (distFromCenterX < innerZoneWidth/2 && distFromCenterY < innerZoneHeight/2) {
+                    // Completely invisible in inner zone
+                    fadeFactor = 0;
+                } else if (distFromCenterX < fadeZoneWidth/2 && distFromCenterY < fadeZoneHeight/2) {
+                    // Fade zone - gradual fade
+                    const xFade = (distFromCenterX - innerZoneWidth/2) / (fadeZoneWidth/2 - innerZoneWidth/2);
+                    const yFade = (distFromCenterY - innerZoneHeight/2) / (fadeZoneHeight/2 - innerZoneHeight/2);
+                    fadeFactor = Math.max(0, Math.min(xFade, yFade));
+                }
+
+                // Pulse alpha with fade factor
+                this.pulsePhase += this.pulseSpeed;
+                const pulseValue = 0.6 + 0.4 * Math.sin(this.pulsePhase);
+                this.alpha = this.baseAlpha * pulseValue * fadeFactor;
+
+                // Reset when off screen
+                if (this.x < -50 || this.x > width + 50 || this.y < -50 || this.y > height + 50) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                if (this.alpha <= 0.05) return;
+
+                // Subtle outer glow
+                const glowGradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 6
+                );
+                glowGradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha * 0.4})`);
+                glowGradient.addColorStop(0.3, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha * 0.15})`);
+                glowGradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 6, 0, Math.PI * 2);
+                ctx.fillStyle = glowGradient;
+                ctx.fill();
+
+                // Sharp bright core
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 50%, 85%, ${this.alpha})`;
+                ctx.fill();
+
+                // Extra bright center dot
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 0.4, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(60, 20%, 98%, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        // Create fireflies (15% fewer - was 40, now 34)
+        const fireflies = [];
+        const fireflyCount = 34;
+        for (let i = 0; i < fireflyCount; i++) {
+            fireflies.push(new Firefly(true)); // true = initial spawn, scatter across screen
+        }
+
+        // Animate fireflies
+        function animateFireflies() {
+            const width = window.innerWidth;
+            const height = heroSection.offsetHeight;
+            ctx.clearRect(0, 0, width, height);
+
+            for (const firefly of fireflies) {
+                firefly.update();
+                firefly.draw();
+            }
+
+            requestAnimationFrame(animateFireflies);
+        }
+        animateFireflies();
+
+        // Parallax scroll effect - three layers at different speeds
+        function updateParallax() {
+            const scrollY = window.pageYOffset;
+            const heroHeight = heroSection.offsetHeight;
+            
+            // Only apply parallax while hero is visible
+            if (scrollY < heroHeight) {
+                // Stars/sky - slowest (barely moves)
+                const bgOffset = scrollY * 0.2;
+                heroBg.style.transform = `translateY(${bgOffset}px)`;
+                
+                // Pines - medium speed
+                const pinesOffset = scrollY * 0.4;
+                heroPines.style.transform = `translateY(${pinesOffset}px)`;
+                
+                // Branches - fastest (foreground)
+                const branchesOffset = scrollY * 0.6;
+                heroBranches.style.transform = `translateY(${branchesOffset}px)`;
+                
+                // Fireflies - between pines and branches
+                const fireflyOffset = scrollY * 0.5;
+                fireflyCanvas.style.transform = `translateY(${fireflyOffset}px)`;
+            }
+        }
+
+        window.addEventListener('scroll', updateParallax);
+        window.addEventListener('load', updateParallax);
     </script>
 </body>
 </html>
