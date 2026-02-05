@@ -897,12 +897,19 @@
         /* Math Parallax Section */
         .tech-parallax {
             height: 400px;
-            background-image: url('reference/parallax-source/Math.jpg');
-            background-attachment: fixed;
+            background-image: url('images/Math.jpg');
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
             position: relative;
+        }
+
+        @supports (background-attachment: fixed) {
+            @media (hover: hover) {
+                .tech-parallax {
+                    background-attachment: fixed;
+                }
+            }
         }
 
         /* Math Parallax Overlay - subtle darkening at edges */
