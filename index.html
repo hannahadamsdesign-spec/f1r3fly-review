@@ -1,2941 +1,843 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1R3FLY.IO — The AI-Native Layer 1 for Verifiable Web3 and Agentic Systems</title>
-    <meta name="description" content="F1R3FLY is an AI-native Layer 1 built on Rholang and validator nodes. Connect AI agents, Web3, and real-world data into verifiable, concurrent workflows without global state bottlenecks.">
-    
-    <!-- Adobe Fonts -->
-    <link rel="stylesheet" href="https://use.typekit.net/mhz8bvz.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: auto;
-        }
-
-        body {
-            font-family: 'source-sans-pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #000;
-            color: rgba(255, 255, 255, 0.85);
-            overflow-x: hidden;
-            line-height: 1.6;
-            font-weight: 300;
-            font-size: 16px;
-            letter-spacing: 0.04em;
-            hyphens: none;
-            -webkit-hyphens: none;
-            -ms-hyphens: none;
-            text-wrap: pretty;
-        }
-
-        /* Keep Brandon Grotesque for headings and UI */
-        h1, h2, h3, h4, h5, h6,
-        .nav-links a,
-        .nav-logo-text,
-        .label,
-        .gradient-btn,
-        .faq-question h3 {
-            font-family: 'brandon-grotesque', sans-serif;
-            text-wrap: balance;
-        }
-
-        /* Paragraphs get balance for better line distribution */
-        p, .section-intro {
-            text-wrap: balance;
-        }
-
-        /* List items get balance for better line distribution */
-        li {
-            text-wrap: balance;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.50);
-            backdrop-filter: blur(10px);
-            padding: 20px 0 27px 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .nav-container {
-            width: 100%;
-            padding: 0 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            outline: none;
-            border: none;
-        }
-
-        .nav-logo:focus,
-        .nav-logo:focus-visible {
-            outline: none;
-            box-shadow: none;
-        }
-
-        .nav-logo-icon {
-            height: 60px;
-            width: auto;
-        }
-
-        .nav-logo-text {
-            color: #FFF;
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 20px;
-            font-weight: 500;
-            letter-spacing: 1.47px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .nav-logo-text-group {
-            display: flex;
-            flex-direction: column;
-            margin-left: 3px;
-            line-height: 1.1;
-        }
-
-        .nav-logo-divider {
-            display: none;
-        }
-
-        .nav-logo-subtitle {
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 14px;
-            font-weight: 330;
-            letter-spacing: 1.47px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            margin-top: 5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-logo:hover .nav-logo-text {
-            color: #03D5FF;
-        }
-
-        .nav-logo:hover .nav-logo-subtitle {
-            color: rgba(3, 213, 255, 0.5);
-        }
-
-        .nav-logo.active .nav-logo-text {
-            color: #F5D731;
-        }
-
-        .nav-logo.active .nav-logo-subtitle {
-            color: rgba(245, 215, 49, 0.5);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            margin-left: 40px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #FFF;
-            text-decoration: none;
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 18px;
-            font-weight: 330;
-            letter-spacing: 1.47px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:not(.active):hover {
-            color: #03D5FF;
-        }
-
-        .nav-links a.active {
-            color: #F5D731 !important;
-            font-weight: 400;
-        }
-
-        .nav-divider {
-            color: rgba(255, 255, 255, 0.3);
-            font-weight: 100;
-            font-size: 18px;
-        }
-
-        .nav-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 50%, #FFE867 100%);
-        }
-
-        /* Nav CTA Button */
-        .nav-cta {
-            display: inline-block;
-            margin-left: 20px;
-            height: 36px;
-            line-height: 36px;
-            padding: 0 32px !important;
-            font-size: 16px !important;
-            font-weight: 400 !important;
-            letter-spacing: 1.47px !important;
-            text-transform: none !important;
-            background: linear-gradient(90deg, #5c0269, #7b0429) !important;
-            border: none;
-            border-radius: 50px;
-            color: #fff !important;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            box-sizing: border-box;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(123, 4, 41, 0.4);
-            color: #fff !important;
-        }
-
-        /* Hamburger Menu Button */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 28px;
-            height: 20px;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        /* Mobile Menu Overlay */
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.98);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .mobile-menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            gap: 30px;
-        }
-
-        .mobile-menu a {
-            color: #fff;
-            text-decoration: none;
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-
-        .mobile-menu a:hover {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Hero/Intro Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 120px 40px 80px;
-            position: relative;
-            background: #000;
-            overflow: hidden;
-            width: 100vw;
-            max-width: 100vw;
-            margin-left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Parallax Forest Background Layer */
-        .hero-parallax-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 120%;
-            background-image: url('images/New Background_layer starry background..png');
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
-            z-index: 0;
-            will-change: transform;
-        }
-
-        /* Pines layer - mid ground */
-        .hero-parallax-pines {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60%;
-            background-image: url('images/New Background_pines layer.png');
-            background-size: cover;
-            background-position: center bottom;
-            background-repeat: no-repeat;
-            z-index: 1;
-            will-change: transform;
-        }
-
-        /* Branches layer - foreground */
-        .hero-parallax-branches {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background-image: url('images/New Background_layer branches..png');
-            background-size: cover;
-            background-position: center bottom;
-            background-repeat: no-repeat;
-            z-index: 2;
-            will-change: transform;
-        }
-
-        /* Dark overlay for readability */
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, 
-                rgba(0, 0, 0, 0.3) 0%, 
-                rgba(0, 0, 0, 0.5) 50%,
-                rgba(0, 0, 0, 0.7) 100%);
-            z-index: 1;
-        }
-
-        /* Bottom fade to black */
-        .hero-bottom-fade {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(to bottom, 
-                transparent 0%, 
-                rgba(0, 0, 0, 0.5) 40%,
-                #000 100%);
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        /* Fireflies Canvas Layer */
-        .hero-fireflies {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-            will-change: transform;
-            overflow: hidden;
-            scroll-margin-top: 0;
-        }
-
-        .hero-video {
-            display: none; /* Replaced by parallax layers */
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 800px;
-            margin: 0 auto;
-            text-decoration: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-
-        .hero-logo-group {
-            transform: translateY(-20px);
-        }
-
-        .hero-bottom-group {
-            transform: translateY(20px);
-        }
-
-        .hero-logo {
-            max-width: 196px;
-            margin: 0 auto 15px;
-        }
-
-        .hero-logo img {
-            width: 100%;
-            height: auto;
-        }
-
-        .hero-tagline {
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.6;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-tagline-small {
-            color: #FFF;
-            text-align: center;
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 18px;
-            font-weight: 330;
-            letter-spacing: 1.47px;
-            text-transform: uppercase;
-            margin-top: 8px;
-            margin-bottom: 0;
-        }
-
-        .hero-company-name {
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 51px;
-            font-weight: 700;
-            letter-spacing: 4.5px;
-            text-transform: uppercase;
-            color: #fff;
-            margin: 0 0 0 0;
-        }
-
-        .hero-arrow {
-            margin-top: 40px;
-            animation: bounce 4s infinite ease-in-out;
-        }
-
-        .hero-arrow img {
-            width: 55px;
-            height: 55px;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        /* Toto section animation - slower and smoother */
-        .toto-animate {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1.2s ease, transform 1.2s ease;
-        }
-
-        .toto-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Staggered toto animations */
-        .toto-animate.delay-1 { transition-delay: 0.3s; }
-        .toto-animate.delay-2 { transition-delay: 0.6s; }
-        .toto-animate.delay-3 { transition-delay: 0.9s; }
-
-        /* Section arrow - links to gradient subsection */
-        .section-arrow {
-            display: flex;
-            justify-content: center;
-            padding: 40px 0;
-            cursor: pointer;
-        }
-
-        .section-arrow img {
-            width: 55px;
-            height: 55px;
-            transition: transform 0.3s ease;
-        }
-
-        .section-arrow:hover img {
-            transform: translateY(5px);
-        }
-
-        /* Sections */
-        section {
-            padding: 50px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-            scroll-margin-top: 90px;
-        }
-
-        /* Main content sections - fixed height for gradient alignment */
-        section.main-content {
-            min-height: 820px;
-            height: 820px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        h2 {
-            font-size: 2.75rem;
-            margin-bottom: 20px;
-            text-align: left;
-            font-weight: 100;
-            letter-spacing: 0.5px;
-            color: #fff;
-        }
-
-        h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            color: #fff;
-        }
-
-        .section-intro {
-            text-align: left;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 50px;
-            line-height: 1.7;
-            max-width: 1100px;
-            text-wrap: balance;
-        }
-
-        /* Three Column Cards */
-        .three-col-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        /* Three Column Text (no boxes) */
-        .three-col-text {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-            align-items: stretch;
-        }
-
-        .col-text {
-            padding: 0;
-        }
-
-        /* Balanced columns for feature lists */
-        #home-gradient .col-text {
-            display: flex;
-            flex-direction: column;
-        }
-        #home-gradient .col-text h3 {
-            min-height: 2.4em;
-        }
-        #home-gradient .col-text ul {
-            flex: 1;
-        }
-
-        .col-text .label,
-        section > .label {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .col-text h3 {
-            font-size: 20px;
-            margin-bottom: 18px;
-            font-weight: 400;
-            color: #fff;
-        }
-
-        .col-text p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .col-text ul {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            padding-left: 20px;
-            margin-bottom: 30px;
-        }
-
-        .col-text li {
-            margin-bottom: 8px;
-        }
-
-        /* Card with Gradient Border */
-        .col-card-gradient {
-            position: relative;
-            background: transparent;
-            border-radius: 12px;
-            padding: 20px 10px 19px 20px;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .col-card-gradient > img:first-child {
-            flex-shrink: 0;
-        }
-
-        .col-card-gradient .gradient-btn {
-            width: 75%;
-            margin-top: auto;
-        }
-
-        /* Text Links (colored links at bottom of cards) */
-        .text-link {
-            display: block;
-            margin-top: auto;
-            padding-top: 20px;
-            color: #FF6B9D;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 400;
-            transition: color 0.3s ease;
-        }
-
-        .text-link:hover {
-            color: #03D5FF;
-        }
-
-        .col-card-gradient .label {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .col-card-gradient h3 {
-            font-size: 20px;
-            margin-bottom: 18px;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .col-card-gradient p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .col-card-gradient ul {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            padding-left: 20px;
-            margin-bottom: 30px;
-        }
-
-        .col-card-gradient li {
-            margin-bottom: 8px;
-        }
-
-        .col-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .col-card .label {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-            font-weight: 400;
-        }
-
-        .col-card h3 {
-            font-size: 20px;
-            margin-bottom: 18px;
-            font-weight: 400;
-        }
-
-        .col-card p, .col-card ul {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-        }
-
-        .col-card ul {
-            margin-top: 15px;
-            padding-left: 20px;
-        }
-
-        .col-card li {
-            margin-bottom: 8px;
-        }
-
-        /* Gradient Buttons */
-        .gradient-btn {
-            display: inline-block;
-            width: 70%;
-            height: 32px;
-            line-height: 32px;
-            padding: 0;
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 1.47px;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, #1a4a7a, #2d6b9e) !important;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            text-transform: capitalize;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .gradient-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(45, 107, 158, 0.4);
-        }
-
-        /* Section-specific button colors */
-        .gradient-btn.btn-developer {
-            background: linear-gradient(90deg, #0063b0, #007a73) !important;
-        }
-        .gradient-btn.btn-developer:hover {
-            box-shadow: 0 10px 30px rgba(0, 122, 115, 0.4);
-        }
-
-        .gradient-btn.btn-client {
-            background: linear-gradient(90deg, #5c0269, #7b0429) !important;
-        }
-        .gradient-btn.btn-client:hover {
-            box-shadow: 0 10px 30px rgba(123, 4, 41, 0.4);
-        }
-
-        .gradient-btn.btn-partner {
-            background: linear-gradient(90deg, #0c8e23, #7a9d0e) !important;
-        }
-        .gradient-btn.btn-partner:hover {
-            box-shadow: 0 10px 30px rgba(122, 157, 14, 0.4);
-        }
-
-        .gradient-btn.btn-neutral {
-            background: linear-gradient(90deg, #2a3441, #3d4a5c) !important;
-        }
-        .gradient-btn.btn-neutral:hover {
-            box-shadow: 0 10px 30px rgba(61, 74, 92, 0.4);
-        }
-
-        /* Demo Buttons Row */
-        .demo-buttons-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        /* Outline Button with Gradient Border */
-        .outline-btn {
-            display: inline-block;
-            padding: 14px 40px;
-            font-size: 18px;
-            font-weight: 400;
-            letter-spacing: 0.54px;
-            background: transparent;
-            color: #fff;
-            border: 2px solid;
-            border-image: linear-gradient(90deg, #a3004d, #b8003d) 1;
-            border-radius: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-
-        .outline-btn:hover {
-            background: linear-gradient(90deg, #a3004d, #b8003d);
-        }
-
-        /* Purple/Technology Gradient Section - #002537 → #021135 (from Team gradient, similar purple-blue) */
-        .purple-gradient {
-            background: linear-gradient(90deg, #002537 0%, #021135 100%);
-            padding: 10px 40px 80px 40px;
-            margin: 30px 0 60px 0;
-        }
-
-        /* Teal/Developer Gradient - #002D2A → #002E54 with 10% darker */
-        .teal-gradient {
-            background: linear-gradient(90deg, #002624 0%, #00294b 100%);
-            padding: 10px 40px 80px 40px;
-            margin: 30px 0 60px 0;
-        }
-
-        /* Magenta/Client Gradient - #3C0009 → #2D003A with 10% darker */
-        .magenta-gradient {
-            background: linear-gradient(90deg, #360008 0%, #290034 100%);
-            padding: 10px 40px 80px 40px;
-            margin: 30px 0 60px 0;
-        }
-
-        /* Green/Partner Gradient - #3A4000 → #00371B with 10% darker */
-        .green-gradient {
-            background: linear-gradient(90deg, #343a00 0%, #003118 100%);
-            padding: 10px 40px 80px 40px;
-            margin: 30px 0 60px 0;
-        }
-
-        /* Neutral/Generic gradient - #282C2D → #021135 */
-        .neutral-gradient {
-            background: linear-gradient(90deg, #282C2D 0%, #021135 100%);
-            padding: 10px 40px 80px 40px;
-            margin: 30px 0 60px 0;
-        }
-
-        /* Launch Demo Buttons */
-        .demo-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        /* Team Parallax Section */
-        /* Math Parallax Section */
-        .tech-parallax {
-            height: 400px;
-            background-image: url('images/Math.jpg');
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            position: relative;
-        }
-
-        @supports (background-attachment: fixed) {
-            @media (hover: hover) {
-                .tech-parallax {
-                    background-attachment: fixed;
-                }
-            }
-        }
-
-        /* Math Parallax Overlay - subtle darkening at edges */
-        .tech-parallax::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(
-                ellipse at center,
-                transparent 30%,
-                rgba(0, 0, 0, 0.15) 70%,
-                rgba(0, 0, 0, 0.3) 100%
-            );
-            pointer-events: none;
-            border-top: 1px solid #222222;
-            border-bottom: 1px solid #222222;
-        }
-
-        .tech-parallax::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0.25) 0%,
-                transparent 20%,
-                transparent 80%,
-                rgba(0, 0, 0, 0.25) 100%
-            );
-            pointer-events: none;
-        }
-
-        /* ==========================================
-           SCROLL-IN ANIMATIONS FOR CARDS/BOXES
-           ========================================== */
-        
-        /* Base state for animated elements */
-        .animate-in {
-            opacity: 0;
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .animate-in.from-left {
-            transform: translateX(-80px);
-        }
-
-        .animate-in.from-right {
-            transform: translateX(80px);
-        }
-
-        .animate-in.from-bottom {
-            transform: translateY(60px);
-        }
-
-        /* Visible state */
-        .animate-in.visible {
-            opacity: 1;
-            transform: translateX(0) translateY(0);
-        }
-
-        /* Stagger delays for sequential animations */
-        .animate-in.delay-1 { transition-delay: 0.1s; }
-        .animate-in.delay-2 { transition-delay: 0.2s; }
-        .animate-in.delay-3 { transition-delay: 0.3s; }
-        .animate-in.delay-4 { transition-delay: 0.4s; }
-        .animate-in.delay-5 { transition-delay: 0.5s; }
-
-        /* Headers fly-in */
-        .fly-in-header {
-            opacity: 0;
-            transform: translateY(-30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .fly-in-header.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Text fade-in animation */
-        .fade-in-text {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        .fade-in-text.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .fade-in-text.delay-1 { transition-delay: 0.2s; }
-        .fade-in-text.delay-2 { transition-delay: 0.4s; }
-        .fade-in-text.delay-3 { transition-delay: 0.6s; }
-
-        /* Slow fade for labels/eyebrows */
-        .fade-in-slow {
-            opacity: 0;
-            transition: opacity 1.2s ease;
-        }
-
-        .fade-in-slow.visible {
-            opacity: 1;
-        }
-
-        /* ==========================================
-           CLIENT LOGOS CAROUSEL
-           ========================================== */
-
-        .carousel-container {
-            width: 100vw;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-            overflow: hidden;
-            padding: 40px 0;
-        }
-
-        .carousel-track {
-            display: flex;
-            animation: scroll-logos 50s linear infinite;
-            width: fit-content;
-        }
-
-        .carousel-track:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes scroll-logos {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .carousel-logo {
-            flex-shrink: 0;
-            width: 400px;
-            height: 240px;
-            margin: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(20, 20, 25, 0.85);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 50px 60px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .carousel-logo:hover {
-            background: rgba(30, 30, 35, 0.95);
-            border-color: rgba(163, 0, 77, 0.5);
-            transform: scale(1.02);
-        }
-
-        .carousel-logo img {
-            max-width: 100%;
-            max-height: 100px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: filter 0.3s ease;
-        }
-
-        .carousel-logo:hover img {
-            filter: brightness(1.15);
-        }
-
-        /* Client Logos Grid - Three Column Layout */
-        .client-logos-grid {
-            margin-top: 40px;
-        }
-
-        .client-logo-card {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(20, 20, 25, 0.85);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px 30px;
-            min-height: 120px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .client-logo-card:hover {
-            background: rgba(30, 30, 35, 0.95);
-            border-color: rgba(163, 0, 77, 0.5);
-            transform: scale(1.02);
-        }
-
-        .client-logo-card img {
-            max-width: 100%;
-            max-height: 80px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: filter 0.3s ease;
-        }
-
-        .client-logo-card:hover img {
-            filter: brightness(1.15);
-        }
-
-        .client-logo-placeholder {
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            background: transparent;
-        }
-
-        .client-logo-placeholder span {
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.35);
-            text-transform: uppercase;
-        }
-
-        .client-logo-placeholder:hover {
-            border-color: rgba(163, 0, 77, 0.5);
-            background: rgba(20, 20, 25, 0.5);
-        }
-
-        /* ==========================================
-           FAQ STICKY PANELS (Avalanche-style)
-           ========================================== */
-        
-        #faq {
-            position: relative;
-        }
-
-        .faq-sticky-container {
-            position: relative;
-            padding: 0 !important;
-            overflow: visible;
-            /* Ensure proper stacking context and smooth rendering */
-            isolation: isolate;
-        }
-
-        .faq-accordion-section {
-            max-width: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        .faq-section-header {
-            position: sticky;
-            top: 100px;
-            z-index: 200;
-            background: linear-gradient(90deg, #282C2D 0%, #021135 100%);
-            padding: 60px 40px 40px 40px;
-            margin: 0;
-            transform: translateZ(0); /* Hardware acceleration */
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-
-        .faq-section-header h2 {
-            margin: 0;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
-        }
-
-        .faq-panels-wrapper {
-            position: relative;
-            margin-top: -1px; /* Overlap with header to prevent gaps */
-            padding-top: 1px; /* Compensate for the negative margin */
-            background: linear-gradient(90deg, #282C2D 0%, #021135 100%);
-            transform: translateZ(0); /* Hardware acceleration */
-        }
-
-        /* First panel needs no top margin to connect seamlessly */
-        .faq-panel:first-child {
-            margin-top: 0;
-        }
-
-        .faq-panel {
-            position: sticky;
-            top: 280px;
-            padding: 40px 40px 60px 40px;
-            margin: 0;
-            margin-top: -1px; /* Slight overlap to prevent subpixel gaps */
-            opacity: 1;
-            transform: translateZ(0); /* Hardware acceleration for smoother rendering */
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-
-        /* Each subsequent panel has higher z-index to stack on top, but below header */
-        .faq-panel:nth-child(1) { z-index: 10; }
-        .faq-panel:nth-child(2) { z-index: 11; }
-        .faq-panel:nth-child(3) { z-index: 12; }
-        .faq-panel:nth-child(4) { z-index: 13; }
-
-        /* Panel label - single line */
-        .faq-panel-header .label {
-            white-space: nowrap;
-        }
-
-        /* Panel backgrounds - matching section gradients (developer/client/partner 10% darker) */
-        .faq-panel[data-section="core"] {
-            background: linear-gradient(90deg, #282C2D 0%, #021135 100%);
-        }
-
-        .faq-panel[data-section="developer"] {
-            background: linear-gradient(90deg, #002624 0%, #00294b 100%);
-        }
-
-        .faq-panel[data-section="client"] {
-            background: linear-gradient(90deg, #360008 0%, #290034 100%);
-        }
-
-        .faq-panel[data-section="partner"] {
-            background: linear-gradient(90deg, #343a00 0%, #003118 100%);
-        }
-
-        .faq-panel-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .faq-panel-header {
-            margin-bottom: 30px;
-        }
-
-        .faq-panel-header .label {
-            position: relative;
-            display: inline-block;
-            padding-right: 100%;
-        }
-
-        /* Cyan/teal gradient line after section label */
-        .faq-panel-header .label::after {
-            content: '';
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100vw;
-            height: 1px;
-            margin-left: 20px;
-            background: linear-gradient(90deg, #03D5FF 0%, #00A693 50%, transparent 100%);
-        }
-
-        /* Divider lines between FAQ items */
-        .faq-accordion-item {
-            border-bottom: 1px solid rgba(3, 213, 255, 0.15);
-        }
-
-        .faq-accordion-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Feature Grid */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 450px);
-            gap: 25px;
-            margin-top: 50px;
-            justify-content: center;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .feature-card h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .feature-card p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-        }
-
-        /* Team Grid */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        #team.main-content {
-            height: auto;
-            min-height: auto;
-            padding-bottom: 80px;
-        }
-
-        .team-member {
-            text-align: center;
-        }
-
-        .team-photo {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .team-member h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            font-weight: 400;
-        }
-
-        .team-member .role {
-            font-family: 'brandon-grotesque', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .team-member .bio {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.6;
-        }
-
-        /* Partner Logos */
-        .partner-logos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 40px;
-            align-items: center;
-            justify-items: center;
-            margin-top: 50px;
-            padding: 40px 0;
-        }
-
-        .partner-logo {
-            width: 140px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
-
-        /* Client Logos Grid */
-        .client-logos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .client-logo {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 40px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 400;
-            text-align: center;
-        }
-
-        /* Highlight Text */
-        .highlight-text {
-            color: #03D5FF;
-            margin-top: 20px;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-        }
-
-        /* Two Column Text */
-        .two-col-text {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            margin-top: 40px;
-            overflow: hidden;
-        }
-
-        .two-col-text .col-text {
-            overflow: hidden;
-        }
-
-        /* FAQ Styling */
-        .faq-section {
-            margin-bottom: 40px;
-        }
-
-        .faq-section .label {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 30px;
-            font-weight: 700;
-        }
-
-        .faq-item {
-            margin-bottom: 30px;
-        }
-
-        .faq-item h3 {
-            font-size: 18px;
-            font-weight: 500;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .faq-answer {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .faq-answer p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-        }
-
-        /* FAQ Accordion Styles */
-        .faq-accordion-section {
-            position: relative;
-        }
-
-        /* .faq-panel styles moved to sticky panels section above */
-
-        .faq-panel-header .label {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-        }
-
-        .faq-accordion-item {
-            border-bottom: 1px solid rgba(3, 213, 255, 0.2);
-            overflow: hidden;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-        }
-
-        .faq-accordion-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .faq-question {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 0 15px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .faq-question:hover {
-            color: #03D5FF;
-        }
-
-        .faq-question h3 {
-            font-size: 18px;
-            font-weight: 400;
-            color: #fff;
-            margin: 0;
-            transition: color 0.3s ease;
-        }
-
-        .faq-question:hover h3 {
-            color: #03D5FF;
-        }
-
-        .faq-icon {
-            font-size: 24px;
-            font-weight: 300;
-            color: #03D5FF;
-            transition: transform 0.3s ease;
-            flex-shrink: 0;
-            margin-left: 20px;
-        }
-
-        .faq-accordion-item.open .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        .faq-answer-accordion {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
-            padding: 0 0;
-        }
-
-        .faq-accordion-item.open .faq-answer-accordion {
-            max-height: 500px;
-            padding: 0 0 24px 0;
-        }
-
-        .faq-answer-accordion p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            margin-bottom: 16px;
-            max-width: 800px;
-        }
-
-        .faq-answer-accordion p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 16px;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .social-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background: #03D5FF;
-            color: #000;
-        }
-
-        .social-icon svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Responsive - Tablet */
-        @media (max-width: 1024px) {
-            .nav-links { gap: 20px; }
-            .nav-links a { font-size: 16px; }
-        }
-
-        /* Responsive - Mobile */
-        @media (max-width: 768px) {
-            nav { padding: 15px 10px 0 10px; }
-            .nav-container { padding: 0 20px; }
-            .nav-logo img { height: 40px; }
-            .nav-logo-subtitle { display: none; }
-            
-            /* Hide desktop nav, show hamburger */
-            .nav-links { display: none; }
-            .hamburger { display: flex; }
-            .mobile-menu-overlay { display: block; }
-            .nav-line { margin-top: 15px; }
-            
-            .hero { padding: 100px 20px 60px; }
-            .hero-logo { max-width: 200px; }
-            h2 { font-size: 1.8rem; }
-            section { padding: 60px 20px; }
-            .three-col-cards, .feature-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1R3FLY.IO — The AI-Native Layer 1 for Verifiable Web3 and Agentic Systems</title>
+  <meta name="description" content="F1R3FLY is an AI-native Layer 1 built on Rholang and validator nodes. Connect AI agents, Web3, and real-world data into verifiable, concurrent workflows without global state bottlenecks.">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="F1R3FLY.IO — AI-Native Layer 1">
+  <meta property="og:description" content="Verifiable concurrency for AI agents, Web3, and real-world data.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://f1r3fly.io">
+
+  <!-- Preconnect to font host -->
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/mhz8bvz.css">
+
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#home" class="nav-logo">
-                <img src="images/Logo Icon.svg" alt="F1R3FLY" class="nav-logo-icon">
-                <div class="nav-logo-text-group">
-                    <span class="nav-logo-text">F1R3FLY.IO</span>
-                    <span class="nav-logo-subtitle">A Subsidiary of F1R3FLY Industries</span>
-                </div>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#technology">Technology</a></li>
-                <li class="nav-divider">|</li>
-                <li><a href="#developers">Developers</a></li>
-                <li class="nav-divider">|</li>
-                <li><a href="#clients">Clients</a></li>
-                <li class="nav-divider">|</li>
-                <li><a href="#partners">Partners</a></li>
-                <li class="nav-divider">|</li>
-                <li><a href="#team">Team</a></li>
-                <li class="nav-divider">|</li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
-            </ul>
-            <div class="hamburger" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        <div class="nav-line"></div>
-    </nav>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <div class="mobile-menu">
-            <a href="#technology" onclick="closeMobileMenu()">Technology</a>
-            <a href="#developers" onclick="closeMobileMenu()">Developers</a>
-            <a href="#clients" onclick="closeMobileMenu()">Clients</a>
-            <a href="#partners" onclick="closeMobileMenu()">Partners</a>
-            <a href="#team" onclick="closeMobileMenu()">Team</a>
-            <a href="#blog" onclick="closeMobileMenu()">Blog</a>
-            <a href="#contact" onclick="closeMobileMenu()">Get In Touch</a>
-        </div>
+<a href="#home" class="skip-link">Skip to main content</a>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-container">
+    <a href="#home" class="nav-logo">
+      <img src="images/logo-icon.svg" alt="F1R3FLY" class="nav-logo-icon" width="60" height="60">
+      <div class="nav-logo-text-group">
+        <span class="nav-logo-text">F1R3FLY.IO</span>
+        <span class="nav-logo-subtitle">A Subsidiary of F1R3FLY Industries</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#technology">Technology</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#developers">Developers</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#clients">Clients</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#partners">Partners</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#team">Team</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenuOverlay">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
+  <div class="mobile-menu">
+    <a href="#technology">Technology</a>
+    <a href="#developers">Developers</a>
+    <a href="#clients">Clients</a>
+    <a href="#partners">Partners</a>
+    <a href="#team">Team</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Get In Touch</a>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="hero">
+  <div class="hero-parallax-bg" id="heroBg"></div>
+  <div class="hero-parallax-pines" id="heroPines"></div>
+  <div class="hero-parallax-branches" id="heroBranches"></div>
+  <div class="hero-overlay"></div>
+  <canvas class="hero-fireflies" id="fireflyCanvas" aria-hidden="true"></canvas>
+  <div class="hero-bottom-fade"></div>
+
+  <div class="hero-content">
+    <div class="hero-logo">
+      <img src="images/logo-icon.svg" alt="F1R3FLY.IO" width="280" height="280" loading="eager">
+    </div>
+    <h1 class="hero-company-name">F1R3FLY.IO</h1>
+    <p class="hero-tagline-small">A Subsidiary of F1R3FLY Industries</p>
+    <p class="hero-tagline">the network is the computer is the network is…</p>
+    <a href="#home" class="hero-arrow">
+      <img src="images/arrow.svg" alt="Scroll to top" width="55" height="55">
+    </a>
+  </div>
+</section>
+
+<!-- ============ HOME: What F1R3FLY Is ============ -->
+<section id="home" class="section">
+  <h2 class="fade-in">What F1R3FLY is, what it solves, why it matters.</h2>
+  <p class="section-intro fade-in delay-1">F1R3FLY is an AI-native Layer 1 built on Rholang and validator nodes. It is designed for teams that need more than another chain: they need verifiable concurrency, safe composition of AI and Web3, and infrastructure that can explain what actually happened.</p>
+
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <div class="label">Developers</div>
+      <h3>From global state chaos to verifiable concurrency</h3>
+      <p>Building multi-agent systems on global state creates bottlenecks and elusive bugs. F1R3FLY provides a concurrency-native model to run processes in parallel with a verifiable record of every interaction.</p>
+      <ul>
+        <li>Model complex workflows without shared-state hacks.</li>
+        <li>Connect on-chain logic to off-chain services seamlessly.</li>
+        <li>Debug with evidence, not guesswork.</li>
+      </ul>
+      <a href="https://www.youtube.com/watch?v=mNbXqw3LX9c" target="_blank" rel="noopener" class="gradient-btn btn-developer">Launch Developer Demo</a>
     </div>
 
-    <!-- Intro Section -->
-    <section id="intro" class="hero">
-        <!-- Parallax Background Layers -->
-        <div class="hero-parallax-bg" id="heroBg"></div>
-        <div class="hero-parallax-pines" id="heroPines"></div>
-        <div class="hero-parallax-branches" id="heroBranches"></div>
-        
-        <!-- Dark Overlay -->
-        <div class="hero-overlay"></div>
-        
-        <!-- Fireflies Canvas Layer -->
-        <canvas class="hero-fireflies" id="fireflyCanvas"></canvas>
-        
-        <!-- Bottom Fade to Black -->
-        <div class="hero-bottom-fade"></div>
-        
-        <a href="#home" class="hero-content">
-            <div class="hero-logo-group">
-                <div class="hero-logo">
-                    <img src="images/Logo Brand Vertical Option with Text.svg" alt="F1R3FLY.IO">
-                </div>
-                <h1 class="hero-company-name">F1R3FLY.IO</h1>
-                <p class="hero-tagline-small">A Subsidiary of F1R3FLY Industries</p>
-            </div>
-            <div class="hero-bottom-group">
-                <p class="hero-tagline">The AI-native infrastructure for verifiable, concurrent, multi-agent applications.</p>
-                <div class="hero-arrow">
-                    <img src="images/Arrow.svg" alt="Scroll down">
-                </div>
-            </div>
-        </a>
-    </section>
-
-    <!-- Home Section -->
-    <section id="home" class="main-content">
-        <h2 class="fade-in-text">What F1R3FLY is, what it solves, why it matters.</h2>
-        <p class="section-intro fade-in-text delay-1">F1R3FLY is an AI-native Layer 1 built on Rholang and validator nodes. It is designed for teams that need more than another chain: they need verifiable concurrency, safe composition of AI and Web3, and infrastructure that can explain what actually happened.</p>
-        
-        <div class="three-col-text">
-            <div class="col-card-gradient animate-in from-left delay-1">
-                <div class="label">Developers</div>
-                <h3>From global state chaos to verifiable concurrency</h3>
-                <p>Building multi-agent systems on global state creates bottlenecks and elusive bugs. F1R3FLY provides a concurrency-native model to run processes in parallel with a verifiable record of every interaction.</p>
-                <ul>
-                    <li>Model complex workflows without shared-state hacks.</li>
-                    <li>Connect on-chain logic to off-chain services seamlessly.</li>
-                    <li>Debug with evidence, not guesswork.</li>
-                </ul>
-                <a href="https://www.youtube.com/watch?v=mNbXqw3LX9c" target="_blank" class="gradient-btn btn-developer">Launch Developer Demo</a>
-            </div>
-            
-            <div class="col-card-gradient animate-in from-bottom delay-2">
-                <div class="label">Clients</div>
-                <h3>Connect AI, data, and Web3 without fragile glue</h3>
-                <p>Skip fragile one-off integrations. F1R3FLY composes AI calls, smart contracts, and data as repeatable workflows on validator-backed infrastructure.</p>
-                <ul>
-                    <li>Manage data flow across AI and services in one place.</li>
-                    <li>Verifiable logs of what was executed and when.</li>
-                    <li>Less maintenance, more time shipping features.</li>
-                </ul>
-                <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" class="gradient-btn btn-client">Launch Client Demo</a>
-            </div>
-            
-            <div class="col-card-gradient animate-in from-right delay-3">
-                <div class="label">Partners</div>
-                <h3>Infrastructure for high-trust, AI-native ecosystems</h3>
-                <p>Partners need an environment where AI and data work under clear rules of evidence. F1R3FLY provides a single, composable layer for high-trust apps.</p>
-                <ul>
-                    <li>A credible technical story for AI-native networks.</li>
-                    <li>Transparency and auditability for complex workflows.</li>
-                    <li>A foundation from pilot to production-grade scale.</li>
-                </ul>
-                <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" class="gradient-btn btn-partner">Launch Partner Demo</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Scalable, Storable, Searchable Section (part of HOME) -->
-    <div id="home-gradient" class="neutral-gradient" style="margin-bottom: 0; padding-bottom: 15px; padding-top: 40px;">
-        <section>
-            <div class="label">Scalable. Storable. Searchable.</div>
-            <h2>An AI-native Layer-1 for the global economy</h2>
-            <p class="section-intro">F1R3FLY provides developers with concurrency-native execution, validator-backed data, and formally grounded Rholang contracts, ensuring real-world, data-heavy workloads remain fast and verifiable.</p>
-            
-            <div class="three-col-text" style="align-items: start;">
-                <div class="col-text">
-                    <h3>Concurrency-Native Scalability</h3>
-                    <ul>
-                        <li>No single global state or transaction<br>queue to fight with.</li>
-                        <li>Transactions execute concurrently<br>across validators.</li>
-                        <li>Capacity scales with your hardware and network topology, not a global bottleneck.</li>
-                    </ul>
-                </div>
-                
-                <div class="col-text">
-                    <h3>Validator-Backed Data</h3>
-                    <ul>
-                        <li>Application state and key datasets live directly on the network.</li>
-                        <li>Verifiable logs and events that AI agents and services can trust.</li>
-                        <li>Built-in auditability and replay for regulated, high-trust scenarios.</li>
-                    </ul>
-                </div>
-                
-                <div class="col-text">
-                    <h3>Correct-by-Construction</h3>
-                    <ul>
-                        <li>Smart contracts written in Rholang with strong concurrency semantics.</li>
-                        <li>Behavior modeled as processes and channels, not ad-hoc callbacks.</li>
-                        <li>Designed to reduce race conditions and simplify complex logic.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+    <div class="card animate-in from-bottom delay-2">
+      <div class="label">Clients</div>
+      <h3>Connect AI, data, and Web3 without fragile glue</h3>
+      <p>Skip fragile one-off integrations. F1R3FLY composes AI calls, smart contracts, and data as repeatable workflows on validator-backed infrastructure.</p>
+      <ul>
+        <li>Manage data flow across AI and services in one place.</li>
+        <li>Verifiable logs of what was executed and when.</li>
+        <li>Less maintenance, more time shipping features.</li>
+      </ul>
+      <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" rel="noopener" class="gradient-btn btn-client">Launch Client Demo</a>
     </div>
 
-    <!-- Math Parallax -->
-    <div class="tech-parallax"></div>
+    <div class="card animate-in from-right delay-3">
+      <div class="label">Partners</div>
+      <h3>Infrastructure for high-trust, AI-native ecosystems</h3>
+      <p>Partners need an environment where AI and data work under clear rules of evidence. F1R3FLY provides a single, composable layer for high-trust apps.</p>
+      <ul>
+        <li>A credible technical story for AI-native networks.</li>
+        <li>Transparency and auditability for complex workflows.</li>
+        <li>A foundation from pilot to production-grade scale.</li>
+      </ul>
+      <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" rel="noopener" class="gradient-btn btn-partner">Launch Partner Demo</a>
+    </div>
+  </div>
+</section>
 
-    <!-- Toto Section (part of HOME) -->
-    <div style="background: #000; margin-top: -20px; padding: 60px 40px 60px 40px;">
-        <section style="padding: 0; max-width: 1400px; margin: 0 auto;">
-            <div class="label toto-animate">Toto, I've a feeling we're not in Kansas anymore.</div>
-            <h2 class="toto-animate delay-1">Most blockchains hit a wall when you ask them to handle real-world, data-rich workloads. F1R3FLY combines concurrency-native execution with validator-backed storage so you can build AI agents, high-frequency trading infrastructure, or secure medical and enterprise systems without fighting global state.</h2>
-            <p class="section-intro toto-animate delay-2" style="margin-top: 40px;"><strong>In one line:</strong> F1R3FLY is an AI-native Layer-1 that unifies scalable concurrency, verifiable data, and Rholang-based contracts, enabling developers to ship high-trust applications without debugging global queues.</p>
-        </section>
+<!-- Scalable. Storable. Searchable. -->
+<div class="section-band neutral" style="margin-bottom:0; padding-top:40px;">
+  <section class="section">
+    <div class="label">Scalable. Storable. Searchable.</div>
+    <h2>An AI-native Layer-1 for the global economy</h2>
+    <p class="section-intro">F1R3FLY provides developers with concurrency-native execution, validator-backed data, and formally grounded Rholang contracts, ensuring real-world, data-heavy workloads remain fast and verifiable.</p>
+
+    <div class="text-grid">
+      <div>
+        <h3>Concurrency-Native Scalability</h3>
+        <ul>
+          <li>No single global state or transaction queue to fight with.</li>
+          <li>Transactions execute concurrently across validators.</li>
+          <li>Capacity scales with your hardware and network topology, not a global bottleneck.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Validator-Backed Data</h3>
+        <ul>
+          <li>Application state and key datasets live directly on the network.</li>
+          <li>Verifiable logs and events that AI agents and services can trust.</li>
+          <li>Built-in auditability and replay for regulated, high-trust scenarios.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Correct-by-Construction</h3>
+        <ul>
+          <li>Smart contracts written in Rholang with strong concurrency semantics.</li>
+          <li>Behavior modeled as processes and channels, not ad-hoc callbacks.</li>
+          <li>Designed to reduce race conditions and simplify complex logic.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Math Parallax -->
+<div class="parallax-image" role="img" aria-label="Mathematical notation background"></div>
+
+<!-- Toto Section -->
+<div style="background:#000; padding:60px 20px;">
+  <section class="section" style="padding-top:0; padding-bottom:0;">
+    <div class="label fade-in">Toto, I've a feeling we're not in Kansas anymore.</div>
+    <h2 class="fade-in delay-1">Most blockchains hit a wall when you ask them to handle real-world, data-rich workloads. F1R3FLY combines concurrency-native execution with validator-backed storage so you can build AI agents, high-frequency trading infrastructure, or secure medical and enterprise systems without fighting global state.</h2>
+    <p class="section-intro fade-in delay-2" style="margin-top:40px;"><strong>In one line:</strong> F1R3FLY is an AI-native Layer-1 that unifies scalable concurrency, verifiable data, and Rholang-based contracts, enabling developers to ship high-trust applications without debugging global queues.</p>
+  </section>
+</div>
+
+<!-- ============ TECHNOLOGY ============ -->
+<section id="technology" class="section">
+  <h2 class="fly-in-header">Deep dive into Rholang and Concurrency</h2>
+
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <img src="images/icon-math.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Concurrent by design. Secure by math.</div>
+      <h3>Rholang – an actor-style smart contract language designed for concurrent execution and verifiable coordination.</h3>
+      <p><strong>Spatial–behavioral types</strong> – a mathematical framework that lets you prove properties of contracts before they touch mainnet, catching whole classes of bugs by construction.</p>
     </div>
 
-    <!-- Technology Section -->
-    <section id="technology" class="main-content" style="padding-top: 40px;">
-        <h2>Deep dive into Rholang and Concurrency</h2>
-
-        <div class="three-col-text">
-            <div class="col-card-gradient animate-in from-left delay-1">
-                <img src="images/math icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Concurrent by design. Secure by math.</div>
-                <h3>Rholang – an actor-style smart contract language designed for concurrent execution and verifiable coordination.</h3>
-                <p><strong>Spatial–behavioral types</strong> – a mathematical framework that lets you prove properties of contracts before they touch mainnet, catching whole classes of bugs by construction.</p>
-            </div>
-
-            <div class="col-card-gradient animate-in from-bottom delay-2">
-                <img src="images/search scale icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Built for scale<br>and searchability.</div>
-                <h3>OSLF Algorithm – an approach that dramatically expands what can be searched and indexed on-chain by reasoning about processes instead of static data.</h3>
-                <p><strong>Casper Consensus</strong> – a Proof-of-Stake protocol that is energy-efficient, finality-oriented, and grounded in peer-reviewed research.</p>
-            </div>
-
-            <div class="col-card-gradient animate-in from-right delay-3">
-                <img src="images/rebuild icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Rebuilt from the geometry of logic up.</div>
-                <h3>Legacy chains execute transactions one after another, turning global state into a single bottleneck. F1R3FLY follows a different path—Rholang contracts run in parallel while converging on a single shared state.</h3>
-                <p>Your AI agents, trading strategies, or mission-critical workflows don't have to stand in the same queue. You get blockchain-level trust without surrendering modern concurrency.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technology FAQ Section (in gradient) -->
-    <div class="neutral-gradient faq-sticky-container" style="padding-left: 0; padding-right: 0;">
-        <section class="faq-accordion-section">
-            <div class="faq-section-header">
-                <h2>Frequently Asked Questions: The Architecture</h2>
-            </div>
-            
-            <div class="faq-panels-wrapper">
-            <!-- Core Architecture Questions -->
-            <div class="faq-panel" data-section="core">
-                <div class="faq-panel-content">
-                <div class="faq-panel-header">
-                    <div class="label">Core Architecture Questions</div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>What is Rholang?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Rholang is a concurrent smart contract language based on the rho-calculus, a formal model for communicating processes. Instead of mutating global variables, Rholang contracts send and receive messages over channels.</p>
-                        <p>This makes them naturally parallelizable and easier to reason about, which is a core ingredient of F1R3FLY's concurrent execution.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How Does F1R3FLY work?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>F1R3FLY is a validator-based execution layer that runs Rholang contracts against a shared global state. Validators execute contracts as processes, agree on results via Proof-of-Stake consensus, and record an auditable history.</p>
-                        <p>From your perspective, you get a familiar "blockchain trust" model; under the hood, you get a process-oriented engine rather than a single-threaded VM.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How does F1R3FLY achieve 'linear-style' scalability without sharding?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>In most chains, every transaction must squeeze through the same global path, so adding more nodes mainly improves redundancy, not throughput. F1R3FLY uses a concurrent execution model: non-conflicting Rholang contracts can be evaluated in parallel across CPU cores and validator nodes.</p>
-                        <p>In realistic workloads, this lets capacity grow with available hardware instead of hitting a sequential bottleneck. The exact performance curve depends on your contracts and network topology.</p>
-                    </div>
-                </div>
-            </div><!-- end faq-panel-content -->
-            </div>
-            
-            <!-- Developer-Focused Questions -->
-            <div class="faq-panel" data-section="developer">
-                <div class="faq-panel-content">
-                <div class="faq-panel-header">
-                    <div class="label">Developer-Focused Questions</div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How hard is it to integrate F1R3FLY into my existing stack?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>You don't have to rewrite everything to start using F1R3FLY. In most projects, F1R3FLY sits behind a service layer and communicates with your existing microservices, APIs, or event buses via adapters. You move high-value coordination logic into Rholang contracts.</p>
-                        <p>That gives you an incremental, low-risk adoption path instead of a "big bang" rewrite.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How do I debug and test Rholang contracts?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>You can run validators locally, deploy contracts to a dev shard, and inspect logs and state transitions for each step of a workflow. Because contracts are modeled as processes with explicit communication patterns, you can unit-test sub-protocols in isolation.</p>
-                        <p>Over time, the validator toolchain is meant to feel like a modern CI/CD setup rather than a black box.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>Can I treat F1R3FLY like a normal database or message bus?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>F1R3FLY is not a drop-in replacement for Postgres or Kafka, but it complements them. You use F1R3FLY when you need verifiable coordination and shared state between many parties or agents; you keep traditional databases for bulk storage.</p>
-                        <p>In practice, many architectures pair F1R3FLY with existing DBs and queues: contracts define the rules, while your data layer handles volume and indexing.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How does F1R3FLY help with AI-native or agentic systems?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Agentic AI systems generate many concurrent actions on shared resources. F1R3FLY's Rholang model is a natural fit: each agent can be modeled as a process, and shared contracts govern how they interact with assets, permissions, or data.</p>
-                        <p>Validators ensure that, even when thousands of agents act simultaneously, the resulting state transitions are consistent, auditable, and replayable.</p>
-                    </div>
-                </div>
-            </div><!-- end faq-panel-content -->
-            </div>
-            
-            <!-- Client-Focused Questions -->
-            <div class="faq-panel" data-section="client">
-                <div class="faq-panel-content">
-                <div class="faq-panel-header">
-                    <div class="label">Client-Focused Questions</div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>What kind of problems is F1R3FLY actually good at solving?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>F1R3FLY shines wherever many independent actors need to coordinate on shared state with strong guarantees: financial rails, marketplaces, AI orchestration, supply chains, and high-trust data platforms.</p>
-                        <p>If you're hitting scaling limits or struggling to prove that critical workflows ran correctly, F1R3FLY helps you unify that complexity into one execution layer with an auditable history.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How does F1R3FLY reduce my integration and operational risk?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Traditional Web3 projects often rely on custom bridges and ad-hoc off-chain logic that is hard to test or audit. F1R3FLY encourages you to move coordination logic into formally grounded contracts and interact with them via stable APIs.</p>
-                        <p>Validators maintain a consistent global state and an evidence trail, which makes audits and incident analysis much more manageable.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How does F1R3FLY help with transparency, auditability, and compliance?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Every contract-driven state change passes through validators and becomes part of a verifiable history. You can reconstruct who did what, when, and under which contract rules, without correlating logs from half a dozen systems.</p>
-                        <p>For regulated industries, F1R3FLY can serve as the backbone for high-risk workflows while existing reporting systems consume the evidence.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>Do we have to "go full blockchain" to benefit from F1R3FLY?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>No. Many teams start with a single high-value workflow—such as settlement, access control, or cross-organization data sharing—while the rest of the stack stays on familiar Web2 infrastructure.</p>
-                        <p>As confidence grows, you can migrate more processes into Rholang or connect additional services to the same global state. This keeps risk under control while providing blockchain-level guarantees where they matter most.</p>
-                    </div>
-                </div>
-            </div><!-- end faq-panel-content -->
-            </div>
-            
-            <!-- Partner-Focused Questions -->
-            <div class="faq-panel" data-section="partner">
-                <div class="faq-panel-content">
-                <div class="faq-panel-header">
-                    <div class="label">Partner-Focused Questions</div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>What does it mean to be a F1R3FLY partner?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Partnership usually means building on, running, or extending F1R3FLY in ways that strengthen the ecosystem: infrastructure providers operating validators, integration partners connecting F1R3FLY to enterprise systems, or projects choosing F1R3FLY as their execution layer.</p>
-                        <p>The common thread is shared tooling, shared protocols, and shared responsibility for keeping the network healthy.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How can infrastructure providers participate?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>Infra partners can run validators, host managed F1R3FLY clusters, or offer observability and evidence-collection services on top of the core stack.</p>
-                        <p>Because F1R3FLY is built for concurrent execution on modern hardware, there is room for specialization around performance, reliability, and monitoring.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How does F1R3FLY fit into existing L1/L2 ecosystems?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>F1R3FLY is not trying to replace every chain. It's designed as a powerful execution layer that can coexist with other networks. Assets or identities can originate from existing L1/L2s, while F1R3FLY coordinates higher-level logic and real-time workflows.</p>
-                        <p>Integration partners can help design bridges, data pipelines, and governance that respect the guarantees of each chain, enabling ecosystems to share strengths.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-accordion-item">
-                    <div class="faq-question">
-                        <h3>How can integrators and consulting partners build on F1R3FLY?</h3>
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer-accordion">
-                        <p>If you design architectures or implement complex systems for clients, F1R3FLY gives you a formal yet flexible backbone. You can capture business rules in Rholang contracts, wire them into existing APIs, and provide clients with clear evidence of system behavior.</p>
-                        <p>As patterns repeat across engagements, you can turn them into reusable playbooks and offerings built around the F1R3FLY stack.</p>
-                    </div>
-                </div>
-            </div><!-- end faq-panel-content -->
-            </div>
-            </div><!-- end faq-panels-wrapper -->
-        </section>
+    <div class="card animate-in from-bottom delay-2">
+      <img src="images/icon-search-scale.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Built for scale and searchability.</div>
+      <h3>OSLF Algorithm – an approach that dramatically expands what can be searched and indexed on-chain by reasoning about processes instead of static data.</h3>
+      <p><strong>Casper Consensus</strong> – a Proof-of-Stake protocol that is energy-efficient, finality-oriented, and grounded in peer-reviewed research.</p>
     </div>
 
-    <!-- Developers Section -->
-    <section id="developers" class="main-content">
-        <h2 class="fly-in-header">Developers</h2>
-        
-        <div class="three-col-text">
-            <div class="col-card-gradient animate-in from-left delay-1">
-                <img src="images/doc icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Documentation</div>
-                <h3>Start here to understand how F1R3FLY works in production.</h3>
-                <p>Explore comprehensive developer documentation: core protocol overviews, Rholang language guides, and tutorials that walk you from "run a validator locally" to "ship a production-grade app" on the F1R3FLY execution layer.</p>
-                <p>This is the canonical, always-up-to-date source for architects and developers.</p>
-                <a href="https://f1r3fly-io.github.io/" target="_blank" class="gradient-btn btn-developer">Live Developer Documentation</a>
-            </div>
-            
-            <div class="col-card-gradient animate-in from-bottom delay-2">
-                <img src="images/repo icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Repositories</div>
-                <h3>Browse the official F1R3FLY GitHub repositories:</h3>
-                <ul>
-                    <li>Validator nodes and Rholang tooling</li>
-                    <li>Reference applications like FireSky</li>
-                    <li>Example contracts you can copy, fork, and extend</li>
-                </ul>
-                <p>Clone the stack, open issues, and contribute fixes or new features.</p>
-                <a href="https://github.com/F1R3FLY-io" target="_blank" class="gradient-btn btn-developer">Developer Repositories</a>
-            </div>
-            
-            <div class="col-card-gradient animate-in from-right delay-3">
-                <img src="images/architect icon.svg" alt="" style="width: 50px; height: 55px; margin-bottom: 20px;">
-                <div class="label">Architecture & Live Sessions</div>
-                <h3>Go deeper with architecture notes, design walkthroughs, and live session recordings.</h3>
-                <p>See how we model real-world systems in Rholang, make concurrency safe, and design AI-native, high-trust applications on F1R3FLY.</p>
-                <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" class="gradient-btn btn-developer">Architecture & Live Sessions</a>
-            </div>
-        </div>
-    </section>
+    <div class="card animate-in from-right delay-3">
+      <img src="images/icon-rebuild.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Rebuilt from the geometry of logic up.</div>
+      <h3>Legacy chains execute transactions one after another, turning global state into a single bottleneck. F1R3FLY follows a different path—Rholang contracts run in parallel while converging on a single shared state.</h3>
+      <p>Your AI agents, trading strategies, or mission-critical workflows don't have to stand in the same queue. You get blockchain-level trust without surrendering modern concurrency.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Developer Transition Band -->
-    <div class="teal-gradient" style="padding: 50px 40px; margin: 30px 0 60px 0;">
-        <section>
-            <div class="label">Built on Rho-Calculus. Proven in production.</div>
-            <h3>F1R3FLY's concurrent computing model isn't theoretical — it's the foundation for real applications in AI, healthcare, defence, and decentralised infrastructure.</h3>
-            <p>From namespace-level data control to mathematically verified smart contracts, every layer is designed for teams building at the edge of what's possible.</p>
-        </section>
+<!-- ============ FAQ ============ -->
+<div class="section-band neutral faq-sticky-container" style="padding-left:0;padding-right:0;">
+  <div class="faq-section-header">
+    <h2>Frequently Asked Questions: The Architecture</h2>
+  </div>
+  <div class="faq-panels-wrapper">
+
+    <!-- Core -->
+    <div class="faq-panel" data-section="core">
+      <div class="faq-panel-content">
+        <div class="faq-panel-header"><div class="label">Core Architecture Questions</div></div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>What is Rholang?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Rholang is a concurrent smart contract language based on the rho-calculus, a formal model for communicating processes. Instead of mutating global variables, Rholang contracts send and receive messages over channels.</p>
+            <p>This makes them naturally parallelizable and easier to reason about, which is a core ingredient of F1R3FLY's concurrent execution.</p>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How Does F1R3FLY work?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>F1R3FLY is a validator-based execution layer that runs Rholang contracts against a shared global state. Validators execute contracts as processes, agree on results via Proof-of-Stake consensus, and record an auditable history.</p>
+            <p>From your perspective, you get a familiar "blockchain trust" model; under the hood, you get a process-oriented engine rather than a single-threaded VM.</p>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How does F1R3FLY achieve 'linear-style' scalability without sharding?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>In most chains, every transaction must squeeze through the same global path, so adding more nodes mainly improves redundancy, not throughput. F1R3FLY uses a concurrent execution model: non-conflicting Rholang contracts can be evaluated in parallel across CPU cores and validator nodes.</p>
+            <p>In realistic workloads, this lets capacity grow with available hardware instead of hitting a sequential bottleneck. The exact performance curve depends on your contracts and network topology.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Clients Section -->
-    <section id="clients" class="main-content">
-        <h2 class="fly-in-header">Clients</h2>
+    <!-- Developer -->
+    <div class="faq-panel" data-section="developer">
+      <div class="faq-panel-content">
+        <div class="faq-panel-header"><div class="label">Developer-Focused Questions</div></div>
 
-        <h3>From decentralized AI networks to next-generation infrastructure, these teams trust F1R3FLY to power their most demanding workflows.</h3>
-
-        <div class="three-col-text" style="margin-top: 30px;">
-            <div class="col-text">
-                <p>They chose us because they need more than a blockchain—they need verifiable concurrency, agentic coordination, and infrastructure that can explain what actually happened.</p>
-                <p>Our clients operate at the intersection of AI and distributed systems, where traditional approaches break down.</p>
-            </div>
-            <div class="col-text">
-                <p>Whether scaling AI inference across a global network or coordinating complex multi-party systems, our clients push the boundaries of what distributed systems can do.</p>
-                <p>They need execution layers that can keep pace with autonomous agents, not bottleneck them.</p>
-            </div>
-            <div class="col-text">
-                <p>From financial infrastructure to decentralized intelligence networks, F1R3FLY provides the verifiable coordination layer that high-stakes applications demand.</p>
-                <p>Every client gets blockchain-grade trust with the concurrency their workloads require.</p>
-            </div>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How hard is it to integrate F1R3FLY into my existing stack?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>You don't have to rewrite everything to start using F1R3FLY. In most projects, F1R3FLY sits behind a service layer and communicates with your existing microservices, APIs, or event buses via adapters. You move high-value coordination logic into Rholang contracts.</p>
+            <p>That gives you an incremental, low-risk adoption path instead of a "big bang" rewrite.</p>
+          </div>
         </div>
 
-        <div class="carousel-container">
-            <div class="carousel-track">
-                <!-- First set -->
-                <a href="https://singularitynet.io/" target="_blank" class="carousel-logo">
-                    <img src="images/SNET Logo - Horizontal - White - 2021.svg" alt="SingularityNET">
-                </a>
-                <a href="https://superintelligence.io/" target="_blank" class="carousel-logo">
-                    <img src="images/client logos/ASA white.png" alt="Artificial Superintelligence Alliance">
-                </a>
-                <a href="https://www.boring.financial/" target="_blank" class="carousel-logo">
-                    <img src="images/client%20logos/boring%20finan.png" alt="Boring Financial">
-                </a>
-                <a href="https://true.ai" target="_blank" class="carousel-logo">
-                    <img src="images/true ai.png" alt="TrueAI">
-                </a>
-                <!-- Duplicate for seamless loop -->
-                <a href="https://singularitynet.io/" target="_blank" class="carousel-logo">
-                    <img src="images/SNET Logo - Horizontal - White - 2021.svg" alt="SingularityNET">
-                </a>
-                <a href="https://superintelligence.io/" target="_blank" class="carousel-logo">
-                    <img src="images/client logos/ASA white.png" alt="Artificial Superintelligence Alliance">
-                </a>
-                <a href="https://www.boring.financial/" target="_blank" class="carousel-logo">
-                    <img src="images/client%20logos/boring%20finan.png" alt="Boring Financial">
-                </a>
-                <a href="https://true.ai" target="_blank" class="carousel-logo">
-                    <img src="images/true ai.png" alt="TrueAI">
-                </a>
-            </div>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How do I debug and test Rholang contracts?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>You can run validators locally, deploy contracts to a dev shard, and inspect logs and state transitions for each step of a workflow. Because contracts are modeled as processes with explicit communication patterns, you can unit-test sub-protocols in isolation.</p>
+            <p>Over time, the validator toolchain is meant to feel like a modern CI/CD setup rather than a black box.</p>
+          </div>
         </div>
 
-        <div style="text-align: right; margin-top: 40px;">
-            <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" class="gradient-btn btn-client" style="width: auto; padding: 0 40px;">Launch Client Demo</a>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>Can I treat F1R3FLY like a normal database or message bus?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>F1R3FLY is not a drop-in replacement for Postgres or Kafka, but it complements them. You use F1R3FLY when you need verifiable coordination and shared state between many parties or agents; you keep traditional databases for bulk storage.</p>
+            <p>In practice, many architectures pair F1R3FLY with existing DBs and queues: contracts define the rules, while your data layer handles volume and indexing.</p>
+          </div>
         </div>
-    </section>
 
-    <!-- Client Case Studies Section -->
-    <div class="magenta-gradient">
-        <section>
-            <div class="label">Example Use Cases</div>
-            <h2>Case Studies</h2>
-
-            <div class="three-col-text">
-                <div class="col-text">
-                    <h3>Real-time workflows without a single global queue</h3>
-                    <p>When many services, agents, or users compete for the same resources, traditional systems push everything into a single global queue. F1R3FLY's concurrent execution model lets non-conflicting workflows run in parallel while still converging on a single shared state.</p>
-                    <p>This is a good fit for real-time trading, streaming data pipelines, or operational dashboards that need up-to-date, verifiable state.</p>
-                </div>
-
-                <div class="col-text">
-                    <h3>Agentic AI on a shared global state</h3>
-                    <p>Agentic AI systems generate thousands of concurrent actions against shared resources. F1R3FLY lets you model each agent as a process and govern their behavior through contracts on a single global state.</p>
-                    <p>AI agents can propose, negotiate, and execute actions in parallel while validators keep the resulting state consistent, replayable, and transparent.</p>
-                </div>
-
-                <div class="col-text">
-                    <h3>Cross-organization data sharing with evidence</h3>
-                    <p>Cross-organization workflows usually rely on custom integrations, brittle APIs, and spreadsheets that are hard to audit. With F1R3FLY, shared rules live in Rholang contracts, and every state change leaves a verifiable trace.</p>
-                    <p>F1R3FLY acts as the neutral execution layer that coordinates access, records decisions, and provides the evidence trail.</p>
-                </div>
-            </div>
-        </section>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How does F1R3FLY help with AI-native or agentic systems?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Agentic AI systems generate many concurrent actions on shared resources. F1R3FLY's Rholang model is a natural fit: each agent can be modeled as a process, and shared contracts govern how they interact with assets, permissions, or data.</p>
+            <p>Validators ensure that, even when thousands of agents act simultaneously, the resulting state transitions are consistent, auditable, and replayable.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Partners Section -->
-    <section id="partners" class="main-content">
-        <h2>Partners & Ecosystem</h2>
+    <!-- Client -->
+    <div class="faq-panel" data-section="client">
+      <div class="faq-panel-content">
+        <div class="faq-panel-header"><div class="label">Client-Focused Questions</div></div>
 
-        <div class="three-col-text">
-            <div class="col-text">
-                <h3>We grow through teams we build with.</h3>
-                <p>Our partners range from infrastructure providers and research groups to AI and enterprise teams stress-testing real agentic systems on F1R3FLY.</p>
-                <p>Partnership is not just a logo on a slide—it's co-designing architectures and validating them in production.</p>
-            </div>
-
-            <div class="col-text">
-                <h3>Building the next generation together.</h3>
-                <p>If you are building AI-native applications or mission-critical coordination systems, F1R3FLY is the layer where we prove your designs scale.</p>
-                <p>Every partnership begins with a clear technical challenge and a shared commitment to solving it.</p>
-            </div>
-
-            <div class="col-text">
-                <h3>From pilot to production.</h3>
-                <p>We turn the lessons learned into reusable patterns for the ecosystem—not just one-off solutions.</p>
-                <p>Whether you're an infrastructure partner, research group, or enterprise team, we're building the foundation together.</p>
-            </div>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>What kind of problems is F1R3FLY actually good at solving?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>F1R3FLY shines wherever many independent actors need to coordinate on shared state with strong guarantees: financial rails, marketplaces, AI orchestration, supply chains, and high-trust data platforms.</p>
+            <p>If you're hitting scaling limits or struggling to prove that critical workflows ran correctly, F1R3FLY helps you unify that complexity into one execution layer with an auditable history.</p>
+          </div>
         </div>
 
-        <div class="partner-image" style="width: 100%; height: 500px; margin-top: 40px; border-radius: 12px; overflow: hidden;"><img src="images/team-photo.jpg" alt="F1R3FLY Team" style="width: 100%; height: 100%; object-fit: cover; object-position: 15% -75px; display: block;"></div>
-    </section>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How does F1R3FLY reduce my integration and operational risk?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Traditional Web3 projects often rely on custom bridges and ad-hoc off-chain logic that is hard to test or audit. F1R3FLY encourages you to move coordination logic into formally grounded contracts and interact with them via stable APIs.</p>
+            <p>Validators maintain a consistent global state and an evidence trail, which makes audits and incident analysis much more manageable.</p>
+          </div>
+        </div>
 
-    <!-- Partner Details Section -->
-    <div class="green-gradient">
-        <section>
-            <div class="label">Building Together</div>
-            <h2>How We Partner</h2>
-            <p class="section-intro">We don't just sign agreements and move on. Every partnership begins with a clear technical challenge and a shared commitment to solving it in production.</p>
-            
-            <div class="three-col-text">
-                <div class="col-card-gradient animate-in from-left delay-1">
-                    <div class="label">Infrastructure Partners</div>
-                    <h3>Scale the execution layer</h3>
-                    <p>Work with us on validator operations, node infrastructure, and network topology. Help stress-test F1R3FLY under real-world conditions and shape the protocols.</p>
-                    <ul>
-                        <li>Run validators and contribute to consensus.</li>
-                        <li>Integrate F1R3FLY into existing cloud and edge infrastructure.</li>
-                        <li>Co-develop tooling for monitoring and operations.</li>
-                    </ul>
-                    <a href="#contact" class="gradient-btn btn-partner">Become an Infrastructure Partner</a>
-                </div>
-                
-                <div class="col-card-gradient animate-in from-bottom delay-2">
-                    <div class="label">Research Partners</div>
-                    <h3>Push the boundaries of what's possible</h3>
-                    <p>Collaborate on Rholang semantics, type systems, and formal verification. Help us publish, present, and advance concurrent smart contract research.</p>
-                    <ul>
-                        <li>Joint research on spatial-behavioral types.</li>
-                        <li>Academic publications and conference talks.</li>
-                        <li>Grants and fellowships for graduate researchers.</li>
-                    </ul>
-                    <a href="#contact" class="gradient-btn btn-partner">Become a Research Partner</a>
-                </div>
-                
-                <div class="col-card-gradient animate-in from-right delay-3">
-                    <div class="label">Integration Partners</div>
-                    <h3>Bring F1R3FLY to your platform</h3>
-                    <p>Build connectors, SDKs, and reference architectures that make it easy for customers to use F1R3FLY as their coordination and verification layer.</p>
-                    <ul>
-                        <li>Early access to APIs and developer tooling.</li>
-                        <li>Co-marketing and joint case studies.</li>
-                        <li>Technical support for enterprise integrations.</li>
-                    </ul>
-                    <a href="#contact" class="gradient-btn btn-partner">Become an Integration Partner</a>
-                </div>
-            </div>
-        </section>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How does F1R3FLY help with transparency, auditability, and compliance?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Every contract-driven state change passes through validators and becomes part of a verifiable history. You can reconstruct who did what, when, and under which contract rules, without correlating logs from half a dozen systems.</p>
+            <p>For regulated industries, F1R3FLY can serve as the backbone for high-risk workflows while existing reporting systems consume the evidence.</p>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>Do we have to "go full blockchain" to benefit from F1R3FLY?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>No. Many teams start with a single high-value workflow—such as settlement, access control, or cross-organization data sharing—while the rest of the stack stays on familiar Web2 infrastructure.</p>
+            <p>As confidence grows, you can migrate more processes into Rholang or connect additional services to the same global state. This keeps risk under control while providing blockchain-level guarantees where they matter most.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Team Section -->
-    <section id="team" class="main-content">
-        <h2 class="fly-in-header">Team</h2>
-        <p class="section-intro">F1R3FLY is built by a small team of researchers, engineers, and product people who have spent years thinking about concurrent computation, smart contract safety, and real-world systems.</p>
-        
-        <div class="team-grid">
-            <!-- Row 1 -->
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo" style="overflow: hidden;"><img src="images/Greg Meredith Photo.jpg" alt="Greg Meredith" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.2) translateY(15px); transform-origin: center 40%;"></div>
-                <h3>Greg Meredith</h3>
-                <p class="role">Founder</p>
-            </div>
-            
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo" style="overflow: hidden;"><img src="images/Mike stay.png" alt="Mike Stay" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;"></div>
-                <h3>Mike Stay</h3>
-                <p class="role">Director of Research</p>
-            </div>
-            
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Lilia Rusu</h3>
-                <p class="role">General Manager</p>
-            </div>
-            
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Nicolas Riddle</h3>
-                <p class="role">Board Director & Chief Operating Officer</p>
-            </div>
+    <!-- Partner -->
+    <div class="faq-panel" data-section="partner">
+      <div class="faq-panel-content">
+        <div class="faq-panel-header"><div class="label">Partner-Focused Questions</div></div>
 
-            <!-- Row 2 -->
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo" style="overflow: hidden;"><img src="images/hannah adams photo.jpg" alt="Hannah Adams" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.15) translateY(-5px); transform-origin: center top;"></div>
-                <h3>Hannah Adams</h3>
-                <p class="role">Creative Director</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Jeff Turner</h3>
-                <p class="role">Product Manager</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Stephen Alexander</h3>
-                <p class="role">President and CEO</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Ralph Benko</h3>
-                <p class="role">General Counsel</p>
-            </div>
-
-            <!-- MeTTaCycle -->
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo"></div>
-                <h3>Christian B. Wells</h3>
-                <p class="role">MeTTaCycle</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Sergey Kryloff</h3>
-                <p class="role">MeTTaCycle</p>
-            </div>
-
-            <!-- MORK -->
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Adam Vandervorst</h3>
-                <p class="role">MORK</p>
-            </div>
-
-            <!-- Integration Team -->
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Nazar Yanovets</h3>
-                <p class="role">Integration Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo"></div>
-                <h3>Steven Preston</h3>
-                <p class="role">Integration Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Andrii Stefaniv</h3>
-                <p class="role">Integration Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Andrii Babentsev</h3>
-                <p class="role">Integration Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Nash Foster</h3>
-                <p class="role">Integration Team</p>
-            </div>
-
-            <!-- F1R3SKY Team -->
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo"></div>
-                <h3>Ihor</h3>
-                <p class="role">F1R3SKY Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Denys Bushuliak</h3>
-                <p class="role">F1R3SKY Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Diana Yevitska</h3>
-                <p class="role">F1R3SKY Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Aidan Stay</h3>
-                <p class="role">F1R3SKY Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo"></div>
-                <h3>Oleksandr K.</h3>
-                <p class="role">F1R3SKY Team</p>
-            </div>
-
-            <!-- Rholang Team -->
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Marcin Rzeźnik</h3>
-                <p class="role">Rholang Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-3">
-                <div class="team-photo"></div>
-                <h3>Adam Mańczuk</h3>
-                <p class="role">Rholang Team</p>
-            </div>
-
-            <div class="team-member animate-in from-bottom delay-4">
-                <div class="team-photo"></div>
-                <h3>Anton Piniaz</h3>
-                <p class="role">Rholang Team</p>
-            </div>
-
-            <!-- Technical Writing -->
-            <div class="team-member animate-in from-bottom delay-1">
-                <div class="team-photo"></div>
-                <h3>Daria B.</h3>
-                <p class="role">Technical Writing</p>
-            </div>
-
-            <!-- Language Tools -->
-            <div class="team-member animate-in from-bottom delay-2">
-                <div class="team-photo"></div>
-                <h3>Dylon Edwards</h3>
-                <p class="role">Language Tools</p>
-            </div>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>What does it mean to be a F1R3FLY partner?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Partnership usually means building on, running, or extending F1R3FLY in ways that strengthen the ecosystem: infrastructure providers operating validators, integration partners connecting F1R3FLY to enterprise systems, or projects choosing F1R3FLY as their execution layer.</p>
+            <p>The common thread is shared tooling, shared protocols, and shared responsibility for keeping the network healthy.</p>
+          </div>
         </div>
-    </section>
 
-    <!-- Team Gradient Section - placeholder for content -->
-    <div class="neutral-gradient">
-        <section>
-            <div class="label">Join Us</div>
-            <h2>Build What Comes Next</h2>
-            <h3>F1R3FLY is a small, focused team solving hard problems at the intersection of concurrent computing, formal verification, and decentralised infrastructure. We work in the open, move fast, and care about getting the foundations right.</h3>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How can infrastructure providers participate?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>Infra partners can run validators, host managed F1R3FLY clusters, or offer observability and evidence-collection services on top of the core stack.</p>
+            <p>Because F1R3FLY is built for concurrent execution on modern hardware, there is room for specialization around performance, reliability, and monitoring.</p>
+          </div>
+        </div>
 
-            <div class="three-col-text" style="margin-top: 40px;">
-                <div class="col-text">
-                    <h3>Who we're looking for.</h3>
-                    <p>Engineers, researchers, and builders who think in systems — not just features. People who are drawn to hard problems in distributed computing, language design, and cryptographic trust.</p>
-                    <p>You don't need a PhD, but you do need to care about why things work, not just that they work.</p>
-                </div>
-                <div class="col-text">
-                    <h3>How we work.</h3>
-                    <p>Distributed team. Async-first. Weekly syncs, public repos, and a bias toward shipping. We pair mathematicians with product thinkers, and give everyone room to go deep on what matters.</p>
-                    <p>Our stack spans Rholang, Scala, Docker, and a growing set of AI-native tooling built on our own platform.</p>
-                </div>
-                <div class="col-text">
-                    <h3>Why it matters.</h3>
-                    <p>Most blockchain infrastructure wasn't designed for the workloads coming next — autonomous agents, real-time coordination, verifiable AI. We're building the layer that makes those things possible.</p>
-                    <p>If that sounds like your kind of problem, we'd like to hear from you.</p>
-                </div>
-            </div>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How does F1R3FLY fit into existing L1/L2 ecosystems?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>F1R3FLY is not trying to replace every chain. It's designed as a powerful execution layer that can coexist with other networks. Assets or identities can originate from existing L1/L2s, while F1R3FLY coordinates higher-level logic and real-time workflows.</p>
+            <p>Integration partners can help design bridges, data pipelines, and governance that respect the guarantees of each chain, enabling ecosystems to share strengths.</p>
+          </div>
+        </div>
 
-            <div style="margin-top: 40px;">
-                <a href="mailto:hello@f1r3fly.io?subject=Interested in joining F1R3FLY" class="gradient-btn" style="width: auto; padding: 0 40px; display: inline-block;">Get In Touch</a>
-            </div>
-        </section>
+        <div class="faq-accordion-item">
+          <div class="faq-question"><h3>How can integrators and consulting partners build on F1R3FLY?</h3><span class="faq-icon" aria-hidden="true">+</span></div>
+          <div class="faq-answer-accordion">
+            <p>If you design architectures or implement complex systems for clients, F1R3FLY gives you a formal yet flexible backbone. You can capture business rules in Rholang contracts, wire them into existing APIs, and provide clients with clear evidence of system behavior.</p>
+            <p>As patterns repeat across engagements, you can turn them into reusable playbooks and offerings built around the F1R3FLY stack.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Blog Section -->
-    <section id="blog" class="main-content">
-        <h2 class="fly-in-header">Blog</h2>
-        <p class="section-intro">Technical deep dives from the F1R3FLY team on concurrent infrastructure, Rholang, and AI-native systems.</p>
+  </div><!-- /faq-panels-wrapper -->
+</div><!-- /faq-sticky-container -->
 
-        <div class="three-col-text">
-            <div class="col-card-gradient">
-                <div class="label">AI-Native Infrastructure</div>
-                <h3>AI-native infrastructure, explained</h3>
-                <p>The F1R3FLY blog explores how to build real systems on a concurrent execution layer: global shared state, verifiable coordination, and Rholang-powered smart contracts.</p>
-                <ul>
-                    <li>Practical patterns for AI-native architectures.</li>
-                    <li>Agentic systems design.</li>
-                    <li>High-trust applications.</li>
-                </ul>
-            </div>
+<!-- ============ DEVELOPERS ============ -->
+<section id="developers" class="section">
+  <h2 class="fly-in-header">Developers</h2>
 
-            <div class="col-card-gradient">
-                <div class="label">Technical Breakdowns</div>
-                <h3>From core ideas to concrete patterns</h3>
-                <p>Each article is a concise technical breakdown, not marketing copy. In 400–800 words, we cover what the piece is about, where F1R3FLY helps, and what you can do with it.</p>
-                <ul>
-                    <li>Problem definition and context.</li>
-                    <li>F1R3FLY and Rholang solutions.</li>
-                    <li>Actionable patterns for your projects.</li>
-                </ul>
-            </div>
-
-            <div class="col-card-gradient">
-                <div class="label">Ecosystem Updates</div>
-                <h3>F1R3FLY insights & ecosystem updates</h3>
-                <p>Each blog entry distills a specific line of work around F1R3FLY — from concurrent execution and Rholang semantics to AI-native architectures and production learnings.</p>
-                <ul>
-                    <li>Research notes and design documents.</li>
-                    <li>Public talks and presentations.</li>
-                    <li>Long-form Substack pieces.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 40px;">
-            <a href="https://f1r3fly.substack.com/" target="_blank" class="gradient-btn btn-neutral" style="width: auto; padding: 0 40px;">Read The Blog</a>
-        </div>
-    </section>
-
-    <!-- Blog Gradient Section -->
-    <div class="neutral-gradient" style="padding: 40px 40px 50px 40px;">
-        <section style="text-align: center;">
-            <p class="section-intro" style="font-style: italic; font-size: 22px; max-width: 900px; margin: 0 auto;">"The tantalizing promise of blockchain—to restore the Internet as a decentralized global compute and storage infrastructure—has been stymied by scaling limitations. F1R3FLY changes that."</p>
-            <p style="margin-top: 20px; color: rgba(255,255,255,0.6);">—Greg Meredith, CEO of F1R3FLY.io</p>
-        </section>
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <img src="images/icon-doc.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Documentation</div>
+      <h3>Start here to understand how F1R3FLY works in production.</h3>
+      <p>Explore comprehensive developer documentation: core protocol overviews, Rholang language guides, and tutorials that walk you from "run a validator locally" to "ship a production-grade app" on the F1R3FLY execution layer.</p>
+      <p>This is the canonical, always-up-to-date source for architects and developers.</p>
+      <a href="https://github.com/F1R3FLY-io/.github" target="_blank" rel="noopener" class="gradient-btn btn-developer">Live Developer Documentation</a>
     </div>
 
-    <!-- Contact Section -->
-    <section id="contact" style="padding-bottom: 80px;">
-        <h2>Contact</h2>
+    <div class="card animate-in from-bottom delay-2">
+      <img src="images/icon-repo.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Repositories</div>
+      <h3>Browse the official F1R3FLY GitHub repositories:</h3>
+      <ul>
+        <li>Validator nodes and Rholang tooling</li>
+        <li>Reference applications like FireSky</li>
+        <li>Example contracts you can copy, fork, and extend</li>
+      </ul>
+      <p>Clone the stack, open issues, and contribute fixes or new features.</p>
+      <a href="https://github.com/F1R3FLY-io" target="_blank" rel="noopener" class="gradient-btn btn-developer">Developer Repositories</a>
+    </div>
 
-        <div class="two-col-text" style="gap: 60px; align-items: start;">
-            <div class="col-text">
-                <h3>Tell us what you're building.</h3>
-                <p>Whether you're exploring F1R3FLY for a new product, evaluating Rholang for an AI-native backend, or looking for an ecosystem partnership, this is the fastest way to reach the team.</p>
+    <div class="card animate-in from-right delay-3">
+      <img src="images/icon-architect.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Architecture &amp; Live Sessions</div>
+      <h3>Go deeper with architecture notes, design walkthroughs, and live session recordings.</h3>
+      <p>See how we model real-world systems in Rholang, make concurrency safe, and design AI-native, high-trust applications on F1R3FLY.</p>
+      <a href="https://github.com/F1R3FLY-io/f1r3fly" target="_blank" rel="noopener" class="gradient-btn btn-developer">Architecture &amp; Live Sessions</a>
+    </div>
+  </div>
+</section>
 
-                <form style="display: flex; flex-direction: column; gap: 16px; margin-top: 25px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 6px; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 16px;">Full name</label>
-                        <input type="text" placeholder="Someone Wonderful" required style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 16px;">
-                    </div>
+<!-- Developer Transition Band -->
+<div class="section-band teal">
+  <section class="section">
+    <div class="label">Built on Rho-Calculus. Proven in production.</div>
+    <h2 class="fly-in-header">F1R3FLY's concurrent computing model isn't theoretical — it's the foundation for real applications in AI, healthcare, defence, and decentralised infrastructure. From namespace-level data control to mathematically verified smart contracts, every layer is designed for teams building at the edge of what's possible.</h2>
+  </section>
+</div>
 
-                    <div>
-                        <label style="display: block; margin-bottom: 6px; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 16px;">Work email</label>
-                        <input type="email" placeholder="name@company.com" required style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 16px;">
-                    </div>
+<!-- ============ CLIENTS ============ -->
+<section id="clients" class="section">
+  <h2 class="fly-in-header">Clients</h2>
+  <h3>From decentralized AI networks to next-generation infrastructure, these teams trust F1R3FLY to power their most demanding workflows.</h3>
 
-                    <div>
-                        <label style="display: block; margin-bottom: 6px; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 16px;">Organization</label>
-                        <input type="text" placeholder="Acme Labs" required style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 16px;">
-                    </div>
-                </form>
-            </div>
+  <div class="text-grid" style="margin-top:30px;">
+    <div>
+      <p>They chose us because they need more than a blockchain—they need verifiable concurrency, agentic coordination, and infrastructure that can explain what actually happened.</p>
+      <p>Our clients operate at the intersection of AI and distributed systems, where traditional approaches break down.</p>
+    </div>
+    <div>
+      <p>Whether scaling AI inference across a global network or coordinating complex multi-party systems, our clients push the boundaries of what distributed systems can do.</p>
+      <p>They need execution layers that can keep pace with autonomous agents, not bottleneck them.</p>
+    </div>
+    <div>
+      <p>From financial infrastructure to decentralized intelligence networks, F1R3FLY provides the verifiable coordination layer that high-stakes applications demand.</p>
+      <p>Every client gets blockchain-grade trust with the concurrency their workloads require.</p>
+    </div>
+  </div>
 
-            <div class="col-text">
-                <form style="display: flex; flex-direction: column; gap: 16px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 6px; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 16px;">I'm contacting as…</label>
-                        <select required style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 16px;">
-                            <option value="">Select one…</option>
-                            <option>Developer / Architect</option>
-                            <option>Client team (product, business, or operations)</option>
-                            <option>Partner / Ecosystem / Investor</option>
-                            <option>Research / Academic</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
+  <!-- Carousel -->
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <a href="https://singularitynet.io/" target="_blank" rel="noopener" class="carousel-logo">
+        <img src="images/partner-singularitynet.svg" alt="SingularityNET" loading="lazy">
+      </a>
+      <a href="https://superintelligence.io/" target="_blank" rel="noopener" class="carousel-logo">
+        <img src="images/clients/asa.svg" alt="Artificial Superintelligence Alliance" loading="lazy">
+      </a>
+      <a href="https://www.boring.financial/" target="_blank" rel="noopener" class="carousel-logo">
+        <img src="images/clients/boring-financial.png" alt="Boring Financial" loading="lazy">
+      </a>
+      <a href="https://true.ai" target="_blank" rel="noopener" class="carousel-logo">
+        <img src="images/true-ai.webp" alt="TrueAI" loading="lazy">
+      </a>
+      <!-- Duplicate set for seamless loop -->
+      <a href="https://singularitynet.io/" target="_blank" rel="noopener" class="carousel-logo" aria-hidden="true">
+        <img src="images/partner-singularitynet.svg" alt="" loading="lazy">
+      </a>
+      <a href="https://superintelligence.io/" target="_blank" rel="noopener" class="carousel-logo" aria-hidden="true">
+        <img src="images/clients/asa.svg" alt="" loading="lazy">
+      </a>
+      <a href="https://www.boring.financial/" target="_blank" rel="noopener" class="carousel-logo" aria-hidden="true">
+        <img src="images/clients/boring-financial.png" alt="" loading="lazy">
+      </a>
+      <a href="https://true.ai" target="_blank" rel="noopener" class="carousel-logo" aria-hidden="true">
+        <img src="images/true-ai.webp" alt="" loading="lazy">
+      </a>
+    </div>
+  </div>
 
-                    <div>
-                        <label style="display: block; margin-bottom: 6px; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 16px;">How can we help?</label>
-                        <textarea placeholder="What you're building and what you'd like to explore with F1R3FLY." required style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-family: inherit; font-size: 16px; min-height: 100px;"></textarea>
-                    </div>
+  <div style="text-align:right; margin-top:40px;">
+    <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" rel="noopener" class="gradient-btn btn-client" style="padding:0 40px;">Launch Client Demo</a>
+  </div>
+</section>
 
-                    <div style="margin-top: 5px;">
-                        <a href="mailto:f1r3fly.ceo@gmail.com?subject=F1R3FLY.io%20Website%20Inquiry" class="gradient-btn btn-neutral" style="width: 50%; display: block;">Send Message</a>
-                    </div>
-                </form>
-            </div>
+<!-- Case Studies -->
+<div class="section-band magenta">
+  <section class="section">
+    <div class="label">Example Use Cases</div>
+    <h2>Case Studies</h2>
+    <div class="text-grid">
+      <div>
+        <h3>Real-time workflows without a single global queue</h3>
+        <p>When many services, agents, or users compete for the same resources, traditional systems push everything into a single global queue. F1R3FLY's concurrent execution model lets non-conflicting workflows run in parallel while still converging on a single shared state.</p>
+        <p>This is a good fit for real-time trading, streaming data pipelines, or operational dashboards that need up-to-date, verifiable state.</p>
+      </div>
+      <div>
+        <h3>Agentic AI on a shared global state</h3>
+        <p>Agentic AI systems generate thousands of concurrent actions against shared resources. F1R3FLY lets you model each agent as a process and govern their behavior through contracts on a single global state.</p>
+        <p>AI agents can propose, negotiate, and execute actions in parallel while validators keep the resulting state consistent, replayable, and transparent.</p>
+      </div>
+      <div>
+        <h3>Cross-organization data sharing with evidence</h3>
+        <p>Cross-organization workflows usually rely on custom integrations, brittle APIs, and spreadsheets that are hard to audit. With F1R3FLY, shared rules live in Rholang contracts, and every state change leaves a verifiable trace.</p>
+        <p>F1R3FLY acts as the neutral execution layer that coordinates access, records decisions, and provides the evidence trail.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PARTNERS ============ -->
+<section id="partners" class="section">
+  <h2 class="fly-in-header">Partners &amp; Ecosystem</h2>
+
+  <div class="text-grid">
+    <div>
+      <h3>We grow through teams we build with.</h3>
+      <p>Our partners range from infrastructure providers and research groups to AI and enterprise teams stress-testing real agentic systems on F1R3FLY.</p>
+      <p>Partnership is not just a logo on a slide—it's co-designing architectures and validating them in production.</p>
+    </div>
+    <div>
+      <h3>Building the next generation together.</h3>
+      <p>If you are building AI-native applications or mission-critical coordination systems, F1R3FLY is the layer where we prove your designs scale.</p>
+      <p>Every partnership begins with a clear technical challenge and a shared commitment to solving it.</p>
+    </div>
+    <div>
+      <h3>From pilot to production.</h3>
+      <p>We turn the lessons learned into reusable patterns for the ecosystem—not just one-off solutions.</p>
+      <p>Whether you're an infrastructure partner, research group, or enterprise team, we're building the foundation together.</p>
+    </div>
+  </div>
+
+  <div class="full-image">
+    <img src="images/team-photo.webp" alt="F1R3FLY Team" loading="lazy" style="object-position:15% 25%;">
+  </div>
+</section>
+
+<!-- How We Partner -->
+<div class="section-band green">
+  <section class="section">
+    <div class="label">Building Together</div>
+    <h2>How We Partner</h2>
+    <p class="section-intro">We don't just sign agreements and move on. Every partnership begins with a clear technical challenge and a shared commitment to solving it in production.</p>
+
+    <div class="card-grid">
+      <div class="card animate-in from-left delay-1">
+        <div class="label">Infrastructure Partners</div>
+        <h3>Scale the execution layer</h3>
+        <p>Work with us on validator operations, node infrastructure, and network topology. Help stress-test F1R3FLY under real-world conditions and shape the protocols.</p>
+        <ul>
+          <li>Run validators and contribute to consensus.</li>
+          <li>Integrate F1R3FLY into existing cloud and edge infrastructure.</li>
+          <li>Co-develop tooling for monitoring and operations.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become an Infrastructure Partner</a>
+      </div>
+
+      <div class="card animate-in from-bottom delay-2">
+        <div class="label">Research Partners</div>
+        <h3>Push the boundaries of what's possible</h3>
+        <p>Collaborate on Rholang semantics, type systems, and formal verification. Help us publish, present, and advance concurrent smart contract research.</p>
+        <ul>
+          <li>Joint research on spatial-behavioral types.</li>
+          <li>Academic publications and conference talks.</li>
+          <li>Grants and fellowships for graduate researchers.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become a Research Partner</a>
+      </div>
+
+      <div class="card animate-in from-right delay-3">
+        <div class="label">Integration Partners</div>
+        <h3>Bring F1R3FLY to your platform</h3>
+        <p>Build connectors, SDKs, and reference architectures that make it easy for customers to use F1R3FLY as their coordination and verification layer.</p>
+        <ul>
+          <li>Early access to APIs and developer tooling.</li>
+          <li>Co-marketing and joint case studies.</li>
+          <li>Technical support for enterprise integrations.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become an Integration Partner</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TEAM ============ -->
+<section id="team" class="section">
+  <h2 class="fly-in-header">Team</h2>
+  <p class="section-intro">F1R3FLY is built by a small team of researchers, engineers, and product people who have spent years thinking about concurrent computation, smart contract safety, and real-world systems.</p>
+
+  <div class="team-grid">
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><img src="images/team-greg-meredith.webp" alt="Greg Meredith" loading="lazy" style="transform:scale(1.2) translateY(10px); transform-origin:center 40%;"></div>
+      <h3>Greg Meredith</h3><p class="role">Founder</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><img src="images/team-mike-stay.webp" alt="Mike Stay" loading="lazy" style="object-position:center top;"></div>
+      <h3>Mike Stay</h3><p class="role">Director of Research</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Lilia Rusu</h3><p class="role">General Manager</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Nicolas Riddle</h3><p class="role">Board Director &amp; COO</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><img src="images/team-hannah-adams.webp" alt="Hannah Adams" loading="lazy" style="transform:scale(1.15) translateY(-3px); transform-origin:center top;"></div>
+      <h3>Hannah Adams</h3><p class="role">Creative Director</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Jeff Turner</h3><p class="role">Product Manager</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Stephen Alexander</h3><p class="role">President and CEO</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Ralph Benko</h3><p class="role">General Counsel</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Christian B. Wells</h3><p class="role">MeTTaCycle</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Sergey Kryloff</h3><p class="role">MeTTaCycle</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Adam Vandervorst</h3><p class="role">MORK</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Nazar Yanovets</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Steven Preston</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Andrii Stefaniv</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Andrii Babentsev</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"><img src="images/team-nash-foster.webp" alt="Nash Foster" loading="lazy"></div>
+      <h3>Nash Foster</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Ihor</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Denys Bushuliak</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Diana Yevitska</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Aidan Stay</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Oleksandr K.</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Marcin Rzeźnik</h3><p class="role">Rholang Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Adam Mańczuk</h3><p class="role">Rholang Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Anton Piniaz</h3><p class="role">Rholang Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Daria B.</h3><p class="role">Technical Writing</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"></div>
+      <h3>Dylon Edwards</h3><p class="role">Language Tools</p>
+    </div>
+  </div>
+</section>
+
+<!-- Join Us Band -->
+<div class="section-band neutral">
+  <section class="section">
+    <div class="label">Join Us</div>
+    <h2>Build What Comes Next</h2>
+    <h3>F1R3FLY is a small, focused team solving hard problems at the intersection of concurrent computing, formal verification, and decentralised infrastructure. We work in the open, move fast, and care about getting the foundations right.</h3>
+
+    <div class="text-grid" style="margin-top:40px;">
+      <div>
+        <h3>Who we're looking for.</h3>
+        <p>Engineers, researchers, and builders who think in systems — not just features. People who are drawn to hard problems in distributed computing, language design, and cryptographic trust.</p>
+        <p>You don't need a PhD, but you do need to care about why things work, not just that they work.</p>
+      </div>
+      <div>
+        <h3>How we work.</h3>
+        <p>Distributed team. Async-first. Weekly syncs, public repos, and a bias toward shipping. We pair mathematicians with product thinkers, and give everyone room to go deep on what matters.</p>
+        <p>Our stack spans Rholang, Scala, Docker, and a growing set of AI-native tooling built on our own platform.</p>
+      </div>
+      <div>
+        <h3>Why it matters.</h3>
+        <p>Most blockchain infrastructure wasn't designed for the workloads coming next — autonomous agents, real-time coordination, verifiable AI. We're building the layer that makes those things possible.</p>
+        <p>If that sounds like your kind of problem, we'd like to hear from you.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <a href="mailto:hello@f1r3fly.io?subject=Interested%20in%20joining%20F1R3FLY" class="gradient-btn btn-neutral" style="padding:0 40px;">Get In Touch</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ BLOG ============ -->
+<section id="blog" class="section">
+  <h2 class="fly-in-header">Blog</h2>
+  <p class="section-intro">Technical deep dives from the F1R3FLY team on concurrent infrastructure, Rholang, and AI-native systems.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="label">AI-Native Infrastructure</div>
+      <h3>AI-native infrastructure, explained</h3>
+      <p>The F1R3FLY blog explores how to build real systems on a concurrent execution layer: global shared state, verifiable coordination, and Rholang-powered smart contracts.</p>
+      <ul>
+        <li>Practical patterns for AI-native architectures.</li>
+        <li>Agentic systems design.</li>
+        <li>High-trust applications.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="label">Technical Breakdowns</div>
+      <h3>From core ideas to concrete patterns</h3>
+      <p>Each article is a concise technical breakdown, not marketing copy. In 400–800 words, we cover what the piece is about, where F1R3FLY helps, and what you can do with it.</p>
+      <ul>
+        <li>Problem definition and context.</li>
+        <li>F1R3FLY and Rholang solutions.</li>
+        <li>Actionable patterns for your projects.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="label">Ecosystem Updates</div>
+      <h3>F1R3FLY insights &amp; ecosystem updates</h3>
+      <p>Each blog entry distills a specific line of work around F1R3FLY — from concurrent execution and Rholang semantics to AI-native architectures and production learnings.</p>
+      <ul>
+        <li>Research notes and design documents.</li>
+        <li>Public talks and presentations.</li>
+        <li>Long-form Substack pieces.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="https://f1r3fly.substack.com/" target="_blank" rel="noopener" class="gradient-btn btn-neutral" style="padding:0 40px;">Read The Blog</a>
+  </div>
+</section>
+
+<!-- Quote Band -->
+<div class="section-band neutral" style="padding:40px 20px 50px;">
+  <section class="section quote-block" style="padding-top:0; padding-bottom:0;">
+    <p class="section-intro quote-text">"The tantalizing promise of blockchain—to restore the Internet as a decentralized global compute and storage infrastructure—has been stymied by scaling limitations. F1R3FLY changes that."</p>
+    <p class="quote-attribution">—Greg Meredith, CEO of F1R3FLY.io</p>
+  </section>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="section" style="padding-bottom:80px;">
+  <h2>Contact</h2>
+
+  <div class="contact-grid">
+    <div>
+      <h3>Tell us what you're building.</h3>
+      <p>Whether you're exploring F1R3FLY for a new product, evaluating Rholang for an AI-native backend, or looking for an ecosystem partnership, this is the fastest way to reach the team.</p>
+
+      <form class="contact-form" action="mailto:f1r3fly.ceo@gmail.com" method="post" enctype="text/plain" style="margin-top:25px;">
+        <div class="form-group">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" placeholder="Someone Wonderful" required>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="neutral-gradient" style="margin: 0; padding: 80px 40px 60px 40px;">
-        <div class="footer-content" style="max-width: 1400px; margin: 0 auto;">
-            <div class="social-icons" style="margin-bottom: 30px;">
-                <a href="https://twitter.com/f1r3flyceo" target="_blank" class="social-icon" aria-label="Twitter/X">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </a>
-                <a href="https://www.linkedin.com/company/f1r3fly-io/" target="_blank" class="social-icon" aria-label="LinkedIn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                </a>
-                <a href="https://github.com/F1R3FLY-io" target="_blank" class="social-icon" aria-label="GitHub">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                </a>
-                <a href="#" class="social-icon" aria-label="Discord">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
-                </a>
-            </div>
-            <p style="color: rgba(255,255,255,0.6); font-size: 14px;">&copy; 2025 F1R3FLY.IO. All rights reserved.</p>
-            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 15px;">A Subsidiary of F1R3FLY Industries</p>
+        <div class="form-group">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" placeholder="name@company.com" required>
         </div>
-    </footer>
+        <div class="form-group">
+          <label for="org">Organization</label>
+          <input type="text" id="org" name="organization" placeholder="Acme Labs" required>
+        </div>
+      </form>
+    </div>
 
-    <!-- Mobile Menu JavaScript -->
-    <script>
-        function toggleMobileMenu() {
-            const hamburger = document.querySelector('.hamburger');
-            const overlay = document.getElementById('mobileMenuOverlay');
-            hamburger.classList.toggle('active');
-            overlay.classList.toggle('active');
-            document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : '';
-        }
+    <div>
+      <form class="contact-form">
+        <div class="form-group">
+          <label for="role">I'm contacting as…</label>
+          <select id="role" name="role" required>
+            <option value="">Select one…</option>
+            <option>Developer / Architect</option>
+            <option>Client team (product, business, or operations)</option>
+            <option>Partner / Ecosystem / Investor</option>
+            <option>Research / Academic</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">How can we help?</label>
+          <textarea id="message" name="message" placeholder="What you're building and what you'd like to explore with F1R3FLY." required></textarea>
+        </div>
+        <div style="margin-top:5px;">
+          <a href="mailto:f1r3fly.ceo@gmail.com?subject=F1R3FLY.io%20Website%20Inquiry" class="gradient-btn btn-neutral">Send Message</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 
-        function closeMobileMenu() {
-            const hamburger = document.querySelector('.hamburger');
-            const overlay = document.getElementById('mobileMenuOverlay');
-            hamburger.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+<!-- ============ FOOTER ============ -->
+<footer class="section-band neutral site-footer" style="margin:0; padding:80px 20px 60px;">
+  <div class="footer-content">
+    <div class="social-icons">
+      <a href="https://twitter.com/f1r3flyceo" target="_blank" rel="noopener" class="social-icon" aria-label="Twitter/X">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/f1r3fly-io/" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://github.com/F1R3FLY-io" target="_blank" rel="noopener" class="social-icon" aria-label="GitHub">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      </a>
+      <a href="#" class="social-icon" aria-label="Discord">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      </a>
+    </div>
+    <p style="color:rgba(255,255,255,0.6); font-size:14px;">&copy; 2026 F1R3FLY.IO. All rights reserved.</p>
+    <p style="color:rgba(255,255,255,0.4); font-size:13px; margin-top:15px;">A Subsidiary of F1R3FLY Industries</p>
+  </div>
+</footer>
 
-        // Bouncy smooth scroll (reduced bounce)
-        function easeOutElastic(t) {
-            const p = 0.6;
-            return Math.pow(2, -10 * t) * Math.sin((t - p / 4) * (2 * Math.PI) / p) + 1;
-        }
-
-        function smoothScrollTo(targetY, duration = 1200) {
-            const startY = window.pageYOffset;
-            const difference = targetY - startY;
-            const startTime = performance.now();
-
-            function step(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeProgress = easeOutElastic(progress);
-                
-                window.scrollTo(0, startY + difference * easeProgress);
-                
-                if (progress < 1) {
-                    requestAnimationFrame(step);
-                }
-            }
-            
-            requestAnimationFrame(step);
-        }
-
-        // Intercept anchor clicks for bouncy scroll
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[href^="#"]');
-            if (link) {
-                const targetId = link.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    e.preventDefault();
-                    const targetY = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
-                    smoothScrollTo(targetY, 2400);
-                }
-            }
-        });
-
-        // Active state management based on scroll position
-        function updateActiveNav() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-links a');
-            const navLogo = document.querySelector('.nav-logo');
-            const scrollPos = window.scrollY + 150;
-
-            // First, remove all active states
-            navLinks.forEach(link => link.classList.remove('active'));
-            navLogo.classList.remove('active');
-
-            // At top - no active states (logo stays white)
-            if (scrollPos < 600) {
-                return;
-            }
-
-            // Find the current section
-            let currentSection = null;
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                
-                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                    currentSection = section.getAttribute('id');
-                }
-            });
-
-            // Set active state for matching nav link
-            if (currentSection) {
-                navLinks.forEach(link => {
-                    if (link.getAttribute('href') === '#' + currentSection) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        }
-
-        window.addEventListener('scroll', updateActiveNav);
-        window.addEventListener('load', updateActiveNav);
-
-        // FAQ Accordion functionality
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                const wasOpen = item.classList.contains('open');
-                
-                // Close all items in the same panel
-                const panel = item.closest('.faq-panel');
-                panel.querySelectorAll('.faq-accordion-item').forEach(i => {
-                    i.classList.remove('open');
-                });
-                
-                // Toggle the clicked item
-                if (!wasOpen) {
-                    item.classList.add('open');
-                }
-            });
-        });
-
-        // Scroll reveal for FAQ panels
-        function revealFaqPanels() {
-            const panels = document.querySelectorAll('.faq-panel');
-            const windowHeight = window.innerHeight;
-            
-            panels.forEach(panel => {
-                const panelTop = panel.getBoundingClientRect().top;
-                const revealPoint = windowHeight * 0.85;
-                
-                if (panelTop < revealPoint) {
-                    panel.classList.add('visible');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', revealFaqPanels);
-        window.addEventListener('load', revealFaqPanels);
-
-        // Scroll reveal for animated elements (cards, headers, toto section, text)
-        function revealAnimatedElements() {
-            const elements = document.querySelectorAll('.animate-in, .fly-in-header, .toto-animate, .fade-in-text, .fade-in-slow');
-            const windowHeight = window.innerHeight;
-            
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const revealPoint = windowHeight * 0.85;
-                
-                if (elementTop < revealPoint) {
-                    element.classList.add('visible');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', revealAnimatedElements);
-        window.addEventListener('load', revealAnimatedElements);
-
-        // =============================================
-        // PARALLAX HERO + FIREFLIES ANIMATION
-        // =============================================
-        
-        const fireflyCanvas = document.getElementById('fireflyCanvas');
-        const ctx = fireflyCanvas.getContext('2d');
-        const heroBg = document.getElementById('heroBg');
-        const heroPines = document.getElementById('heroPines');
-        const heroBranches = document.getElementById('heroBranches');
-        const heroSection = document.querySelector('.hero');
-
-        // Setup canvas for high DPI and full viewport width
-        function setupFireflyCanvas() {
-            const dpr = window.devicePixelRatio || 1;
-            const width = window.innerWidth;
-            const height = heroSection.offsetHeight;
-            fireflyCanvas.width = width * dpr;
-            fireflyCanvas.height = height * dpr;
-            ctx.scale(dpr, dpr);
-            fireflyCanvas.style.width = width + 'px';
-            fireflyCanvas.style.height = height + 'px';
-        }
-        setupFireflyCanvas();
-        window.addEventListener('resize', setupFireflyCanvas);
-
-        // Firefly class
-        class Firefly {
-            constructor(initialSpawn = false) {
-                this.reset(initialSpawn);
-            }
-
-            reset(initialSpawn = false) {
-                const width = window.innerWidth;
-                const height = heroSection.offsetHeight;
-                
-                if (initialSpawn) {
-                    // On first load, scatter across the screen
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height;
-                    // Random direction
-                    const goingRight = Math.random() > 0.5;
-                    this.speedX = goingRight ? (0.3 + Math.random() * 0.4) : -(0.3 + Math.random() * 0.4);
-                } else {
-                    // After traveling off-screen, respawn from edge
-                    const startFromLeft = Math.random() > 0.5;
-                    this.x = startFromLeft ? -20 : width + 20;
-                    this.y = Math.random() * height;
-                    this.speedX = startFromLeft ? (0.3 + Math.random() * 0.4) : -(0.3 + Math.random() * 0.4);
-                }
-                
-                this.speedY = (Math.random() - 0.5) * 0.2;
-                
-                this.size = 2 + Math.random() * 3;
-                this.baseAlpha = 0.4 + Math.random() * 0.6;
-                this.alpha = 0;
-                this.pulseSpeed = 0.008 + Math.random() * 0.015;
-                this.pulsePhase = Math.random() * Math.PI * 2;
-                this.wobbleX = Math.random() * Math.PI * 2;
-                this.wobbleY = Math.random() * Math.PI * 2;
-                this.wobbleSpeedX = 0.015 + Math.random() * 0.02;
-                this.wobbleSpeedY = 0.01 + Math.random() * 0.015;
-                this.wobbleAmplitude = 0.8 + Math.random() * 1.2;
-                // Color variation - 70% golden yellow, 30% white
-                const isWhite = Math.random() < 0.3;
-                if (isWhite) {
-                    this.hue = 60;
-                    this.saturation = 10;
-                    this.lightness = 90;
-                } else {
-                    this.hue = 40 + Math.random() * 20;
-                    this.saturation = 80 + Math.random() * 20;
-                    this.lightness = 55 + Math.random() * 20;
-                }
-            }
-
-            update() {
-                const width = window.innerWidth;
-                const height = heroSection.offsetHeight;
-                
-                // Center fade zone (where logo/text is) - expanded with buffer
-                const centerX = width / 2;
-                const centerY = height / 2;
-                const fadeZoneWidth = 700;  // Wider exclusion
-                const fadeZoneHeight = 620; // Taller exclusion
-                
-                // Gentle wobble movement
-                this.wobbleX += this.wobbleSpeedX;
-                this.wobbleY += this.wobbleSpeedY;
-                
-                let moveX = this.speedX + Math.sin(this.wobbleX) * this.wobbleAmplitude;
-                let moveY = this.speedY + Math.sin(this.wobbleY) * (this.wobbleAmplitude * 0.7);
-                
-                this.x += moveX;
-                this.y += moveY;
-
-                // Calculate distance from center for fading
-                const distFromCenterX = Math.abs(this.x - centerX);
-                const distFromCenterY = Math.abs(this.y - centerY);
-                
-                // Fade based on proximity to center zone - completely invisible in inner zone
-                let fadeFactor = 1;
-                const innerZoneWidth = 450;  // Completely invisible inside this
-                const innerZoneHeight = 400;
-                
-                if (distFromCenterX < innerZoneWidth/2 && distFromCenterY < innerZoneHeight/2) {
-                    // Completely invisible in inner zone
-                    fadeFactor = 0;
-                } else if (distFromCenterX < fadeZoneWidth/2 && distFromCenterY < fadeZoneHeight/2) {
-                    // Fade zone - gradual fade
-                    const xFade = (distFromCenterX - innerZoneWidth/2) / (fadeZoneWidth/2 - innerZoneWidth/2);
-                    const yFade = (distFromCenterY - innerZoneHeight/2) / (fadeZoneHeight/2 - innerZoneHeight/2);
-                    fadeFactor = Math.max(0, Math.min(xFade, yFade));
-                }
-
-                // Pulse alpha with fade factor
-                this.pulsePhase += this.pulseSpeed;
-                const pulseValue = 0.6 + 0.4 * Math.sin(this.pulsePhase);
-                this.alpha = this.baseAlpha * pulseValue * fadeFactor;
-
-                // Reset when off screen
-                if (this.x < -50 || this.x > width + 50 || this.y < -50 || this.y > height + 50) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                if (this.alpha <= 0.05) return;
-
-                // Subtle outer glow
-                const glowGradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size * 6
-                );
-                glowGradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha * 0.4})`);
-                glowGradient.addColorStop(0.3, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha * 0.15})`);
-                glowGradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
-                
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 6, 0, Math.PI * 2);
-                ctx.fillStyle = glowGradient;
-                ctx.fill();
-
-                // Sharp bright core
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${this.hue}, 50%, 85%, ${this.alpha})`;
-                ctx.fill();
-
-                // Extra bright center dot
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 0.4, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(60, 20%, 98%, ${this.alpha})`;
-                ctx.fill();
-            }
-        }
-
-        // Create fireflies (15% fewer - was 40, now 34)
-        const fireflies = [];
-        const fireflyCount = 34;
-        for (let i = 0; i < fireflyCount; i++) {
-            fireflies.push(new Firefly(true)); // true = initial spawn, scatter across screen
-        }
-
-        // Animate fireflies
-        function animateFireflies() {
-            const width = window.innerWidth;
-            const height = heroSection.offsetHeight;
-            ctx.clearRect(0, 0, width, height);
-
-            for (const firefly of fireflies) {
-                firefly.update();
-                firefly.draw();
-            }
-
-            requestAnimationFrame(animateFireflies);
-        }
-        animateFireflies();
-
-        // Parallax scroll effect - three layers at different speeds
-        function updateParallax() {
-            const scrollY = window.pageYOffset;
-            const heroHeight = heroSection.offsetHeight;
-            
-            // Only apply parallax while hero is visible
-            if (scrollY < heroHeight) {
-                // Stars/sky - slowest (barely moves)
-                const bgOffset = scrollY * 0.2;
-                heroBg.style.transform = `translateY(${bgOffset}px)`;
-                
-                // Pines - medium speed
-                const pinesOffset = scrollY * 0.4;
-                heroPines.style.transform = `translateY(${pinesOffset}px)`;
-                
-                // Branches - fastest (foreground)
-                const branchesOffset = scrollY * 0.6;
-                heroBranches.style.transform = `translateY(${branchesOffset}px)`;
-                
-                // Fireflies - between pines and branches
-                const fireflyOffset = scrollY * 0.5;
-                fireflyCanvas.style.transform = `translateY(${fireflyOffset}px)`;
-            }
-        }
-
-        window.addEventListener('scroll', updateParallax);
-        window.addEventListener('load', updateParallax);
-
-    </script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
