@@ -28,42 +28,31 @@
     link.addEventListener('click', closeMobileMenu);
   });
 
-  // --- Smooth Scroll for Anchor Links ---
-  function smoothScrollTo(targetEl) {
-    const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 90;
-    const startY = window.scrollY;
-    const targetY = targetEl.getBoundingClientRect().top + startY - navHeight;
-    const distance = Math.abs(targetY - startY);
-    // Scale duration: 400ms minimum, 1200ms max, proportional to distance
-    const duration = Math.min(1200, Math.max(400, distance * 0.4));
-    const diff = targetY - startY;
-    let startTime = null;
-
-    function easeOutQuart(t) {
-      return 1 - Math.pow(1 - t, 4);
-    }
-
-    function step(timestamp) {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      window.scrollTo(0, startY + diff * easeOutQuart(progress));
-      if (progress < 1) requestAnimationFrame(step);
-    }
-
-    requestAnimationFrame(step);
-  }
-
+  // --- Anchor Link Click Handler ---
+  // Manually calculate scroll position for all anchor clicks.
+  // Reasons: scrollIntoView() doesn't reliably respect scroll-margin-top,
+  // and the mobile menu's body overflow reset causes reflow issues.
   document.addEventListener('click', function (e) {
     const link = e.target.closest('a[href^="#"]');
     if (!link) return;
-    const id = link.getAttribute('href');
-    const target = document.querySelector(id);
-    if (target) {
-      e.preventDefault();
+
+    const targetId = link.getAttribute('href');
+    const target = document.querySelector(targetId);
+    if (!target) return;
+
+    e.preventDefault();
+
+    const isMenuOpen = overlay?.classList.contains('active');
+    if (isMenuOpen) {
       closeMobileMenu();
-      smoothScrollTo(target);
     }
+
+    // Use rAF to let any layout changes (menu close) settle first
+    requestAnimationFrame(() => {
+      const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'));
+      const targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top: targetPos, behavior: 'smooth' });
+    });
   });
 
   // --- Active Nav State ---
@@ -94,10 +83,10 @@
   document.querySelectorAll('.faq-question').forEach(q => {
     q.addEventListener('click', () => {
       const item = q.parentElement;
-      const panel = item.closest('.faq-panel');
+      const section = item.closest('.section');
       const wasOpen = item.classList.contains('open');
-      // Close siblings in same panel
-      panel.querySelectorAll('.faq-accordion-item.open').forEach(i => i.classList.remove('open'));
+      // Close siblings in same section
+      section.querySelectorAll('.faq-accordion-item.open').forEach(i => i.classList.remove('open'));
       if (!wasOpen) item.classList.add('open');
     });
   });
