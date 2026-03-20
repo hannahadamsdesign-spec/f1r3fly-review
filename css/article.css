@@ -1,0 +1,221 @@
+/* ============================================
+   F1R3FLY.IO — Article Page Styles
+   ============================================
+   Inherits all base styles from styles.css
+   Article-specific layout and typography
+   ============================================ */
+
+/* --- Article Layout --- */
+.article-page {
+  max-width: var(--container-max, 1400px);
+  margin: 0 auto;
+  padding: calc(var(--nav-height) + 40px) 20px 80px;
+}
+
+/* Dashed border box wrapping article content (below breadcrumb) */
+.article-page .article-box {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 40px;
+}
+
+/* --- Breadcrumb --- */
+.article-breadcrumb {
+  margin-bottom: var(--space-lg);
+}
+.article-breadcrumb a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-faint);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+.article-breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+/* --- Tag --- */
+/* Eyebrow: matches site .label spec — 16px, uppercase, tracking-label */
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+.article-tag-ai    { color: #3FA9F5; }
+.article-tag-comp  { color: #F3D630; }
+.article-tag-phil  { color: #8BB999; }
+.article-tag-dev   { color: #009188; }
+
+/* --- H1 --- */
+.article-page h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+  text-wrap: balance;
+}
+
+/* --- Subtitle / Substack link --- */
+.article-subtitle {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-xl);
+  line-height: var(--leading-body);
+}
+.article-subtitle a {
+  color: var(--color-text-faint);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.15);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+.article-subtitle a:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+/* --- Intro --- */
+.article-intro {
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px dashed var(--color-border);
+}
+.article-intro p {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-white);
+}
+.article-intro strong {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+/* --- Article Sections (Key Takeaways, Key Questions, Why It Matters) --- */
+.article-section {
+  margin-bottom: var(--space-xl);
+}
+.article-section h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 3vw, 22px);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-md);
+}
+
+.article-section ul {
+  list-style: none;
+  padding: 0;
+}
+.article-section ul li {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: var(--leading-body);
+  color: var(--color-white);
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 12px;
+}
+.article-section ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-border);
+}
+.article-section p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: var(--leading-body);
+  color: var(--color-white);
+}
+
+/* --- Links Section --- */
+.article-links {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius);
+}
+
+.article-related {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--color-white);
+  margin-bottom: 12px;
+}
+.article-related strong {
+  font-weight: 600;
+}
+.article-related a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.article-related a:hover {
+  opacity: 0.8;
+}
+.article-substack-link {
+  margin: 0;
+}
+.article-substack-link a {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: #3FA9F5;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.article-substack-link a:hover {
+  opacity: 0.8;
+}
+
+/* --- Topics --- */
+.article-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.article-topics span {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-faint);
+  padding: 4px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
+/* --- Responsive --- */
+@media (min-width: 768px) {
+  .article-page {
+    padding: calc(var(--nav-height) + 60px) 40px 120px;
+  }
+}
+@media (min-width: 1024px) {
+  .article-page {
+    padding: calc(var(--nav-height) + 80px) 40px 120px;
+  }
+
+}

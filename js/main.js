@@ -324,4 +324,50 @@
     }
   }
 
+  // --- Page Transitions (blog cards → articles, articles → blog) ---
+  var transEl = document.createElement('div');
+  transEl.className = 'page-transition';
+  document.body.appendChild(transEl);
+
+  function navigateWithTransition(href, direction) {
+    transEl.className = 'page-transition ' + direction;
+    setTimeout(function() { window.location.href = href; }, 180);
+  }
+
+  // Blog link cards: slide right (going deeper into an article)
+  document.querySelectorAll('a.blog-link-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      e.preventDefault();
+      navigateWithTransition(this.href, 'slide-right');
+    });
+  });
+
+  // Article breadcrumb back link: slide left (going back to blog)
+  document.querySelectorAll('.article-breadcrumb a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Navigate without hash — use ?scrollto=blog so we can jump instantly
+      var base = this.href.split('#')[0];
+      navigateWithTransition(base + '?scrollto=blog', 'slide-left');
+    });
+  });
+
+  // On page load: if ?scrollto= param exists, jump to that section instantly
+  // (no smooth scroll animation — we already have the slide transition)
+  var params = new URLSearchParams(window.location.search);
+  var scrollTarget = params.get('scrollto');
+  if (scrollTarget) {
+    var target = document.getElementById(scrollTarget);
+    if (target) {
+      // Force instant jump — override CSS smooth scroll
+      document.documentElement.style.scrollBehavior = 'auto';
+      target.scrollIntoView();
+      // Clean up the URL and restore smooth scroll
+      setTimeout(function() {
+        history.replaceState(null, '', window.location.pathname + '#' + scrollTarget);
+        document.documentElement.style.scrollBehavior = '';
+      }, 50);
+    }
+  }
+
 })(); // end IIFE

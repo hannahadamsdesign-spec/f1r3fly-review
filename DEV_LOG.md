@@ -119,4 +119,17 @@ Chrome DevTools responsive emulation breaks `position: fixed` + `backdrop-filter
 
 ---
 
+---
+
+### Mar 20, 2026 — Session 6
+- **Individual article pages built:** Per Daria's meeting (March 20 morning call), switched from expandable inline cards to 17 individual article HTML pages. Each page follows Daria's specified structure: H1 title, Substack subtitle link, "In brief" intro, Key Takeaways (bullets), Key Questions (bullets), Why It Matters (prose), Related internal cross-link, Substack link, topic tags.
+- **Article file structure:** `articles/` directory with 17 HTML files using keyword-rich slugs from Daria's doc. Generator script (`generate_articles.py`) at website rebuild root — regenerates all 17 from data + template.
+- **Article CSS:** `css/article.css` — article-specific styles inheriting base `styles.css`. Width matches site `--container-max` (1400px). H1 at `font-weight: 500` (medium). Eyebrow tags at 16px/400 matching site `.label` spec. Dashed border box (`.article-box`) wraps article content below breadcrumb.
+- **Blog section updated on index.html:** Cards changed from expandable `<div>`s to `<a>` link cards pointing to `articles/[slug].html`. Removed expand/collapse JS, detail content, and Substack links from cards. Added `blog-link-card` and `blog-read-more` CSS classes.
+- **Page transitions added:** Directional slide transitions between blog grid and article pages. Blog card click → black panel slides right (going deeper). "← Ideas & Research" back link → panel slides left (going back). CSS keyframe animations (`slideRight` / `slideLeft`) on `.page-transition` overlay in `styles.css`. JS in `main.js` intercepts link clicks, plays transition, navigates at midpoint.
+- **Smooth scroll conflict fixed:** Back link previously navigated to `index.html#blog`, triggering CSS `scroll-behavior: smooth` which caused a "rush down" animation competing with the slide transition. Fix: back link now navigates to `index.html?scrollto=blog`. JS on page load detects `?scrollto=` param, forces `scrollBehavior: auto` (instant jump), scrolls to target, then cleans URL to `#blog` and restores smooth scroll.
+- **Files modified:** `index.html` (blog section JS), `css/styles.css` (transition overlay, link card styles), `css/article.css` (new file, article layout), `js/main.js` (transition logic, scrollto handler), `generate_articles.py` (article generator script), `articles/*.html` (17 generated files).
+
+---
+
 *For AI instances: This file is the technical source of truth for website work. Cross-cutting project info (payments, equity, team) is in `/Dropbox/09 AI Resources/Projects/F1R3FLY.md`.*
