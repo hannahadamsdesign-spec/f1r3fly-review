@@ -1036,34 +1036,26 @@ a.blog-card .blog-date {
   font-size: 13px;
   color: var(--color-text-faint);
 }
-/* --- Page Transition Overlay --- */
-.page-transition {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #000000;
-  z-index: 9999;
-  pointer-events: none;
+/* --- SPA Content Transitions --- */
+/* Crossfade with subtle vertical shift for smooth page swaps */
+main#app {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+main#app.spa-fade-out {
   opacity: 0;
-  transition: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.page-transition.slide-right {
-  animation: slideRight 0.4s ease-in-out;
+main#app.spa-fade-in {
+  animation: spaFadeIn 0.3s cubic-bezier(0, 0, 0.2, 1) forwards;
 }
-.page-transition.slide-left {
-  animation: slideLeft 0.4s ease-in-out;
-}
-@keyframes slideRight {
-  0%   { transform: translateX(-100%); opacity: 1; }
-  40%  { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(100%); opacity: 1; }
-}
-@keyframes slideLeft {
-  0%   { transform: translateX(100%); opacity: 1; }
-  40%  { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(-100%); opacity: 1; }
+@keyframes spaFadeIn {
+  0%   { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* --- Blog Link Cards (link to individual article pages) --- */

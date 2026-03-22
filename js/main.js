@@ -324,50 +324,291 @@
     }
   }
 
-  // --- Page Transitions (blog cards → articles, articles → blog) ---
-  var transEl = document.createElement('div');
-  transEl.className = 'page-transition';
-  document.body.appendChild(transEl);
+  // --- SPA Router ---
+  // Intercepts internal navigation between index.html and article pages.
+  // Each page is a standalone .html file (for SEO), but navigation between
+  // them swaps <main> content with a crossfade instead of a full reload.
+  // Uses History API for real URLs — Daria's SEO requirement preserved.
 
-  function navigateWithTransition(href, direction) {
-    transEl.className = 'page-transition ' + direction;
-    setTimeout(function() { window.location.href = href; }, 180);
+  var mainEl = document.querySelector('main#app');
+  var isTransitioning = false;
+  var articleCSSLink = document.querySelector('link[href*="article.css"]');
+
+  // Cache for prefetched pages
+  var pageCache = {};
+
+  // Determine if a URL is an internal SPA-routable link
+  function isRoutable(url) {
+    try {
+      var a = new URL(url, window.location.origin);
+      // Same origin only
+      if (a.origin !== window.location.origin) return false;
+      // Must be an article page or index
+      var path = a.pathname;
+      if (path.includes('/articles/') && path.endsWith('.html')) return true;
+      if (path.endsWith('/index.html') || path.endsWith('/')) return true;
+      // Also match relative paths by checking href attribute
+      return false;
+    } catch(e) { return false; }
   }
 
-  // Blog link cards: slide right (going deeper into an article)
-  document.querySelectorAll('a.blog-link-card').forEach(function(card) {
-    card.addEventListener('click', function(e) {
-      e.preventDefault();
-      navigateWithTransition(this.href, 'slide-right');
+  // Resolve a relative href to an absolute URL
+  function resolveHref(href) {
+    var a = document.createElement('a');
+    a.href = href;
+    return a.href;
+  }
+
+  // Fetch a page and extract <main id="app"> content, <title>, and meta
+  function fetchPage(url) {
+    if (pageCache[url]) return Promise.resolve(pageCache[url]);
+    return fetch(url).then(function(res) {
+      if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+      return res.text();
+    }).then(function(html) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var newMain = doc.querySelector('main#app');
+      var newTitle = doc.querySelector('title');
+      var newDesc = doc.querySelector('meta[name="description"]');
+      var hasArticleCSS = !!doc.querySelector('link[href*="article.css"]');
+      var result = {
+        mainHTML: newMain ? newMain.innerHTML : null,
+        title: newTitle ? newTitle.textContent : document.title,
+        description: newDesc ? newDesc.getAttribute('content') : '',
+        needsArticleCSS: hasArticleCSS
+      };
+      pageCache[url] = result;
+      return result;
     });
+  }
+
+  // Ensure article.css is loaded or unloaded
+  // Always use path relative to index.html since the browser URL
+  // may not match the fetched page's directory depth during SPA nav
+  function manageArticleCSS(needed) {
+    var existing = document.querySelector('link[data-spa-article-css]');
+    if (needed && !existing) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      // Use absolute-ish path from site root to avoid relative path confusion
+      // Determine base from the initial page's stylesheet link
+      var baseCSS = document.querySelector('link[href*="styles.css"]');
+      var basePath = baseCSS ? baseCSS.href.replace(/styles\.css$/, 'article.css') : 'css/article.css';
+      link.href = basePath;
+      link.setAttribute('data-spa-article-css', 'true');
+      document.head.appendChild(link);
+    } else if (!needed && existing) {
+      existing.remove();
+    }
+  }
+
+  // Re-observe scroll-reveal elements in new content
+  function reobserveAnimations() {
+    if (!('IntersectionObserver' in window)) return;
+    var targets = mainEl.querySelectorAll('.animate-in, .fly-in-header, .fade-in');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    targets.forEach(function(el) { observer.observe(el); });
+  }
+
+  // Re-bind FAQ accordion in new content
+  function rebindFAQ() {
+    mainEl.querySelectorAll('.faq-question').forEach(function(q) {
+      q.addEventListener('click', function() {
+        var item = q.parentElement;
+        var sec = item.closest('.section');
+        var wasOpen = item.classList.contains('open');
+        sec.querySelectorAll('.faq-accordion-item.open').forEach(function(i) { i.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  }
+
+  // Re-run blog card generation script if we navigated back to index
+  function rebindBlogCards() {
+    var grid = mainEl.querySelector('#blogGrid');
+    if (!grid || grid.children.length > 0) return;
+    // The blog card data is in a <script> tag inside main — it will auto-execute
+    // after innerHTML swap. But since innerHTML scripts don't execute, we need
+    // to find and run them manually.
+    var scripts = mainEl.querySelectorAll('script');
+    scripts.forEach(function(oldScript) {
+      var newScript = document.createElement('script');
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+  }
+
+  // The actual navigation transition
+  function navigateSPA(href, scrollToId, pushState) {
+    if (isTransitioning || !mainEl) return;
+    isTransitioning = true;
+
+    var targetURL = resolveHref(href);
+
+    fetchPage(targetURL).then(function(page) {
+      if (!page.mainHTML) {
+        // Fallback: full page load
+        window.location.href = targetURL;
+        return;
+      }
+
+      // Phase 1: fade out current content
+      mainEl.classList.add('spa-fade-out');
+
+      setTimeout(function() {
+        // Phase 2: swap content
+        mainEl.innerHTML = page.mainHTML;
+        document.title = page.title;
+
+        // Update meta description
+        var metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && page.description) {
+          metaDesc.setAttribute('content', page.description);
+        }
+
+        // Manage article.css
+        manageArticleCSS(page.needsArticleCSS);
+
+        // Push history state
+        if (pushState !== false) {
+          history.pushState({ spaURL: targetURL }, page.title, targetURL);
+        }
+
+        // Scroll: either to a specific section or to top
+        document.documentElement.style.scrollBehavior = 'auto';
+        if (scrollToId) {
+          var target = document.getElementById(scrollToId);
+          if (target) {
+            var navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 80;
+            var pos = target.getBoundingClientRect().top + window.scrollY - navH;
+            window.scrollTo(0, pos);
+          }
+        } else {
+          window.scrollTo(0, 0);
+        }
+        document.documentElement.style.scrollBehavior = '';
+
+        // Phase 3: re-bind interactive elements
+        rebindBlogCards();
+        rebindFAQ();
+        reobserveAnimations();
+        updateActiveNav();
+        bindSPALinks();
+
+        // Phase 4: fade in new content
+        mainEl.classList.remove('spa-fade-out');
+        mainEl.classList.add('spa-fade-in');
+
+        setTimeout(function() {
+          mainEl.classList.remove('spa-fade-in');
+          isTransitioning = false;
+        }, 300);
+
+      }, 200); // matches fade-out duration
+
+    }).catch(function(err) {
+      console.error('SPA navigation failed, falling back:', err);
+      isTransitioning = false;
+      window.location.href = targetURL;
+    });
+  }
+
+  // Bind click handlers on all routable links inside <main>
+  function bindSPALinks() {
+    if (!mainEl) return;
+
+    // Blog link cards → article pages
+    mainEl.querySelectorAll('a.blog-link-card').forEach(function(card) {
+      // Remove old listeners by cloning
+      var newCard = card.cloneNode(true);
+      card.parentNode.replaceChild(newCard, card);
+      newCard.addEventListener('click', function(e) {
+        e.preventDefault();
+        navigateSPA(this.getAttribute('href'), null, true);
+      });
+    });
+
+    // Article breadcrumb back links → index#blog
+    // Use a smooth fade-out then full page load (not SPA swap) because
+    // the homepage has canvas/parallax/fireflies that need fresh init.
+    mainEl.querySelectorAll('.article-breadcrumb a').forEach(function(link) {
+      var newLink = link.cloneNode(true);
+      link.parentNode.replaceChild(newLink, link);
+      newLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = this.getAttribute('href');
+        // Fade out, then navigate with scrollto param for instant jump
+        mainEl.classList.add('spa-fade-out');
+        setTimeout(function() {
+          var base = href.split('#')[0];
+          var hash = href.split('#')[1] || '';
+          window.location.href = base + (hash ? '?scrollto=' + hash : '');
+        }, 200);
+      });
+    });
+  }
+
+  // Prefetch: on hover over blog cards, start fetching the target page
+  document.addEventListener('mouseover', function(e) {
+    var card = e.target.closest('a.blog-link-card');
+    if (!card) return;
+    var url = resolveHref(card.getAttribute('href'));
+    if (!pageCache[url]) {
+      fetchPage(url).catch(function() {}); // silent prefetch
+    }
   });
 
-  // Article breadcrumb back link: slide left (going back to blog)
-  document.querySelectorAll('.article-breadcrumb a').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Navigate without hash — use ?scrollto=blog so we can jump instantly
-      var base = this.href.split('#')[0];
-      navigateWithTransition(base + '?scrollto=blog', 'slide-left');
-    });
+  // Handle browser back/forward
+  window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.spaURL) {
+      var url = e.state.spaURL;
+      var hash = new URL(url).hash.replace('#', '');
+      navigateSPA(url, hash || null, false);
+    } else {
+      // Fallback: reload
+      window.location.reload();
+    }
   });
 
   // On page load: if ?scrollto= param exists, jump to that section instantly
-  // (no smooth scroll animation — we already have the slide transition)
+  // (used when navigating back from article pages)
   var params = new URLSearchParams(window.location.search);
   var scrollTarget = params.get('scrollto');
   if (scrollTarget) {
-    var target = document.getElementById(scrollTarget);
-    if (target) {
-      // Force instant jump — override CSS smooth scroll
+    var scrollEl = document.getElementById(scrollTarget);
+    if (scrollEl) {
       document.documentElement.style.scrollBehavior = 'auto';
-      target.scrollIntoView();
-      // Clean up the URL and restore smooth scroll
+      var navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 80;
+      var pos = scrollEl.getBoundingClientRect().top + window.scrollY - navH;
+      window.scrollTo(0, pos);
       setTimeout(function() {
         history.replaceState(null, '', window.location.pathname + '#' + scrollTarget);
         document.documentElement.style.scrollBehavior = '';
       }, 50);
     }
+  }
+
+  // Set initial history state
+  history.replaceState({ spaURL: window.location.href }, document.title, window.location.href);
+
+  // Initial binding
+  bindSPALinks();
+
+  // Mark article.css as SPA-managed if it exists on this page
+  if (articleCSSLink) {
+    articleCSSLink.setAttribute('data-spa-article-css', 'true');
   }
 
 })(); // end IIFE

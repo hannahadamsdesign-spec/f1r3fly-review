@@ -114,6 +114,7 @@ def build(a):
 </head>
 <body>
 {NAV}
+<main id="app">
 <article class="article-page">
   <div class="article-breadcrumb">
     <a href="../index.html#blog">&larr; Ideas &amp; Research</a>
@@ -158,6 +159,7 @@ def build(a):
   </div>
   </div>
 </article>
+</main>
 {FOOTER}
 <script src="../js/main.js" defer></script>
 </body>
