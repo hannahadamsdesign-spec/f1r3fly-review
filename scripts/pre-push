@@ -1,25 +1,10 @@
 #!/bin/bash
-# Pre-push hook: run broken link checker before pushing to main.
+# Pre-push hook: run broken link checker before every push.
 # Only checks internal links (fast, no network needed).
 #
 # Install: cp scripts/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 
-remote="$1"
-url="$2"
-
-pushing_to_main=false
-while read local_ref local_sha remote_ref remote_sha; do
-    if echo "$remote_ref" | grep -q "refs/heads/main$"; then
-        pushing_to_main=true
-        break
-    fi
-done
-
-if [ "$pushing_to_main" = false ]; then
-    exit 0
-fi
-
-echo "Pre-push: checking for broken links before pushing to main..."
+echo "Pre-push: checking for broken links..."
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
@@ -28,7 +13,7 @@ exit_code=$?
 
 if [ $exit_code -ne 0 ]; then
     echo ""
-    echo "Push to main blocked: broken links detected."
+    echo "Push blocked: broken links detected."
     echo "Fix the broken links above, then try again."
     echo "To skip this check: git push --no-verify"
 fi
