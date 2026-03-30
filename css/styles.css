@@ -6,6 +6,9 @@
    Approach: Mobile-first with breakpoints at 768px and 1024px
    ============================================ */
 
+/* --- Reveal page once styles are parsed (prevents FOUC) --- */
+html { visibility: visible; }
+
 /* --- Custom Properties (Brand System) --- */
 :root {
   /* Colors */
