@@ -1,0 +1,24 @@
+name: Check Links
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check internal links
+        run: node scripts/check-links.mjs
+
+      - name: Check external links
+        run: node scripts/check-links.mjs --check-external
+        continue-on-error: true
