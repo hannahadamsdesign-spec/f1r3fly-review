@@ -400,7 +400,7 @@ ul { list-style: none; }
 .hero-parallax-pines {
   bottom: 0;
   height: 60%;
-  background-image: url('../images/parallax-pines.png');
+  background-image: url('../images/parallax-pines.webp');
   background-position: center bottom;
   z-index: var(--z-parallax-mid);
 }
@@ -408,7 +408,7 @@ ul { list-style: none; }
 .hero-parallax-branches {
   bottom: 0;
   height: 50%;
-  background-image: url('../images/parallax-branches.png');
+  background-image: url('../images/parallax-branches.webp');
   background-position: center bottom;
   z-index: var(--z-parallax-fg);
 }
