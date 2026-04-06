@@ -13,18 +13,12 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://f1r3fly.io">
 
-  <!-- Hide page until styles load to prevent FOUC -->
-  <style>html { visibility: hidden; }</style>
-
-  <!-- Local CSS (preloaded, reveals page via html { visibility: visible }) -->
-  <link rel="preload" href="css/styles.css" as="style">
-  <link rel="stylesheet" href="css/styles.css">
-
-  <!-- Google Fonts: async load to avoid render-blocking -->
+  <!-- Google Fonts: Josefin Sans + Source Sans Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -35,10 +29,8 @@
   <div class="nav-container">
     <div class="nav-logo-area">
       <a href="#home" class="nav-logo">
-        <img src="images/f1r3fly-io-horizontal-logo.svg" alt="F1R3FLY.IO" class="nav-logo-wordmark">
+        <img src="images/f1r3fly-io-horizontal-on-dark-with-tag.svg" alt="F1R3FLY.IO — A Subsidiary of F1R3FLY Industries" class="nav-logo-wordmark">
       </a>
-      <span class="nav-logo-divider" aria-hidden="true">|</span>
-      <span class="nav-logo-subtitle">A Subsidiary of <a href="https://f1r3fly.com" target="_blank" rel="noopener">F1R3FLY Industries</a></span>
     </div>
 
     <ul class="nav-links">
@@ -55,6 +47,10 @@
       <li><a href="#team">Team</a></li>
       <li class="nav-divider" aria-hidden="true">|</li>
       <li><a href="#blog">Blog</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#brain-candy">Brain Candy</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#white-papers">White Papers</a></li>
       <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
     </ul>
 
@@ -75,6 +71,8 @@
     <a href="#partners">Partners</a>
     <a href="#team">Team</a>
     <a href="#blog">Blog</a>
+    <a href="#brain-candy">Brain Candy</a>
+    <a href="#white-papers">White Papers</a>
     <a href="#contact">Get In Touch</a>
   </div>
 </div>
@@ -740,6 +738,68 @@
   });
 })();
 </script>
+
+<!-- ============ BRAIN CANDY ============ -->
+<section id="brain-candy" class="section section-page">
+  <h2 class="fly-in-header">Brain Candy</h2>
+  <p class="section-intro fade-in delay-1">Interactive explorations at the intersection of mathematics, music, computation, and perception — where the ideas behind F1R3FLY's technology meet art.</p>
+
+  <div class="card-grid" id="brainCandyGrid">
+
+    <a class="blog-parent blog-link-card" href="brain-candy/conformal-canons.html">
+      <span class="blog-tag blog-tag-comp">Math &amp; Music</span>
+      <h3>Conformal Canons: the Droste Effect in Music</h3>
+      <p class="blog-parent-desc">Represent notes as complex numbers z&nbsp;=&nbsp;duration&nbsp;+&nbsp;i·pitch, then apply the conformal map z<sup>(1+iα)</sup> from de&nbsp;Smit–Lenstra's analysis of Escher's <em>Print Gallery</em>. The melody becomes its own harmony — a self-similar canon where each voice is a conformally-warped echo of the source.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Launch interactive &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="brain-candy/graph-expansion.html">
+      <span class="blog-tag blog-tag-dev">Graphs &amp; Evolution</span>
+      <h3>Evolutionary Techniques on Graphs: Concept Mating via the Rho Calculus</h3>
+      <p class="blog-parent-desc">Instead of concept <em>blending</em>, why not concept <em>mating</em>? Encode graph vertices as rholang agents, cross their port structures to produce offspring, and watch the graph evolve. Vertex mating ⊕ becomes parallel composition |, and iterated evolution converges toward small-world graphs — with connections to Connes–Kreimer Hopf algebras and renormalization.</p>
+      <span class="blog-parent-date">Mar 2026</span>
+      <span class="blog-read-more">View paper &amp; slides &#x2192;</span>
+    </a>
+
+  </div>
+
+  <p class="fade-in delay-2" style="color:rgba(255,255,255,0.45); font-size:14px; margin-top:30px; font-style:italic;">More explorations coming soon — process calculi visualizations, generative music from the rho calculus, and interactive category theory.</p>
+</section>
+
+<!-- ============ WHITE PAPERS ============ -->
+<section id="white-papers" class="section section-page">
+  <h2 class="fly-in-header">White Papers</h2>
+  <p class="section-intro fade-in delay-1">Technical white papers detailing F1R3FLY's foundational technology, platform economics, and product architecture.</p>
+
+  <div class="card-grid" id="whitePaperGrid">
+
+    <a class="blog-parent blog-link-card" href="white-papers/algorithmic-scientists.html">
+      <span class="blog-tag blog-tag-ai">AI &amp; Foundations</span>
+      <h3>Algorithmic Scientists and the Foundations of Machine Intelligence</h3>
+      <p class="blog-parent-desc">A mathematical framework grounding AI in graph-structured lambda theories, where programs discover their world through experimentation and formulate hypotheses in an automatically generated logic.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="white-papers/tokenizing-coordination.html">
+      <span class="blog-tag blog-tag-comp">Platform &amp; Economics</span>
+      <h3>Tokenizing Coordination in Mixed Communities of Humans and Agentic AIs</h3>
+      <p class="blog-parent-desc">How phlogiston-metered friction creates value across F1R3FLY web properties by making coordination costs explicit at the points where friction improves outcomes.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="white-papers/f1r3games-collective-intelligence.html">
+      <span class="blog-tag blog-tag-phil">Games &amp; Collective Intelligence</span>
+      <h3>F1R3GAMES: Collective Intelligence Through Play</h3>
+      <p class="blog-parent-desc">A suite of on-chain games designed to cultivate collective intelligence through structured, playful collaboration on F1R3FLY shard infrastructure.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+  </div>
+</section>
 
 <!-- Quote Band -->
 <div class="section-band neutral">

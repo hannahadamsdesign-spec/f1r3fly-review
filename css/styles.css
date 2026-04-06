@@ -6,9 +6,6 @@
    Approach: Mobile-first with breakpoints at 768px and 1024px
    ============================================ */
 
-/* --- Reveal page once styles are parsed (prevents FOUC) --- */
-html { visibility: visible; }
-
 /* --- Custom Properties (Brand System) --- */
 :root {
   /* Colors */
@@ -158,7 +155,7 @@ ul { list-style: none; }
 
 .nav-container {
   width: 100%;
-  padding: 30px 30px 0;
+  padding: 20px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,7 +168,7 @@ ul { list-style: none; }
   text-decoration: none;
 }
 
-.nav-logo-wordmark { height: 40px; width: auto; }
+.nav-logo-wordmark { height: 50px; width: auto; }
 
 .nav-logo-area {
   display: flex;
@@ -212,7 +209,7 @@ ul { list-style: none; }
   width: 100%;
   height: 1px;
   background: var(--gradient-brand);
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 /* Desktop nav links - hidden on mobile */
@@ -226,7 +223,7 @@ ul { list-style: none; }
 .nav-links a {
   color: var(--color-white);
   font-family: var(--font-heading);
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 330;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
@@ -235,7 +232,7 @@ ul { list-style: none; }
 
 .nav-links a:hover { color: var(--color-accent); }
 .nav-links a.active { color: var(--color-highlight) !important; font-weight: 400; }
-.nav-divider { color: rgba(255,255,255,0.3); font-weight: 100; font-size: 18px; }
+.nav-divider { color: rgba(255,255,255,0.3); font-weight: 100; font-size: 14px; }
 
 .nav-cta {
   display: inline-block;

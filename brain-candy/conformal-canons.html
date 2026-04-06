@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conformal Canons — The Droste Effect in Music — F1R3FLY.IO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #08080e;
+    color: #d8ccb4;
+    font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #08080e; }
+  ::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 3px; }
+  input[type=range] { cursor: pointer; accent-color: #F3D630; }
+  #root { min-height: 100vh; padding-top: 100px; }
+</style>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+<body>
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-container">
+    <div class="nav-logo-area">
+      <a href="../index.html#home" class="nav-logo">
+        <img src="../images/f1r3fly-io-horizontal-on-dark-with-tag.svg" alt="F1R3FLY.IO — A Subsidiary of F1R3FLY Industries" class="nav-logo-wordmark">
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html#home">Home</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#technology">Technology</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#developers">Developers</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#clients">Clients</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#partners">Partners</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#team">Team</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#blog">Blog</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#brain-candy">Brain Candy</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#white-papers">White Papers</a></li>
+      <li><a href="../index.html#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+</nav>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef, useEffect, useMemo, useCallback } = React;
+
+/* ═══════════════════════════════════════════
+   Complex Arithmetic
+   ═══════════════════════════════════════════ */
+const C = (re, im = 0) => ({ re, im });
+const cMul = (a, b) => C(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re);
+const cAbs = z => Math.sqrt(z.re * z.re + z.im * z.im);
+const cArg = z => Math.atan2(z.im, z.re);
+const cExp = z => {
+  const r = Math.exp(z.re);
+  return C(r * Math.cos(z.im), r * Math.sin(z.im));
+};
+const cLog = z => {
+  const a = cAbs(z);
+  return a === 0 ? C(-Infinity, 0) : C(Math.log(a), cArg(z));
+};
+const cPow = (z, w) => cExp(cMul(w, cLog(z)));
+const cPowN = (base, n) => {
+  let result = C(1, 0);
+  for (let i = 0; i < n; i++) result = cMul(result, base);
+  return result;
+};
+
+/* ═══════════════════════════════════════════
+   Preset Melodies  { p: MIDI pitch, d: duration in beats }
+   ═══════════════════════════════════════════ */
+const PRESETS = {
+  frereJacques: {
+    name: "Frère Jacques",
+    notes: [
+      { p: 60, d: 1 }, { p: 62, d: 1 }, { p: 64, d: 1 }, { p: 60, d: 1 },
+      { p: 60, d: 1 }, { p: 62, d: 1 }, { p: 64, d: 1 }, { p: 60, d: 1 },
+      { p: 64, d: 1 }, { p: 65, d: 1 }, { p: 67, d: 2 },
+      { p: 64, d: 1 }, { p: 65, d: 1 }, { p: 67, d: 2 },
+      { p: 67, d: .5 }, { p: 69, d: .5 }, { p: 67, d: .5 }, { p: 65, d: .5 }, { p: 64, d: 1 }, { p: 60, d: 1 },
+      { p: 67, d: .5 }, { p: 69, d: .5 }, { p: 67, d: .5 }, { p: 65, d: .5 }, { p: 64, d: 1 }, { p: 60, d: 1 },
+      { p: 60, d: 1 }, { p: 55, d: 1 }, { p: 60, d: 2 },
+      { p: 60, d: 1 }, { p: 55, d: 1 }, { p: 60, d: 2 },
+    ],
+  },
+  twinkle: {
+    name: "Twinkle Twinkle",
+    notes: [
+      { p: 60, d: 1 }, { p: 60, d: 1 }, { p: 67, d: 1 }, { p: 67, d: 1 },
+      { p: 69, d: 1 }, { p: 69, d: 1 }, { p: 67, d: 2 },
+      { p: 65, d: 1 }, { p: 65, d: 1 }, { p: 64, d: 1 }, { p: 64, d: 1 },
+      { p: 62, d: 1 }, { p: 62, d: 1 }, { p: 60, d: 2 },
+    ],
+  },
+  scale: {
+    name: "C Major Scale",
+    notes: [
+      { p: 60, d: 1 }, { p: 62, d: 1 }, { p: 64, d: 1 }, { p: 65, d: 1 },
+      { p: 67, d: 1 }, { p: 69, d: 1 }, { p: 71, d: 1 }, { p: 72, d: 1 },
+    ],
+  },
+  pentatonic: {
+    name: "Pentatonic Motif",
+    notes: [
+      { p: 60, d: .75 }, { p: 64, d: .25 }, { p: 67, d: 1 }, { p: 69, d: .5 },
+      { p: 72, d: .5 }, { p: 69, d: 1 }, { p: 67, d: .75 }, { p: 64, d: .25 },
+      { p: 60, d: 1.5 }, { p: 64, d: .5 }, { p: 67, d: 1 },
+    ],
+  },
+};
+
+/* ═══════════════════════════════════════════
+   Conformal Transform Engine
+   ═══════════════════════════════════════════ */
+function addOnsets(notes) {
+  let t = 0;
+  return notes.map(n => {
+    const out = { ...n, o: t };
+    t += n.d;
+    return out;
+  });
+}
+
+function transformVoice(notes, alpha, voiceIndex) {
+  if (voiceIndex === 0) return addOnsets(notes);
+  const durs = notes.map(n => n.d);
+  const pitches = notes.map(n => n.p);
+  const minD = Math.min(...durs), maxD = Math.max(...durs);
+  const minP = Math.min(...pitches), maxP = Math.max(...pitches);
+  const rangeD = maxD - minD || 1;
+  const rangeP = maxP - minP || 12;
+
+  const exponent = cPowN(C(1, alpha), voiceIndex);
+
+  const transformed = notes.map(n => {
+    const normD = 1.5 + 3 * (n.d - minD) / rangeD;
+    const normP = 1.5 + 3 * (n.p - minP) / rangeP;
+    const z = C(normD, normP);
+    const w = cPow(z, exponent);
+    const newD = minD + rangeD * Math.max(0.05, (w.re - 1.5) / 3);
+    const newP = minP + rangeP * (w.im - 1.5) / 3;
+    return {
+      d: Math.max(0.1, Math.abs(newD)),
+      p: Math.round(newP),
+      zRe: normD, zIm: normP,
+      wRe: w.re, wIm: w.im,
+    };
+  });
+
+  return addOnsets(transformed);
+}
+
+/* ═══════════════════════════════════════════
+   Helpers
+   ═══════════════════════════════════════════ */
+const midiToFreq = m => 440 * Math.pow(2, (m - 69) / 12);
+const VOICE_COLORS = ["#F3D630", "#3FA9F5", "#c9845a", "#8BB999"];
+const VOICE_LABELS = ["Original", "Voice II", "Voice III", "Voice IV"];
+
+/* ═══════════════════════════════════════════
+   Piano Roll Canvas
+   ═══════════════════════════════════════════ */
+function PianoRoll({ voices, width, height }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, width, height);
+
+    const all = voices.flat();
+    if (all.length === 0) return;
+
+    const minP = Math.min(...all.map(n => n.p)) - 2;
+    const maxP = Math.max(...all.map(n => n.p)) + 2;
+    const maxT = Math.max(...all.map(n => n.o + n.d)) + 0.5;
+    const pRange = maxP - minP || 24;
+    const pad = { l: 44, r: 16, t: 16, b: 28 };
+    const pw = width - pad.l - pad.r;
+    const ph = height - pad.t - pad.b;
+    const xScale = pw / maxT;
+    const yScale = ph / pRange;
+
+    // Pitch grid
+    ctx.lineWidth = 0.5;
+    for (let p = Math.ceil(minP); p <= maxP; p++) {
+      const y = pad.t + ph - (p - minP) * yScale;
+      ctx.strokeStyle = (p % 12 === 0) ? "#252540" : "#13131f";
+      ctx.beginPath();
+      ctx.moveTo(pad.l, y);
+      ctx.lineTo(width - pad.r, y);
+      ctx.stroke();
+      if (p % 12 === 0) {
+        ctx.fillStyle = "#555";
+        ctx.font = "10px 'Fira Code', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText("C" + (Math.floor(p / 12) - 1), pad.l - 5, y + 3);
+      }
+    }
+    // Beat grid
+    for (let t = 0; t <= maxT; t++) {
+      const x = pad.l + t * xScale;
+      ctx.strokeStyle = t % 4 === 0 ? "#252540" : "#10101c";
+      ctx.lineWidth = t % 4 === 0 ? 1 : 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x, pad.t);
+      ctx.lineTo(x, height - pad.b);
+      ctx.stroke();
+    }
+
+    // Notes — draw back-to-front so original (voice 0) is on top
+    for (let vi = voices.length - 1; vi >= 0; vi--) {
+      const color = VOICE_COLORS[vi] || "#888";
+      const a = vi === 0 ? 0.92 : 0.6;
+      const hex = Math.round(a * 255).toString(16).padStart(2, "0");
+      voices[vi].forEach(n => {
+        const x = pad.l + n.o * xScale;
+        const y = pad.t + ph - (n.p - minP) * yScale;
+        const w = Math.max(n.d * xScale, 2);
+        const h = Math.max(yScale * 0.78, 3);
+
+        ctx.fillStyle = color + hex;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.roundRect(x, y - h / 2, w, h, 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+    }
+
+    // Time axis labels
+    ctx.fillStyle = "#555";
+    ctx.font = "9px 'Fira Code', monospace";
+    ctx.textAlign = "center";
+    const step = maxT > 40 ? 8 : 4;
+    for (let t = 0; t <= maxT; t += step) {
+      ctx.fillText(t.toString(), pad.l + t * xScale, height - 8);
+    }
+  }, [voices, width, height]);
+
+  return <canvas ref={canvasRef} style={{ width, height, display: "block", borderRadius: 6 }} />;
+}
+
+/* ═══════════════════════════════════════════
+   Complex Plane Canvas
+   ═══════════════════════════════════════════ */
+function ComplexPlane({ voices, width, height }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, width, height);
+
+    const pad = 32;
+    const pw = width - 2 * pad;
+    const ph = height - 2 * pad;
+
+    // Collect all coordinates
+    const origNotes = voices[0] || [];
+    if (origNotes.length === 0) return;
+    const durs = origNotes.map(n => n.d);
+    const pitches = origNotes.map(n => n.p);
+    const minD = Math.min(...durs), maxD = Math.max(...durs);
+    const minP = Math.min(...pitches), maxP = Math.max(...pitches);
+    const rangeD = (maxD - minD) || 1;
+    const rangeP = (maxP - minP) || 12;
+
+    let allRe = [], allIm = [];
+    origNotes.forEach(n => {
+      const nD = 1.5 + 3 * (n.d - minD) / rangeD;
+      const nP = 1.5 + 3 * (n.p - minP) / rangeP;
+      allRe.push(nD); allIm.push(nP);
+    });
+    voices.forEach((voice, vi) => {
+      if (vi === 0) return;
+      voice.forEach(n => {
+        if (n.wRe !== undefined) { allRe.push(n.wRe); allIm.push(n.wIm); }
+      });
+    });
+
+    const minRe = Math.min(...allRe) - 0.5;
+    const maxRe = Math.max(...allRe) + 0.5;
+    const minIm = Math.min(...allIm) - 0.5;
+    const maxIm = Math.max(...allIm) + 0.5;
+    const rngRe = maxRe - minRe || 4;
+    const rngIm = maxIm - minIm || 4;
+
+    const toX = re => pad + pw * (re - minRe) / rngRe;
+    const toY = im => pad + ph - ph * (im - minIm) / rngIm;
+
+    // Grid
+    ctx.strokeStyle = "#111122";
+    ctx.lineWidth = 0.3;
+    for (let r = Math.ceil(minRe); r <= maxRe; r++) {
+      const x = toX(r);
+      ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, height - pad); ctx.stroke();
+    }
+    for (let i = Math.ceil(minIm); i <= maxIm; i++) {
+      const y = toY(i);
+      ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(width - pad, y); ctx.stroke();
+    }
+
+    // Mapping lines
+    voices.forEach((voice, vi) => {
+      if (vi === 0) return;
+      const color = VOICE_COLORS[vi] || "#888";
+      ctx.strokeStyle = color + "28";
+      ctx.lineWidth = 0.8;
+      voice.forEach((n, ni) => {
+        if (n.zRe === undefined) return;
+        ctx.beginPath();
+        ctx.moveTo(toX(n.zRe), toY(n.zIm));
+        ctx.lineTo(toX(n.wRe), toY(n.wIm));
+        ctx.stroke();
+      });
+    });
+
+    // Original points
+    origNotes.forEach(n => {
+      const nD = 1.5 + 3 * (n.d - minD) / rangeD;
+      const nP = 1.5 + 3 * (n.p - minP) / rangeP;
+      ctx.fillStyle = VOICE_COLORS[0];
+      ctx.beginPath();
+      ctx.arc(toX(nD), toY(nP), 4.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Transformed points
+    voices.forEach((voice, vi) => {
+      if (vi === 0) return;
+      const color = VOICE_COLORS[vi];
+      voice.forEach(n => {
+        if (n.wRe === undefined) return;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(toX(n.wRe), toY(n.wIm), 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    });
+
+    // Axis labels
+    ctx.fillStyle = "#555";
+    ctx.font = "10px 'Fira Code', monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("Re (duration)", width / 2, height - 6);
+    ctx.save();
+    ctx.translate(12, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText("Im (pitch)", 0, 0);
+    ctx.restore();
+  }, [voices, width, height]);
+
+  return <canvas ref={canvasRef} style={{ width, height, display: "block", borderRadius: 6 }} />;
+}
+
+/* ═══════════════════════════════════════════
+   Audio Engine Hook
+   ═══════════════════════════════════════════ */
+function useAudioEngine() {
+  const synthsRef = useRef([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const play = useCallback(async (voices, bpm = 140) => {
+    await Tone.start();
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    Tone.Transport.bpm.value = bpm;
+
+    synthsRef.current.forEach(s => { try { s.dispose(); } catch(e){} });
+    const timbres = ["triangle", "sine", "square", "sawtooth"];
+    synthsRef.current = voices.map((_, i) =>
+      new Tone.PolySynth(Tone.Synth, {
+        maxPolyphony: 8,
+        voice: Tone.Synth,
+        options: {
+          oscillator: { type: timbres[i] || "sine" },
+          envelope: { attack: 0.05, decay: 0.2, sustain: 0.4, release: 0.8 },
+          volume: i === 0 ? -8 : -14,
+        },
+      }).toDestination()
+    );
+
+    voices.forEach((voice, vi) => {
+      voice.forEach(note => {
+        if (note.o < 0 || note.d <= 0) return;
+        const freq = midiToFreq(note.p);
+        if (freq < 20 || freq > 8000 || isNaN(freq)) return;
+        const time = Tone.Time("4n").toSeconds() * note.o;
+        const dur = Math.max(0.05, Tone.Time("4n").toSeconds() * note.d * 0.85);
+        Tone.Transport.schedule(t => {
+          try { synthsRef.current[vi]?.triggerAttackRelease(freq, dur, t); } catch(e){}
+        }, time);
+      });
+    });
+
+    const maxT = Math.max(...voices.flat().map(n => n.o + n.d));
+    const totalSec = Tone.Time("4n").toSeconds() * (maxT + 1);
+    Tone.Transport.schedule(() => {
+      Tone.Transport.stop();
+      setIsPlaying(false);
+    }, totalSec);
+
+    Tone.Transport.start();
+    setIsPlaying(true);
+  }, []);
+
+  const stop = useCallback(() => {
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    synthsRef.current.forEach(s => { try { s.releaseAll(); } catch(e){} });
+    setIsPlaying(false);
+  }, []);
+
+  useEffect(() => () => {
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    synthsRef.current.forEach(s => { try { s.dispose(); } catch(e){} });
+  }, []);
+
+  return { play, stop, isPlaying };
+}
+
+/* ═══════════════════════════════════════════
+   Main App
+   ═══════════════════════════════════════════ */
+function ConformalCanons() {
+  const [preset, setPreset] = useState("frereJacques");
+  const [alpha, setAlpha] = useState(0.12);
+  const [numVoices, setNumVoices] = useState(2);
+  const [bpm, setBpm] = useState(140);
+  const { play, stop, isPlaying } = useAudioEngine();
+  const containerRef = useRef(null);
+  const [dims, setDims] = useState({ w: 740, h: 320 });
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = Math.max(340, Math.min(900, el.clientWidth));
+      setDims({ w, h: Math.max(220, Math.min(380, w * 0.44)) });
+    };
+    measure();
+    const obs = new ResizeObserver(measure);
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const voices = useMemo(() => {
+    const base = PRESETS[preset].notes;
+    return Array.from({ length: numVoices }, (_, v) => transformVoice(base, alpha, v));
+  }, [preset, alpha, numVoices]);
+
+  const handlePlay = () => isPlaying ? stop() : play(voices, bpm);
+
+  // ── Inline styles ──
+  const s = {
+    inner: { maxWidth: 840, margin: "0 auto", padding: "40px 24px 100px" },
+    hero: { textAlign: "center", padding: "56px 0 40px", borderBottom: "1px solid #1a1a2e", marginBottom: 52 },
+    h1: { fontSize: "clamp(28px, 5vw, 42px)", fontFamily: "'Josefin Sans', sans-serif", fontWeight: 500, letterSpacing: "0.02em", color: "#fff", marginBottom: 12, lineHeight: 1.3 },
+    sub: { fontSize: "clamp(14px, 2vw, 19px)", color: "#6a6050", fontStyle: "italic", fontWeight: 300 },
+    sec: { marginBottom: 52 },
+    h2: { fontSize: "clamp(18px, 3vw, 22px)", fontFamily: "'Josefin Sans', sans-serif", fontWeight: 600, color: "#F3D630", marginBottom: 18, letterSpacing: "1.47px", textTransform: "uppercase" },
+    p: { fontSize: "clamp(15px, 2vw, 17.5px)", color: "#b8a898", marginBottom: 18, maxWidth: 680 },
+    math: {
+      fontFamily: "'Fira Code', 'Courier New', monospace", fontSize: "clamp(12px, 1.7vw, 14.5px)",
+      color: "#3FA9F5", background: "rgba(255,255,255,0.02)", padding: "16px 22px", borderRadius: 8,
+      border: "1px solid #1a1a2e", display: "block", margin: "20px 0", overflowX: "auto",
+      lineHeight: 1.9, whiteSpace: "pre",
+    },
+    aside: {
+      fontSize: "clamp(13px, 1.6vw, 14.5px)", color: "#6a6050", fontStyle: "italic",
+      borderLeft: "2px solid #252540", paddingLeft: 18, margin: "20px 0",
+    },
+    pg: { background: "#0b0b14", borderRadius: 10, border: "1px solid #1a1a2e", padding: "28px 20px" },
+    ctrls: { display: "flex", flexWrap: "wrap", gap: 18, alignItems: "center", marginBottom: 22 },
+    lbl: { fontSize: 13, color: "#7a7060", fontFamily: "'Fira Code', monospace", display: "flex", flexDirection: "column", gap: 5 },
+    sel: { background: "#12121e", color: "#d8ccb4", border: "1px solid #2a2a3e", borderRadius: 4, padding: "7px 12px", fontFamily: "inherit", fontSize: 14 },
+    sld: { width: 130 },
+    btn: {
+      background: isPlaying ? "#2e1618" : "rgba(255,255,255,0.03)", color: isPlaying ? "#c9645a" : "#F3D630",
+      border: "1px solid " + (isPlaying ? "#c9645a" : "#F3D630"), borderRadius: 8,
+      padding: "9px 24px", cursor: "pointer", fontFamily: "inherit", fontSize: 16,
+      letterSpacing: "0.06em", transition: "all 0.2s",
+    },
+    legend: { display: "flex", gap: 18, marginBottom: 14, flexWrap: "wrap" },
+    legendItem: { display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontFamily: "'Fira Code', monospace", color: "#7a7060" },
+    dot: c => ({ width: 10, height: 10, borderRadius: "50%", background: c, display: "inline-block", flexShrink: 0 }),
+    canvasWrap: { background: "#060610", borderRadius: 6, padding: 2, marginBottom: 18 },
+    panelLbl: { fontSize: 11, color: "#555", fontFamily: "'Fira Code', monospace", marginBottom: 7, textTransform: "uppercase", letterSpacing: "0.1em" },
+  };
+
+  return (
+    <div style={s.inner} ref={containerRef}>
+      {/* Back link */}
+      <a href="../index.html#brain-candy" style={{
+        display: "inline-block",
+        fontSize: 14,
+        color: "#6a6050",
+        textDecoration: "none",
+        marginBottom: 8,
+        fontFamily: "'Fira Code', monospace",
+        transition: "color 0.2s",
+      }}
+        onMouseEnter={e => e.target.style.color = "#3FA9F5"}
+        onMouseLeave={e => e.target.style.color = "#6a6050"}
+      >&larr; Brain Candy</a>
+
+      {/* Hero */}
+      <div style={s.hero}>
+        <h1 style={s.h1}>Conformal Canons</h1>
+        <p style={s.sub}>The Droste Effect in Music via Conformal Maps on ℂ</p>
+      </div>
+
+      {/* I */}
+      <div style={s.sec}>
+        <h2 style={s.h2}>I.&ensp;Notes as Complex Numbers</h2>
+        <p style={s.p}>
+          Represent a note as a complex number <em>z&nbsp;=&nbsp;d&nbsp;+&nbsp;ip</em> where
+          the real part <em>d</em> is its duration and the imaginary part <em>p</em> is its pitch.
+          This is not merely a bookkeeping convenience — it gives the space of notes a
+          geometric structure.
+        </p>
+        <p style={s.p}>
+          Multiplication by <em>e<sup>iθ</sup></em> rotates a note in the duration–pitch
+          plane: a long low note becomes a short high note, and vice versa. The imaginary
+          axis encodes pitch because we want this rotation to correspond to traversing pitch
+          classes. Scaling the modulus&nbsp;|<em>z</em>| stretches both dimensions
+          simultaneously — if pitch is logarithmic (as psychoacoustic perception suggests),
+          scalar multiplication corresponds to octave displacement.
+        </p>
+        <div style={s.aside}>
+          A melody is a finite sequence (z₁,&thinsp;z₂,&thinsp;…,&thinsp;zₙ) in&nbsp;ℂ.
+          Its temporal unfolding comes from reading the sequence in order, with each note's
+          duration determining when the next begins.
+        </div>
+      </div>
+
+      {/* II */}
+      <div style={s.sec}>
+        <h2 style={s.h2}>II.&ensp;The Conformal Map</h2>
+        <p style={s.p}>
+          The de&nbsp;Smit–Lenstra analysis of Escher's <em>Print Gallery</em> revealed that
+          its self-swallowing structure arises from the conformal map
+          <em> z&nbsp;↦&nbsp;z<sup>1+iα</sup></em>, where α controls the spiral rate.
+          We apply the same map to our melody.
+        </p>
+        <code style={s.math}>{`f(z) = z^(1+iα) = exp((1+iα) · log z)
+
+In polar form, z = r·exp(iθ):
+  new modulus  = r · exp(−αθ)
+  new argument = θ + α · ln r
+
+The duration–pitch coupling is the musical content:
+  • pitch shifts by α·ln(duration)  — long notes drift in pitch
+  • duration scales by exp(−α·pitch) — high notes accelerate`}</code>
+        <p style={s.p}>
+          Because the map is conformal, it preserves local angles — a rising third
+          remains a rising third, though it may live at a different scale and in a
+          different register. The topology of intervallic relationships is invariant.
+        </p>
+      </div>
+
+      {/* Escher Centerpiece */}
+      <div style={{
+        marginBottom: 52,
+        textAlign: "center",
+        padding: "36px 0",
+        borderTop: "1px solid #1a1a2e",
+        borderBottom: "1px solid #1a1a2e",
+      }}>
+        <a
+          href="https://youtu.be/ldxFjLJ3rVY?si=FnYJpz6F2mPVtGoi"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: "inline-block", textDecoration: "none" }}
+        >
+          <div style={{
+            position: "relative",
+            display: "inline-block",
+            borderRadius: 8,
+            overflow: "hidden",
+            border: "1px solid #2a2a3e",
+            boxShadow: "0 8px 40px rgba(0,0,0,0.5), 0 0 80px rgba(201,168,76,0.08)",
+            maxWidth: 560,
+            width: "100%",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = "scale(1.02)";
+              e.currentTarget.style.boxShadow = "0 12px 50px rgba(0,0,0,0.6), 0 0 100px rgba(201,168,76,0.14)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,0,0,0.5), 0 0 80px rgba(201,168,76,0.08)";
+            }}
+          >
+            <img
+              src="https://img.youtube.com/vi/ldxFjLJ3rVY/maxresdefault.jpg"
+              alt="3Blue1Brown — Escher's Print Gallery and conformal maps"
+              style={{
+                display: "block",
+                width: "100%",
+                height: "auto",
+              }}
+            />
+            {/* Play button overlay */}
+            <div style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              background: "rgba(8,8,14,0.75)",
+              border: "2px solid rgba(201,168,76,0.6)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              <div style={{
+                width: 0,
+                height: 0,
+                borderLeft: "22px solid #F3D630",
+                borderTop: "13px solid transparent",
+                borderBottom: "13px solid transparent",
+                marginLeft: 4,
+              }} />
+            </div>
+          </div>
+        </a>
+        <p style={{
+          fontSize: "clamp(13px, 1.8vw, 15px)",
+          color: "#7a7060",
+          marginTop: 16,
+          fontStyle: "italic",
+          lineHeight: 1.6,
+          maxWidth: 520,
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}>
+          Grant Sanderson's 3Blue1Brown analysis of Escher's <em style={{color:"#b8a898"}}>Print Gallery</em>
+          &thinsp;—&thinsp;the de&nbsp;Smit–Lenstra conformal map that reveals the
+          Droste spiral hidden in the lithograph.
+        </p>
+      </div>
+
+      {/* III */}
+      <div style={s.sec}>
+        <h2 style={s.h2}>III.&ensp;The Droste Spiral</h2>
+        <p style={s.p}>
+          The Droste effect emerges from iteration. Voice&nbsp;<em>k</em> applies the
+          exponent (1+iα)<sup>k</sup> to each note. Since (1+iα)<sup>k</sup> is itself
+          a complex number with growing modulus and rotating argument, each successive
+          voice is a further-warped echo — scaled differently and transposed differently,
+          but preserving the conformal structure.
+        </p>
+        <p style={s.p}>
+          The result is a self-similar canon: the melody at one temporal and pitch
+          scale <em>is</em> its own counterpoint at another. Like Escher's gallery, where the
+          picture on the wall contains the gallery containing the picture, each voice
+          contains a distorted image of every other voice. This unifies Nancarrow's tempo
+          canons, Shepard–Risset tonal illusions, and the Risset rhythm accelerando
+          through a single conformal geometry.
+        </p>
+      </div>
+
+      {/* IV — Playground */}
+      <div style={s.sec}>
+        <h2 style={s.h2}>IV.&ensp;Playground</h2>
+        <div style={s.pg}>
+          <div style={s.ctrls}>
+            <label style={s.lbl}>
+              melody
+              <select style={s.sel} value={preset} onChange={e => setPreset(e.target.value)}>
+                {Object.entries(PRESETS).map(([k, v]) =>
+                  <option key={k} value={k}>{v.name}</option>
+                )}
+              </select>
+            </label>
+            <label style={s.lbl}>
+              α&nbsp;=&nbsp;{alpha.toFixed(2)}
+              <input type="range" min="0" max="0.6" step="0.01" value={alpha}
+                onChange={e => setAlpha(+e.target.value)} style={s.sld} />
+            </label>
+            <label style={s.lbl}>
+              voices:&nbsp;{numVoices}
+              <input type="range" min="1" max="4" step="1" value={numVoices}
+                onChange={e => setNumVoices(+e.target.value)} style={s.sld} />
+            </label>
+            <label style={s.lbl}>
+              bpm:&nbsp;{bpm}
+              <input type="range" min="60" max="220" step="5" value={bpm}
+                onChange={e => setBpm(+e.target.value)} style={s.sld} />
+            </label>
+            <button style={s.btn} onClick={handlePlay}
+              onMouseEnter={e => e.target.style.opacity = 0.85}
+              onMouseLeave={e => e.target.style.opacity = 1}>
+              {isPlaying ? "■  Stop" : "▶  Play"}
+            </button>
+          </div>
+
+          <div style={s.legend}>
+            {voices.map((_, i) =>
+              <div key={i} style={s.legendItem}>
+                <span style={s.dot(VOICE_COLORS[i])} />
+                {VOICE_LABELS[i]}
+              </div>
+            )}
+          </div>
+
+          <div style={s.panelLbl}>Piano Roll — time × pitch</div>
+          <div style={s.canvasWrap}>
+            <PianoRoll voices={voices} width={dims.w - 48} height={dims.h} />
+          </div>
+
+          <div style={s.panelLbl}>Complex Plane — z ↦ z<sup style={{fontSize:9}}>(1+iα)</sup></div>
+          <div style={s.canvasWrap}>
+            <ComplexPlane voices={voices} width={dims.w - 48} height={Math.max(220, dims.h * 0.82)} />
+          </div>
+
+          <div style={s.aside}>
+            Drag α slowly from 0 to 0.5 and listen. At α&nbsp;=&nbsp;0 the voices are
+            identical. As α grows, pitch and tempo decouple — the melody becomes its
+            own harmony, its own Droste reflection. The complex plane shows how each
+            note's position (gold) maps to its transformed image under successive
+            powers of (1+iα).
+          </div>
+        </div>
+      </div>
+
+      {/* Coda */}
+      <div style={{ ...s.sec, borderTop: "1px solid #1a1a2e", paddingTop: 36 }}>
+        <h2 style={s.h2}>Coda</h2>
+        <p style={s.p}>
+          The conformal map z<sup>(1+iα)</sup> is not the only option. Any holomorphic
+          function on&nbsp;ℂ preserves angles and could serve as a melodic transformation —
+          Möbius transformations, exponential maps, the Joukowski transform. Each imposes
+          a different geometry on the space of notes, a different relationship between
+          duration and pitch, a different kind of self-reference.
+        </p>
+        <p style={s.p}>
+          What makes the Droste map special is that it creates a structure that
+          <em> contains itself</em>. The melody, conformally warped, becomes simultaneously
+          the figure and the ground — a musical Droste cocoa tin, a sonic Print Gallery,
+          where listening to the harmony means listening to the melody again, at a
+          different scale, forever.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<ConformalCanons />);
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolutionary Techniques on Graphs — F1R3FLY.IO</title>
+<meta name="description" content="Concept mating via the rho calculus — encode graph vertices as rholang agents, cross their port structures to produce offspring, and watch the graph evolve.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/article.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400&display=swap');
+  .downloads {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 24px 0 40px;
+  }
+  .dl-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    transition: border-color 0.2s;
+    display: block;
+    text-decoration: none !important;
+  }
+  .dl-card:hover { border-color: var(--color-accent); }
+  .dl-card h3 {
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .dl-card p { font-size: 13px; color: var(--color-text-faint); margin: 0; }
+  .dl-card .fmt {
+    display: inline-block;
+    background: rgba(63,169,245,0.12);
+    color: var(--color-accent);
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+  .idea { margin-bottom: 16px; padding-left: 20px; border-left: 2px solid var(--color-border); }
+  .idea:last-child { margin-bottom: 0; }
+  .idea strong { color: var(--color-white); font-size: 16px; }
+  .idea p { font-size: 14px; margin: 4px 0 0; color: rgba(255,255,255,0.7); }
+  code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.88em;
+    background: rgba(63,169,245,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--color-accent);
+  }
+  .math-block {
+    font-family: 'Fira Code', monospace;
+    font-size: clamp(12px, 1.6vw, 14px);
+    color: var(--color-accent);
+    background: rgba(255,255,255,0.02);
+    padding: 16px 22px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    display: block;
+    margin: 20px 0;
+    overflow-x: auto;
+    line-height: 1.9;
+    white-space: pre;
+  }
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-container">
+    <div class="nav-logo-area">
+      <a href="../index.html#home" class="nav-logo">
+        <img src="../images/f1r3fly-io-horizontal-on-dark-with-tag.svg" alt="F1R3FLY.IO — A Subsidiary of F1R3FLY Industries" class="nav-logo-wordmark">
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html#home">Home</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#technology">Technology</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#developers">Developers</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#clients">Clients</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#partners">Partners</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#team">Team</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#blog">Blog</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#brain-candy">Brain Candy</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="../index.html#white-papers">White Papers</a></li>
+      <li><a href="../index.html#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+</nav>
+<main id="app">
+<article class="article-page">
+  <div class="article-breadcrumb">
+    <a href="../index.html#brain-candy">&larr; Brain Candy</a>
+  </div>
+  <div class="article-box">
+  <span class="article-tag article-tag-dev">Graphs &amp; Evolution</span>
+  <h1>Evolutionary Techniques on Graphs: Concept Mating via the Rho Calculus</h1>
+  <p class="article-subtitle">
+    Lucius Gregory Meredith &mdash; F1R3FLY Research &amp; Development &mdash; March 2026
+  </p>
+  <div class="article-intro">
+    <p><strong>Abstract:</strong> Instead of concept <em>blending</em>&mdash;the category-theoretic pushout that merges two mental spaces into one&mdash;we propose concept <em>mating</em>: a biologically inspired operation that crosses the port structure of two graph vertices to produce two offspring, each inheriting half of each parent&rsquo;s relational profile. The construction composes cleanly, encodes directly in rholang, and connects to Connes&ndash;Kreimer Hopf algebras when iterated.</p>
+  </div>
+  <section class="article-section">
+    <h2>Downloads</h2>
+    <div class="downloads">
+      <a class="dl-card" href="graph_expansion.pdf" target="_blank">
+        <h3>Graph Expansion as Concept Blending</h3>
+        <p>Full paper: the expansion algorithm, DSL grammar, structural properties, concept blending interpretation, and Scala implementation.</p>
+        <span class="fmt">PDF &middot; paper</span>
+      </a>
+      <a class="dl-card" href="EvolutionaryTechniquesOnGraphs.pdf" target="_blank">
+        <h3>Evolutionary Techniques on Graphs</h3>
+        <p>Slide deck: visual walkthrough of vertex evolution, agentic encoding in rholang, edge evolution, graph-level mating, and iterated evolution on categories.</p>
+        <span class="fmt">PDF &middot; slides</span>
+      </a>
+      <a class="dl-card" href="graph_expansion.tex" target="_blank">
+        <h3>LaTeX Source</h3>
+        <p>Complete LaTeX source for the paper, including TikZ figures and Scala listings.</p>
+        <span class="fmt">TEX &middot; source</span>
+      </a>
+    </div>
+  </section>
+  <section class="article-section">
+    <h2>Key Ideas</h2>
+    <div class="idea">
+      <strong>Vertex mating &oplus;</strong>
+      <p>Given two parent vertices M and F with port sets (sources and targets), the offspring D gets M&rsquo;s inputs and F&rsquo;s outputs, while S gets F&rsquo;s inputs and M&rsquo;s outputs. The symmetry is exact: swapping parents swaps children.</p>
+    </div>
+    <div class="idea">
+      <strong>Agentic encoding in rholang</strong>
+      <p>Each vertex becomes a rholang process: <code>V(s&#x20d7;, t&#x20d7;) = for(y&#x2081; &lt;- s&#x2081; &amp; &hellip; &amp; y&#x2098; &lt;- s&#x2098;){ t&#x2081;!([y&#x2081;,&hellip;,y&#x2098;]) | &hellip; | t&#x2099;!([y&#x2081;,&hellip;,y&#x2098;]) | V(s&#x20d7;,t&#x20d7;) }</code>. Mating &oplus; is then just parallel composition |. A population of agents <em>is</em> an agent.</p>
+    </div>
+    <div class="idea">
+      <strong>Local evolution via gendered vertices</strong>
+      <p>Female vertices pattern-match on messages carrying sender vertex codes; male vertices tag their outputs with their own code. Sex is determined by the shape of incoming data&mdash;&agrave; la Le Guin&rsquo;s <em>Left Hand of Darkness</em>. This makes generational change entirely local: agents don&rsquo;t know the graph, only their neighbors.</p>
+    </div>
+    <div class="idea">
+      <strong>Graph-level crossover requires homomorphisms</strong>
+      <p>Naive crossover G(V&#x2081;,E&#x2082;)|G(V&#x2082;,E&#x2081;) fails because edges can&rsquo;t find their vertices. A pair of graph homomorphisms H&#x2081;:G&#x2081;&rarr;G&#x2082; and H&#x2082;:G&#x2082;&rarr;G&#x2081; solves this&mdash;the whole graph becomes more than the sum of its parts.</p>
+    </div>
+    <div class="idea">
+      <strong>Iterated evolution &rarr; small-world + Hopf algebras</strong>
+      <p>Without constraints the agentic encoding generates infinite iterations. The limit approaches a graph with the small-world property surrounded by a cloud of isolated points. The vertex mating operation appears to produce a Hopf algebra associated with the Connes&ndash;Kreimer renormalization group.</p>
+    </div>
+  </section>
+  <section class="article-section">
+    <h2>The Core Construction</h2>
+    <p>The <code>expand</code> operation takes a graph G and two distinguished vertices M and F:</p>
+    <code class="math-block">expand(G, M, F, D, S)
+
+ports_in(D)  = ports_in(M)     ports_out(D) = ports_out(F)
+ports_in(S)  = ports_in(F)     ports_out(S) = ports_out(M)
+
+V(s&#x20d7;, t&#x20d7;) &oplus; V(s&#x20d7;', t&#x20d7;')  =  V(s&#x20d7;, t&#x20d7;') | V(s&#x20d7;', t&#x20d7;)</code>
+    <p>The duality is clean: swapping M&harr;F simultaneously swaps D&harr;S. The operation composes under tensor product and respects the reflective name structure of the rho calculus.</p>
+  </section>
+  <div class="article-topics">
+    <span>graph expansion</span>
+    <span>concept mating</span>
+    <span>rholang</span>
+    <span>rho calculus</span>
+    <span>Hopf algebras</span>
+    <span>small-world graphs</span>
+    <span>evolutionary programming</span>
+  </div>
+  </div>
+</article>
+</main>
+<footer class="section-band neutral site-footer" style="margin:0; padding:80px 20px 40px;">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <img src="../images/f1r3fly-io-bug-icon.svg" alt="F1R3FLY.IO" width="40" height="40">
+        <span style="font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:2px; text-transform:uppercase; color:var(--color-white);">F1R3FLY.IO</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.5); font-size:14px; line-height:1.6; margin-bottom:24px;">Scalable. Searchable. Secure. Storable.<br>A Digital Evolution in concurrent computing.</p>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Europe Office</h4>
+      <p class="footer-address">4-5 Langham Place<br>London, W1B 3DG</p>
+      <p class="footer-address"><a href="tel:+442034320078">+44 (0)203 432 0078</a></p>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">US Office</h4>
+      <p class="footer-address">Floor 17, 521 Fifth Avenue<br>New York, NY 10175</p>
+      <p class="footer-address"><a href="tel:+16464759644">+1 646 475 9644</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 F1R3FLY.IO. All rights reserved.</p>
+  </div>
+</footer>
+<script src="../js/main.js" defer></script>
+</body>
+</html>
