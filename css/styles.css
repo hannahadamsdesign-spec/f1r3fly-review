@@ -1272,7 +1272,7 @@ a.blog-link-card:hover .blog-read-more {
 /* ============================================
    RESPONSIVE: DESKTOP (1024px+)
    ============================================ */
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   /* Show desktop nav, hide hamburger */
   .nav-links { display: flex; }
   .hamburger { display: none; }
