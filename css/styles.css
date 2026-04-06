@@ -163,8 +163,8 @@ ul { list-style: none; }
 
 .nav-logo {
   display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  flex-direction: column;
+  gap: 2px;
   text-decoration: none;
 }
 
@@ -172,14 +172,11 @@ ul { list-style: none; }
 
 .nav-logo-subtitle {
   font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 330;
-  letter-spacing: 0.5px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   white-space: nowrap;
-  margin-left: 12px;
-  padding-left: 12px;
-  border-left: 1px solid rgba(255,255,255,0.2);
   background: linear-gradient(90deg, #80D5FF 0%, #C6E0AB 89.42%, #FFE867 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
