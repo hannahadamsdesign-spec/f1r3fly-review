@@ -6,7 +6,7 @@ Click any section to zoom in. Use arrow keys to navigate between sections, +/−
 
 ## Live Preview
 
-https://hannahadamsdesign-spec.github.io/f1r3fly-website-stage/
+https://hannahadamsdesign-spec.github.io/f1r3fly-review/
 
 ## What This Is
 
