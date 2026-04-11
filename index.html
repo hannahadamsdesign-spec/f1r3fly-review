@@ -380,7 +380,7 @@ function F1R3Pix() {
           <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, justifyContent: "space-between" }}>
-          <button className="tour-btn" style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 13, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0 }}>TAKE A TOUR</button>
+          <button className="tour-btn" style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 13, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0, marginLeft: 16 }}>TAKE A TOUR</button>
           <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
           <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
           <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
