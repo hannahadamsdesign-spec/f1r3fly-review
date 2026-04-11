@@ -21,26 +21,29 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-  @media (max-width: 768px) { html, body { overflow: auto; } }
+  @media (max-width: 768px) { html, body { overflow-y: auto; overflow-x: hidden; height: auto; } }
   @media (max-width: 768px) {
-    .game-layout { flex-direction: column !important; }
+    .game-layout { flex-direction: column !important; height: calc(100vh - 60px) !important; }
     .game-sidebar {
       width: 100% !important; border-left: none !important;
-      border-top: 1px solid rgba(255,255,255,0.2); flex-direction: row !important;
-      flex-wrap: wrap; gap: 12px !important; padding: 12px 16px !important;
-      max-height: 280px; overflow-y: auto;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      flex-direction: column !important;
+      gap: 12px !important; padding: 12px 16px !important;
+      max-height: none !important; overflow-y: auto !important;
+      flex: 0 0 auto !important;
+      order: -1 !important;
     }
-    .game-sidebar > div { min-width: 140px; }
-    .game-header { flex-wrap: wrap; gap: 8px; min-height: auto !important; padding: 10px 12px !important; }
-    .game-header-title { font-size: 22px !important; }
-    .game-header-stats { font-size: 13px !important; }
-    .game-grid-wrap { flex: 1; min-height: 50vh; }
-    .zoom-controls { gap: 6px !important; }
-    .zoom-btn { width: 32px !important; height: 32px !important; font-size: 18px !important; }
+    .game-sidebar > div { min-width: unset !important; }
+    .game-header { flex-wrap: nowrap; gap: 6px; min-height: auto !important; padding: 8px 12px !important; position: sticky; top: 0; z-index: 50; }
+    .game-header-title { font-size: 18px !important; }
+    .game-header-stats { font-size: 11px !important; display: none !important; }
+    .game-grid-wrap { flex: 1 1 auto !important; min-height: 40vh !important; max-height: 55vh !important; }
+    .zoom-controls { gap: 4px !important; }
+    .zoom-btn { width: 28px !important; height: 28px !important; font-size: 16px !important; }
   }
   @media (max-width: 480px) {
-    .game-header-title { font-size: 18px !important; letter-spacing: 2px !important; }
-    .game-header-stats { font-size: 12px !important; display: block !important; margin-left: 0 !important; margin-top: 4px !important; }
+    .game-header-title { font-size: 16px !important; letter-spacing: 2px !important; }
+    .game-header-stats { display: none !important; }
     .join-title { font-size: 28px !important; letter-spacing: 4px !important; }
     .join-subtitle { font-size: 14px !important; }
     .join-logo { width: 200px !important; }
@@ -357,7 +360,7 @@ function F1R3Pix() {
 
   // ── GAME VIEW ──────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FB, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FB, display: "flex", flexDirection: "column" }}>
       <style>{BRAND_FONTS}{`
         ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent}
         ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
@@ -381,7 +384,7 @@ function F1R3Pix() {
       <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
         {/* Grid */}
         <div ref={gridContainerRef} className="game-grid-wrap" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 8, overflow: "auto", background: "#000" }}>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridW}, ${CELL}px)`, gap: 1, background: "#0a0a14", padding: 1, borderRadius: 4, transform: `scale(${zoom})`, transformOrigin: "center center", transition: "transform 0.1s ease-out" }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridW}, ${CELL}px)`, gap: 1, background: "rgba(255,255,255,0.08)", padding: 1, borderRadius: 4, transform: `scale(${zoom})`, transformOrigin: "center center", transition: "transform 0.1s ease-out" }}>
             {Array.from({ length: gridH }, (_, y) =>
               Array.from({ length: gridW }, (_, x) => {
                 const key = `${x},${y}`; const px = grid[key];
