@@ -21,7 +21,7 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-  @media (max-width: 768px) { html, body { overflow-y: auto; overflow-x: hidden; height: auto; } }
+  @media (max-width: 768px) { html, body { overflow-y: auto; overflow-x: hidden; height: auto; } html { scroll-behavior: auto; } }
   @media (max-width: 768px) {
     .game-layout { flex-direction: column !important; }
     .game-sidebar {
@@ -362,6 +362,13 @@ function F1R3Pix() {
     </div>
   );
   if (phase === "join") return <JoinScreen onJoin={handleJoin} players={players} />;
+
+  // Scroll to top on mobile when game loads
+  useEffect(() => {
+    if (phase === "play" && window.innerWidth <= 768) {
+      window.scrollTo(0, 0);
+    }
+  }, [phase]);
   const hovInfo = hoverCell ? grid[hoverCell] : null;
 
   // ── GAME VIEW ──────────────────────────────────────────────
@@ -412,7 +419,7 @@ function F1R3Pix() {
         {/* Sidebar — wider (240px), more breathing room */}
         <div className="game-sidebar" style={{ width: 280, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>PALETTE</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px 6px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
             {PALETTE.map(c => (
               <div key={c} onClick={() => setSelColor(c)} style={{ width: 28, height: 28, borderRadius: 4, background: c, cursor: "pointer",
                 border: selColor === c ? "2px solid #fff" : c === "#000000" ? "1px solid #333" : "1px solid transparent",
@@ -443,7 +450,7 @@ function F1R3Pix() {
           <div style={{ marginTop: 16, padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
             <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
             <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px 6px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
               {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
                 <div key={`sig-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
                   border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
@@ -455,7 +462,7 @@ function F1R3Pix() {
             </div>
             {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
             {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
-            <div style={{ marginTop: 10, fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
+            <div style={{ marginTop: 10, fontSize: 13, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
           </div>
         </div>
       </div>
