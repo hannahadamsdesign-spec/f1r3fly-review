@@ -33,7 +33,7 @@
       max-height: none !important; overflow-y: visible !important;
       flex: 0 0 auto !important;
     }
-    .game-sidebar > div { min-width: unset !important; }
+    .game-sidebar-left { display: none !important; }
     .game-header { flex-wrap: nowrap; gap: 6px; min-height: auto !important; padding: 8px 12px !important; position: sticky; top: 0; z-index: 50; background: #000 !important; }
     .game-header-title { font-size: 18px !important; letter-spacing: 2px !important; }
     .game-header-stats { display: none !important; }
@@ -349,7 +349,7 @@ function F1R3Pix() {
 
   const handleWheel = useCallback((e) => { e.preventDefault(); setZoom(z => { const next = e.deltaY > 0 ? z - 0.1 : z + 0.1; return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 10) / 10)); }); }, []);
   useEffect(() => { const el = gridContainerRef.current; if (!el) return; el.addEventListener("wheel", handleWheel, { passive: false }); return () => el.removeEventListener("wheel", handleWheel); }, [handleWheel, phase]);
-  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 280 : 0;
+  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 560 : 0;
   // Scroll to top on mobile so header is visible on load
   if (window.innerWidth <= 768) window.scrollTo(0, 0); const vw = window.innerWidth - sW; const vh = window.innerWidth <= 768 ? window.innerHeight * 0.55 : window.innerHeight - 90; const gpw = gridW * (CELL + 1); const gph = gridH * (CELL + 1); const fit = Math.min(vw / gpw, vh / gph, MAX_ZOOM); setZoom(Math.max(MIN_ZOOM, Math.round(fit * 10) / 10)); }, [phase, gridW, gridH]);
 
@@ -393,9 +393,34 @@ function F1R3Pix() {
       </div>
 
       {/* Brand gradient stroke — matches f1r3fly.io nav line */}
-      <div style={{ width: "100%", height: 1, background: BRAND.stroke }} />
+      <div style={{ width: "100%", height: "0.5px", background: BRAND.stroke, opacity: 0.8 }} />
 
       <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+        {/* Left Sidebar: Canvas + Signals */}
+        <div className="game-sidebar game-sidebar-left" style={{ width: 280, borderRight: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+          <CanvasShapeControls currentShape={canvasShape} hostName={hostName || "host"} isHost={isHost} isUnlocked={shapeUnlocked} canChange={canChange} onChangeShape={handleChangeShape} onToggleLock={handleToggleLock} pixelCount={pixelCount} />
+
+          {/* F1R3 SIGNALS */}
+          <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
+            <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
+            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
+              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
+                <div key={`sig-l-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
+                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
+                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
+                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
+                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
+              ))}
+            </div>
+            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
+            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
+            <div style={{ marginTop: 10, fontSize: 13, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
+          </div>
+        </div>
+
         {/* Grid */}
         <div ref={gridContainerRef} className="game-grid-wrap" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 8, overflow: "auto", background: "#000" }}>
           <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridW}, ${CELL}px)`, gap: 1, background: "rgba(255,255,255,0.08)", padding: 1, borderRadius: 4, transform: `scale(${zoom})`, transformOrigin: "center center", transition: "transform 0.1s ease-out" }}>
@@ -426,9 +451,6 @@ function F1R3Pix() {
           <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span></div>
           {hovInfo?.by && <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>by: {hovInfo.byName || "?"}<br />{new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>}
 
-          {/* Canvas Shape Controls */}
-          <CanvasShapeControls currentShape={canvasShape} hostName={hostName || "host"} isHost={isHost} isUnlocked={shapeUnlocked} canChange={canChange} onChangeShape={handleChangeShape} onToggleLock={handleToggleLock} pixelCount={pixelCount} />
-
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginTop: 8 }}>PLAYERS</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {allPlayers.map(p => (
@@ -439,25 +461,6 @@ function F1R3Pix() {
                 </span>
               </div>
             ))}
-          </div>
-
-          {/* F1R3 SIGNALS — same size heading as PALETTE and PLAYERS */}
-          <div style={{ marginTop: 16, padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
-            <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
-            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
-              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
-                <div key={`sig-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
-                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
-                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
-                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
-                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
-                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
-              ))}
-            </div>
-            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
-            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
-            <div style={{ marginTop: 10, fontSize: 13, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
           </div>
         </div>
       </div>
