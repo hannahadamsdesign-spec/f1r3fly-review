@@ -70,10 +70,11 @@ const BRAND = {
   surface: "#000000", card: "#0c0c18", border: "rgba(255,255,255,0.2)", stroke: "linear-gradient(90deg, #F3D630, #8BB999)",
   text: "#ffffff", textMuted: "#ffffff", textDim: "#ffffff",
 };
-const BRAND_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');`;
+const BRAND_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&family=Pixelify+Sans:wght@400;500;600;700&display=swap');`;
 const FH = "'Josefin Sans', 'Source Sans 3', sans-serif";
 const FB = "'Source Sans 3', 'Josefin Sans', sans-serif";
 const FM = "'Source Code Pro', 'Courier New', monospace";
+const FP = "'Pixelify Sans', 'Josefin Sans', sans-serif";
 
 const SHAPES = {
   portrait:  { w: 32, h: 48, label: "PORTRAIT",  desc: "32 × 48" },
@@ -258,7 +259,7 @@ function JoinScreen({ onJoin, players }) {
   const [name, setName] = useState("");
   const go = () => { const n = name.trim(); if(n) onJoin(n); };
   return (
-    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", fontFamily: FH }}>
+    <div style={{ height: "100vh", maxHeight: "100vh", overflow: "hidden", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", fontFamily: FH }}>
       <style>{BRAND_FONTS}{`
         @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
         * { box-sizing: border-box; }
@@ -269,7 +270,7 @@ function JoinScreen({ onJoin, players }) {
         <div style={{ height: 30 }} />
         <div style={{ width: 160, height: 1, background: BRAND.border, margin: "0 auto" }} />
         <div style={{ height: 35 }} />
-        <h1 className="join-title" style={{ margin: "0 0 12px", fontSize: 34, fontWeight: 700, letterSpacing: 8, color: "#fff", fontFamily: FH }}>
+        <h1 className="join-title" style={{ margin: "0 0 12px", fontSize: 34, fontWeight: 700, letterSpacing: 8, color: "#fff", fontFamily: FP }}>
           F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
         </h1>
         <div className="join-subtitle" style={{ fontSize: 18, color: "#fff", letterSpacing: 3, fontWeight: 400 }}>COLLECTIVE VISUAL INTELLIGENCE</div>
@@ -340,15 +341,7 @@ function F1R3Pix() {
     await sh.set(`${PFX_P}${id}`, { id, name, joinedAt: Date.now() }); await sh.set(MY_ID, id, false);
     const existingHost = await sh.get(SHARD_HOST);
     if (!existingHost) { await sh.set(SHARD_HOST, { id, name }); await sh.set(SHARD_SHAPE, DEFAULT_SHAPE); setHostId(id); setHostName(name); }
-    setMyId(id); setMyName(name); await syncAll(); 
-    // Force scroll to top before showing game view (mobile)
-    window.scrollTo({top: 0, left: 0, behavior: "instant"});
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    setPhase("play");
-    setTimeout(() => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, 0);
-    setTimeout(() => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, 50);
-    setTimeout(() => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, 200);
+    setMyId(id); setMyName(name); await syncAll(); setPhase("play");
   };
   const handleChangeShape = async (s) => { setCanvasShape(s); await sh.set(SHARD_SHAPE, s); };
   const handleToggleLock = async () => { const v = !shapeUnlocked; setShapeUnlocked(v); await sh.set(SHARD_SHAPE_UNLOCKED, v); };
@@ -385,7 +378,7 @@ function F1R3Pix() {
       {/* Header */}
       <div className="game-header" style={{ padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#000", minHeight: 70 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: "#fff" }}>F1R3<span style={{ color: BRAND.yellow }}>PIX</span></span>
+          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FP, color: "#fff" }}>F1R3<span style={{ color: BRAND.yellow }}>PIX</span></span>
           <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, justifyContent: "space-between" }}>
