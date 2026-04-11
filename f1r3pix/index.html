@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>F1R3PIX — Draft Review v1r1 (Hannah Adams, April 2026)</title>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script>
+(function() {
+  var store = {};
+  window.storage = {
+    get: function(key, shared) { var v = store[key]; return v !== undefined ? Promise.resolve({ key: key, value: v, shared: !!shared }) : Promise.resolve(null); },
+    set: function(key, value, shared) { store[key] = value; return Promise.resolve({ key: key, value: value, shared: !!shared }); },
+    delete: function(key, shared) { delete store[key]; return Promise.resolve({ key: key, deleted: true, shared: !!shared }); },
+    list: function(prefix, shared) { var keys = Object.keys(store).filter(function(k) { return !prefix || k.startsWith(prefix); }); return Promise.resolve({ keys: keys, prefix: prefix, shared: !!shared }); }
+  };
+})();
+</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  @media (max-width: 768px) { html, body { overflow-y: auto; overflow-x: hidden; height: auto; } html { scroll-behavior: auto; } }
+  @media (max-width: 768px) {
+    .game-layout { flex-direction: column !important; }
+    .game-sidebar {
+      width: 100% !important; border-left: none !important;
+      border-top: none;
+      border-top: 1px solid; border-image: linear-gradient(90deg, #F3D630, #8BB999) 1;
+      flex-direction: column !important;
+      gap: 16px !important; padding: 16px !important;
+      max-height: none !important; overflow-y: visible !important;
+      flex: 0 0 auto !important;
+    }
+    .game-sidebar-left { display: none !important; }
+    .game-header { flex-wrap: nowrap; gap: 6px; min-height: auto !important; padding: 8px 12px !important; position: sticky; top: 0; z-index: 50; background: #000 !important; }
+    .game-header-title { font-size: 18px !important; letter-spacing: 2px !important; }
+    .game-header-stats { display: none !important; }
+    .game-grid-wrap { flex: 0 0 auto !important; height: 55vh !important; min-height: 55vh !important; max-height: 55vh !important; overflow: auto !important; }
+    .zoom-controls { gap: 4px !important; }
+    .zoom-btn { width: 28px !important; height: 28px !important; font-size: 16px !important; }
+    .built-on-badge { position: relative !important; bottom: auto !important; left: auto !important; transform: none !important; margin: 16px auto !important; }
+  }
+  @media (max-width: 480px) {
+    .game-header-title { font-size: 16px !important; letter-spacing: 2px !important; }
+    .game-header-stats { display: none !important; }
+    .join-title { font-size: 28px !important; letter-spacing: 4px !important; }
+    .join-subtitle { font-size: 14px !important; }
+    .join-logo { width: 200px !important; }
+    .tour-btn { font-size: 10px !important; padding: 4px 8px !important; }
+    .storm-btn { font-size: 12px !important; padding: 4px 8px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+// ══════════════════════════════════════════════════════════════════
+// F1R3PIX — Draft Review v1r1
+// F1R3FLY Brand Book March 27, 2026 — Hannah Adams
+// Canvas shape: in-game host controls, portrait default
+// Brand border: rgba(255,255,255,0.2) per f1r3fly.io site
+// ══════════════════════════════════════════════════════════════════
+
+const BRAND = {
+  yellow: "#F3D630", sage: "#8BB999", sky: "#3FA9F5",
+  surface: "#000000", card: "#0c0c18", border: "rgba(255,255,255,0.2)", stroke: "linear-gradient(90deg, #F3D630, #8BB999)",
+  text: "#ffffff", textMuted: "#cccccc", textDim: "#999999",
+};
+const BRAND_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');`;
+const FH = "'Josefin Sans', 'Source Sans 3', sans-serif";
+const FB = "'Source Sans 3', 'Josefin Sans', sans-serif";
+const FM = "'Source Code Pro', 'Courier New', monospace";
+
+const SHAPES = {
+  portrait:  { w: 32, h: 48, label: "PORTRAIT",  desc: "32 × 48" },
+  landscape: { w: 48, h: 32, label: "LANDSCAPE", desc: "48 × 32" },
+  square:    { w: 40, h: 40, label: "SQUARE",    desc: "40 × 40" },
+};
+const DEFAULT_SHAPE = "portrait";
+
+const PFX_PX = "f1r3pix-pixel:";
+const PFX_P = "f1r3pix-player:";
+const MY_ID = "f1r3pix-myid";
+const SHARD_SHAPE = "f1r3pix-canvas-shape";
+const SHARD_HOST = "f1r3pix-host";
+const SHARD_SHAPE_UNLOCKED = "f1r3pix-shape-unlocked";
+const POLL = 1500;
+const MIN_ZOOM = 0.3;
+const MAX_ZOOM = 2.5;
+const CELL = 16;
+
+const PALETTE = [
+  "#000000","#1a1a30","#3f3f3f","#8E8E93","#FFFFFF",
+  "#7b0429","#5c0269","#F7E478","#F3D630","#B3D1BC",
+  "#0c8e23","#8BB999","#7a9d0e","#82C7F8","#3FA9F5",
+  "#009188","#007bc4","#1114ad","#BF5AF2","#AF52DE",
+];
+
+const sh = {
+  async get(k,s=true){try{const r=await window.storage.get(k,s);return r?.value?JSON.parse(r.value):null}catch{return null}},
+  async set(k,v,s=true){try{await window.storage.set(k,JSON.stringify(v),s);return true}catch{return false}},
+  async del(k,s=true){try{await window.storage.delete(k,s);return true}catch{return false}},
+  async list(p){try{const r=await window.storage.list(p,true);return r?.keys||[]}catch{return[]}},
+};
+
+function hSeed(id){let h=0;for(let i=0;i<id.length;i++)h=((h<<5)-h+id.charCodeAt(i))|0;return Math.abs(h)}
+
+function Sigil({seed, size=24}){
+  const s=seed%10000, h1=s%360, h2=(s*7+120)%360, r=size*.38;
+  return(
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <circle cx={size/2} cy={size/2} r={r} fill={`hsl(${h1},25%,15%)`} stroke={`hsl(${h1},50%,40%)`} strokeWidth="1"/>
+      <circle cx={size/2} cy={size/2-r*.3} r={size*.1} fill={`hsl(${h1},70%,65%)`} opacity=".8"/>
+      <circle cx={size/2+r*.3} cy={size/2+r*.2} r={size*.08} fill={`hsl(${h2},70%,65%)`} opacity=".7"/>
+    </svg>
+  );
+}
+
+// ── "Built on F1R3FLY.IO" Badge with logo ────────────────────────
+function BuiltOnBadge() {
+  return (
+    <div className="built-on-badge" style={{
+      position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 100,
+      display: "flex", alignItems: "center", gap: 10,
+      background: "rgba(0,0,0,0.85)", border: `1px solid ${BRAND.border}`,
+      borderRadius: 8, padding: "8px 16px",
+      fontFamily: FH, fontSize: 14, letterSpacing: 2,
+      color: BRAND.textDim, cursor: "pointer", backdropFilter: "blur(8px)",
+    }} onClick={() => window.open && window.open("https://f1r3fly.io", "_blank")}>
+      <span style={{ color: "#999", fontSize: 12, letterSpacing: 2 }}>BUILT ON</span>
+      <svg width="120" viewBox="0 0 2343 535" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <linearGradient id="b-lg" x1="620.975" y1="117.901" x2="793.518" y2="-180.951" gradientTransform="translate(-545.342 290.672) rotate(-4.856)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#009188"/><stop offset="1" stopColor="#007bc4"/>
+          </linearGradient>
+          <linearGradient id="b-lg1" x1="10868.88" y1="2958.368" x2="11042.919" y2="2656.923" gradientTransform="translate(11539.772 2556.8) rotate(-153.904) scale(1 -1)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#deffac"/><stop offset="1" stopColor="#8fc8e7"/>
+          </linearGradient>
+          <linearGradient id="b-lg2" x1="1278.548" y1="-693.973" x2="1379.282" y2="-693.973" gradientTransform="translate(-816.84 975.667) rotate(-11.485)" xlinkHref="#b-lg"/>
+          <radialGradient id="b-rg" cx="-507.17" cy="1315.506" fx="-507.17" fy="1166.669" r="148.898" gradientTransform="translate(-462.725 1690.402) rotate(-169.698) scale(1.001 1.048) skewX(.542)" gradientUnits="userSpaceOnUse">
+            <stop offset=".159" stopColor="#ebe1a3"/><stop offset=".243" stopColor="#ebdf96"/><stop offset=".395" stopColor="#eedc75"/><stop offset=".598" stopColor="#f1d741"/><stop offset=".658" stopColor="#f3d630"/><stop offset=".995" stopColor="#f3d630"/>
+          </radialGradient>
+        </defs>
+        <g>
+          <path fill="url(#b-lg)" d="M316.697,105.798c-37.703,124.422-167.35,232.91-298.749,218.058-19.188-3.649-20.283-20.828-15.672-37.06C31.864,162.855,152.312,70.533,276.989,74.429c21.882.057,44.988,2.747,39.708,31.368Z"/>
+          <path fill="url(#b-lg1)" d="M349.717,112.154c-8.765,129.993,73.792,279.334,201.506,314.364,19.172,3.736,26.255-11.869,27.685-28.713,16.157-126.526-63.53-257.377-181.112-300.119-20.416-8.086-42.901-14.173-48.079,14.468Z"/>
+          <path fill="url(#b-lg2)" d="M400.519,44.343c1.708-41.624-83.95-62.735-103.871-23.736-3.572,6.996-.071,15.53,6.922,17.387,25.852,6.863,56.168,11.194,82.282,18.292,7.128,1.934,14.336-3.926,14.667-11.944Z"/>
+          <path fill="url(#b-rg)" d="M378.911,353.267c-46.405,267.616-227.024,226.916-174.919-34.206,44.206-27.89,81.981-64.979,110.028-108.046,11.008,50.816,33.273,99.674,64.892,142.252Z"/>
+        </g>
+        <g>
+          <path fill="#fff" d="M755.273,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.271,0,5.652,2.677,5.652,5.652v24.391c0,2.975-2.381,5.652-5.652,5.652h-88.049v55.924h73.473c2.975,0,5.652,2.677,5.652,5.652v24.392c0,2.974-2.677,5.652-5.652,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/>
+          <path fill="#fff" d="M952.779,223.691l-26.177,5.652c-2.677.595-5.652-1.189-5.949-3.867l-1.785-14.576c-.297-2.379.297-4.164,1.488-5.353l42.834-35.993h20.822c2.975,0,5.355,2.677,5.355,5.652v190.971c0,2.975-2.379,5.652-5.355,5.652h-25.581c-3.272,0-5.652-2.677-5.652-5.652v-142.485Z"/>
+          <path fill="#fff" d="M1058.965,169.256c0-2.975,2.379-5.652,5.652-5.652h85.075c35.696,0,64.847,28.556,64.847,63.954,0,27.367-18.146,49.676-44.024,60.088l40.752,75.555c2.082,3.868,0,8.627-5.056,8.627h-31.234c-2.677,0-4.164-1.488-4.759-2.677l-39.563-78.828h-33.018v75.853c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92ZM1146.419,258.494c15.765,0,29.449-13.683,29.449-30.34,0-15.766-13.684-28.855-29.449-28.855h-48.486v59.195h48.486Z"/>
+          <path fill="#fff" d="M1255.873,340.892l15.171-14.576c2.677-2.379,5.355-2.379,7.734,0,.892,1.19,18.443,16.064,36.588,16.064,16.063,0,31.532-11.602,31.532-27.962,0-15.468-14.279-29.449-41.05-29.449h-16.658c-3.271,0-5.652-2.379-5.652-5.949v-18.74c0-3.867,2.082-5.949,5.652-5.949h16.658c24.392,0,36.885-12.196,36.885-27.366,0-16.361-13.683-27.366-28.854-27.366-15.468,0-24.987,8.329-30.044,14.278-2.082,2.379-5.353,2.677-8.031.297l-14.575-13.683c-2.381-2.082-2.082-5.652,0-7.734,0,0,22.606-26.177,55.923-26.177,34.506,0,63.359,21.12,63.359,54.436,0,22.905-17.253,40.157-30.639,46.404v.893c13.98,5.949,35.993,22.012,35.993,48.486,0,33.614-27.366,58.006-68.417,58.006-37.182,0-55.328-18.74-61.872-26.474-1.785-2.082-1.488-5.355.297-7.437Z"/>
+          <path fill="#fff" d="M1442.072,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.272,0,5.651,2.677,5.651,5.652v24.391c0,2.975-2.378,5.652-5.651,5.652h-88.049v55.924h73.473c2.975,0,5.653,2.677,5.653,5.652v24.392c0,2.974-2.678,5.652-5.653,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/>
+          <path fill="#fff" d="M1624.705,169.256c0-2.975,2.381-5.652,5.653-5.652h27.366c2.975,0,5.651,2.677,5.651,5.652v166.876h75.853c3.272,0,5.653,2.678,5.653,5.652v24.392c0,2.975-2.381,5.652-5.653,5.652h-108.87c-3.272,0-5.653-2.677-5.653-5.652v-196.92Z"/>
+          <path fill="#fff" d="M1815.074,271.582l-67.822-99.352c-2.381-3.867,0-8.626,4.759-8.626h30.341c2.381,0,3.867,1.486,4.759,2.677l47.595,68.417,47.593-68.417c.892-1.19,2.381-2.677,4.759-2.677h30.641c4.759,0,7.137,4.759,4.759,8.626l-68.714,99.055v94.891c0,2.975-2.678,5.652-5.653,5.652h-27.366c-3.272,0-5.651-2.677-5.651-5.652v-94.594Z"/>
+          <path fill="#fff" d="M1961.416,325.721c13.387,0,24.691,11.304,24.691,24.689s-11.304,24.392-24.691,24.392-24.391-11.006-24.391-24.392,11.006-24.689,24.391-24.689Z"/>
+          <path fill="#fff" d="M2036.073,169.256c0-2.975,2.678-5.652,5.653-5.652h27.663c2.975,0,5.651,2.677,5.651,5.652v196.92c0,2.975-2.676,5.652-5.651,5.652h-27.663c-2.975,0-5.653-2.677-5.653-5.652v-196.92Z"/>
+          <path fill="#fff" d="M2235.958,160.629c59.493,0,107.086,47.891,107.086,107.384s-47.593,106.79-107.086,106.79-106.789-47.297-106.789-106.79,47.298-107.384,106.789-107.384ZM2235.958,336.132c37.481,0,68.417-30.639,68.417-68.119s-30.936-68.714-68.417-68.714-68.119,31.234-68.119,68.714,30.639,68.119,68.119,68.119Z"/>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function F1R3GamesLogo({ width = 300 }) {
+  return (
+    <svg width={width} viewBox="0 0 2042 1170" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", margin: "0 auto" }}>
+      <defs>
+        <linearGradient id="fg-g1" x1="930" y1="748" x2="930" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#9ec597"/><stop offset=".519" stopColor="#5fb7e7"/><stop offset="1" stopColor="#1c6d8d"/>
+        </linearGradient>
+        <linearGradient id="fg-g2" x1="771.5" y1="405.6" x2="1465.1" y2="405.6" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#f4d633"/><stop offset="1" stopColor="#a82933"/>
+        </linearGradient>
+      </defs>
+      <path fill="#fff" d="M0,924.4c0-3.5,2.8-6.7,6.7-6.7h144.3c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7H46.1v66.7h87.6c3.5,0,6.7,3.2,6.7,6.7v29.1c0,3.5-3.2,6.7-6.7,6.7H46.1v89.7c0,3.5-3.2,6.7-6.7,6.7H6.7c-3.9,0-6.7-3.2-6.7-6.7V924.4ZM235.4,989.3l-31.2,6.7c-3.2.7-6.7-1.4-7.1-4.6l-2.1-17.4c-.4-2.8.4-5,1.8-6.4l51.1-42.9h24.8c3.5,0,6.4,3.2,6.4,6.7v227.6c0,3.5-2.8,6.7-6.4,6.7h-30.5c-3.9,0-6.7-3.2-6.7-6.7V989.3ZM362,924.4c0-3.5,2.8-6.7,6.7-6.7h101.4c42.5,0,77.3,34,77.3,76.2,0,32.6-21.6,59.2-52.5,71.6l48.6,90.1c2.5,4.6,0,10.3-6,10.3h-37.2c-3.2,0-5-1.8-5.7-3.2l-47.2-94h-39.4v90.4c0,3.5-3.2,6.7-6.7,6.7h-32.6c-3.9,0-6.7-3.2-6.7-6.7V924.4ZM466.2,1030.8c18.8,0,35.1-16.3,35.1-36.2,0-18.8-16.3-34.4-35.1-34.4h-57.8v70.6h57.8ZM596.7,1129l18.1-17.4c3.2-2.8,6.4-2.8,9.2,0,1.1,1.4,22,19.1,43.6,19.1,19.1,0,37.6-13.8,37.6-33.3,0-18.4-17-35.1-48.9-35.1h-19.9c-3.9,0-6.7-2.8-6.7-7.1v-22.3c0-4.6,2.5-7.1,6.7-7.1h19.9c29.1,0,44-14.5,44-32.6,0-19.5-16.3-32.6-34.4-32.6-18.4,0-29.8,9.9-35.8,17-2.5,2.8-6.4,3.2-9.6.4l-17.4-16.3c-2.8-2.5-2.5-6.7,0-9.2,0,0,27-31.2,66.7-31.2,41.1,0,75.5,25.2,75.5,64.9,0,27.3-20.6,47.9-36.5,55.3v1.1c16.7,7.1,42.9,26.2,42.9,57.8,0,40.1-32.6,69.1-81.6,69.1-44.3,0-65.9-22.3-73.7-31.6-2.1-2.5-1.8-6.4.4-8.9Z"/>
+      <path fill="#fff" d="M928.2,914.2c31.9,0,62.4,12.4,86.5,33,2.8,2.8,3.2,7.1.4,9.9l-22,23c-2.8,2.8-6,2.8-9.2,0-15.2-13.5-34-20.6-53.5-20.6-44.3,0-79.4,37.9-79.4,82.3,0,44,35.1,81.2,79.8,81.2,19.9,0,35.1-6,42.2-8.9v-30.1h-28.4c-3.9,0-6.7-2.8-6.7-6.4v-28c0-3.9,2.8-6.7,6.7-6.7h68.1c3.5,0,6.4,3.2,6.4,6.7v90.8c0,2.8-1.4,4.6-2.8,5.7,0,0-36.5,23-87.9,23-70.6,0-127.3-56-127.3-126.9s56.7-128,127.3-128Z"/>
+      <path fill="#fff" d="M1056.6,1156.7l110.3-238.6c1.1-2.1,2.8-3.9,6-3.9h3.5c3.5,0,5,1.8,6,3.9l109.2,238.6c2.1,4.6-.7,9.2-6,9.2h-30.8c-5.3,0-7.8-2.1-10.3-7.1l-17.4-38.3h-106l-17.4,38.3c-1.4,3.5-4.6,7.1-10.3,7.1h-30.8c-5.3,0-8.2-4.6-6-9.2ZM1209.8,1081.2l-35.5-78h-1.1l-34.7,78h71.3Z"/>
+      <path fill="#fff" d="M1367.5,919.5c.4-2.8,2.5-5.3,6.4-5.3h5.7c2.8,0,5,1.4,6,3.5l78,167.4h1.1l78-167.4c1.1-2.1,2.8-3.5,6-3.5h5.7c3.9,0,6,2.5,6.4,5.3l41.8,238.3c1.1,5-1.8,8.2-6.4,8.2h-32.3c-3.2,0-6-2.8-6.7-5.3l-20.9-134.4h-1.1l-62,139.3c-.7,2.1-2.8,3.9-6,3.9h-6.4c-3.2,0-5-1.8-6-3.9l-62.8-139.3h-1.1l-20.6,134.4c-.4,2.5-3.2,5.3-6.4,5.3h-31.9c-4.6,0-7.4-3.2-6.7-8.2l42.2-238.3Z"/>
+      <path fill="#fff" d="M1668.9,924.4c0-3.5,2.8-6.7,6.7-6.7h144.3c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7h-105v58.1h87.6c3.5,0,6.7,3.2,6.7,6.7v29.4c0,3.9-3.2,6.7-6.7,6.7h-87.6v62.1h105c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7h-144.3c-3.9,0-6.7-3.2-6.7-6.7V924.4Z"/>
+      <path fill="#fff" d="M1880.6,1131.2l12.8-22c2.8-5,8.9-5,12.1-2.5,1.8,1.1,30.5,22,53.5,22,18.4,0,32.3-12.1,32.3-27.3,0-18.1-15.2-30.5-45-42.5-33.3-13.5-66.7-34.7-66.7-76.6,0-31.6,23.4-68.1,79.8-68.1,36.2,0,63.8,18.4,70.9,23.8,3.5,2.1,4.6,8.2,2.1,11.7l-13.5,20.2c-2.8,4.3-8.2,7.1-12.4,4.3-2.8-1.8-29.8-19.5-49.3-19.5-20.2,0-31.2,13.5-31.2,24.8,0,16.7,13.1,28,41.8,39.7,34.4,13.8,74.1,34.4,74.1,80.1,0,36.5-31.6,70.2-81.6,70.2-44.7,0-70.9-20.9-78-27.7-3.2-3.2-5-5-1.8-10.6Z"/>
+      <path fill="url(#fg-g1)" d="M1142,0c46.3,37.9,87.2,88.1,111.2,144.5,43.2,100.5,38,218-4.5,317.9-38.9,93-108.7,173.1-196.6,223.9-60,35.1-128.1,58-198.3,61.1-87.4,4.4-180.3-25.7-234.7-98-30.1-39.8-44.7-89.2-41.9-138.6,6.1-108.8,82.2-204.1,172.7-258.3,23.4-14.1,46.9-25.6,71.5-35.8,9.4-4,31.6-12.2,41.5-16,15.3-5.8,37.7-14.4,52.6-20.5,32.2-13.4,62-32.8,85.9-58.5,24.6-26.1,43.7-59.4,55.3-97.3,1.3,9.9,1.8,19.9,1.5,30-1.9,79-48,149.4-112.1,193.9-20.1,14.5-41.3,28.5-62.1,42-9.6,6.1-19.6,12.7-28.9,19.2-49.8,35-89.9,73.8-116.5,126.5-14.2,29.1-24.4,62.3-17.5,93.6,4.4,19.1,17.1,34.5,33.4,44.9,19.9,12.9,47.1,20,71.5,21,162.4,4.7,311.5-124.8,357-278.8,10.1-33.2,15.3-68,16-102.6,2.5-74.2-23.9-147.5-57-214.1Z"/>
+      <path fill="url(#fg-g2)" d="M1385,397.3c57.8,42.2,91.5,118.5,76.5,189.8-4.7,22.6-13.8,44.5-26.9,63.6-30.7,47.4-82.4,80.5-136.5,94.7-86,23.1-182.5,7.8-262.7-28.3-96.8-44.8-177.3-123-225-217.6-40-83.6-48.7-180.8-28.3-270.7,7.5-32.2,19.3-63.5,35.3-92.4,13.2-23.4,29.2-45.5,48.4-64.2,6.3-6.2,13-11.9,20-17.2-2.1,14-4.3,27.2-5.5,40.4-6.3,60.8-1.2,122.1,14.8,180.9,10.7,40.1,25.1,79,46,114.7,5.4,9.4,11.6,19,18.1,27.7,7.2,8.9,14.4,17.9,22,26.5,41.2,46.4,90.9,86,146.8,112.7,9,4.1,19.3,8.4,28.5,11.8,43.9,16.2,93.7,28.1,139,21.2,18.5-2.8,35.5-9.4,51.1-20.2,5-3.1,9.5-7.1,13.7-11.3,38.8-40.7,34.8-108.9,24.7-162.1Z"/>
+    </svg>
+  );
+}
+
+// ── Canvas Shape Controls (in-game, sidebar) ─────────────────────
+function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canChange, onChangeShape, onToggleLock, pixelCount }) {
+  const [confirmTarget, setConfirmTarget] = useState(null);
+  const shapes = Object.entries(SHAPES);
+  const handleShapeClick = (key) => {
+    if (!canChange || key === currentShape) return;
+    const cur = SHAPES[currentShape]; const next = SHAPES[key];
+    if (pixelCount > 0 && (next.w < cur.w || next.h < cur.h)) { setConfirmTarget(key); } else { onChangeShape(key); }
+  };
+  return (
+    <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+        <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>CANVAS</div>
+        {isHost && (
+          <button onClick={onToggleLock} style={{
+            background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", cursor: "pointer",
+            fontSize: 10, letterSpacing: 1, fontFamily: FH, color: isUnlocked ? BRAND.sage : BRAND.textDim, display: "flex", alignItems: "center", gap: 4,
+          }}>{isUnlocked ? "\u{1F513}" : "\u{1F512}"}{isUnlocked ? "OPEN" : "LOCKED"}</button>
+        )}
+      </div>
+      <div style={{ fontSize: 12, color: BRAND.textDim, fontFamily: FB, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ color: BRAND.yellow, fontWeight: 600 }}>{hostName}</span><span>picked</span>
+        <span style={{ color: "#fff", fontWeight: 600 }}>{SHAPES[currentShape]?.label}</span>
+      </div>
+      <div style={{ display: "flex", gap: 4 }}>
+        {shapes.map(([key, shape]) => {
+          const isActive = currentShape === key;
+          const pw = key === "portrait" ? 16 : key === "landscape" ? 24 : 20;
+          const ph = key === "portrait" ? 24 : key === "landscape" ? 16 : 20;
+          return (
+            <button key={key} onClick={() => handleShapeClick(key)} style={{
+                flex: 1, background: isActive ? "rgba(243,214,48,0.08)" : "rgba(255,255,255,0.03)",
+                border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
+                borderRadius: 6, padding: "8px 4px", cursor: canChange && !isActive ? "pointer" : "default",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+                opacity: canChange || isActive ? 1 : 0.4, transition: "all 0.15s ease", position: "relative",
+              }}>
+              {isActive && !canChange && <div style={{ position: "absolute", top: 2, right: 4, fontSize: 10 }}>{"\u{1F512}"}</div>}
+              <div style={{ width: pw, height: ph, border: isActive ? `2px solid ${BRAND.yellow}` : `1px solid rgba(255,255,255,0.15)`, borderRadius: 2 }} />
+              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, fontFamily: FH, color: isActive ? BRAND.yellow : BRAND.textDim }}>{shape.label}</div>
+            </button>
+          );
+        })}
+      </div>
+      {!isHost && !isUnlocked && <div style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>only {hostName} can change shape</div>
+        <button style={{ background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, fontFamily: FH, letterSpacing: 1, color: BRAND.sky, cursor: "pointer" }}>ASK TO UNLOCK</button>
+      </div>}
+      {!isHost && isUnlocked && <div style={{ marginTop: 8, fontSize: 11, color: BRAND.sage, fontFamily: FB }}>{hostName} unlocked canvas shape — you can change it</div>}
+      {confirmTarget && (
+        <div style={{ marginTop: 10, padding: 10, borderRadius: 4, background: "rgba(123,4,41,0.15)", border: "1px solid #7b042966" }}>
+          <div style={{ fontSize: 12, color: "#ff6b6b", fontFamily: FB, marginBottom: 8, lineHeight: 1.4 }}>Changing to {SHAPES[confirmTarget]?.label} will cut the canvas. Pixels outside the new bounds will be lost.</div>
+          <div style={{ display: "flex", gap: 6 }}>
+            <button onClick={() => { onChangeShape(confirmTarget); setConfirmTarget(null); }} style={{ background: "linear-gradient(135deg, #7b0429, #5c0269)", color: "#fff", border: "none", borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>RESHAPE</button>
+            <button onClick={() => setConfirmTarget(null)} style={{ background: "none", color: BRAND.textDim, border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>CANCEL</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Join Screen ──────────────────────────────────────────────────
+function JoinScreen({ onJoin, players }) {
+  const [name, setName] = useState("");
+  const go = () => { const n = name.trim(); if(n) onJoin(n); };
+  return (
+    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", fontFamily: FH }}>
+      <style>{BRAND_FONTS}{`
+        @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        * { box-sizing: border-box; }
+        input:focus { border-color: ${BRAND.sky}66 !important; }
+      `}</style>
+      <div style={{ animation: "fadeIn .6s ease-out", textAlign: "center" }}>
+        <F1R3GamesLogo width={280} />
+        <div style={{ height: 30 }} />
+        <div style={{ width: 160, height: 1, background: BRAND.border, margin: "0 auto" }} />
+        <div style={{ height: 35 }} />
+        <h1 className="join-title" style={{ margin: "0 0 12px", fontSize: 34, fontWeight: 700, letterSpacing: 8, color: "#fff", fontFamily: FH }}>
+          F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
+        </h1>
+        <div className="join-subtitle" style={{ fontSize: 18, color: "#fff", letterSpacing: 3, fontWeight: 400 }}>COLLECTIVE VISUAL INTELLIGENCE</div>
+        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          <input value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} placeholder="your name"
+            style={{ background: "#111", border: `1px solid ${BRAND.border}`, borderRadius: 6, color: "#fff", padding: "10px 16px", fontSize: 16, width: 260, fontFamily: FH, textAlign: "center", outline: "none" }} />
+          <button onClick={go} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#fff", border: "none", borderRadius: 20, padding: "10px 32px", fontSize: 16, fontFamily: FH, fontWeight: 600, cursor: "pointer", letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)" }}>JOIN</button>
+        </div>
+        {players.length > 0 && <div style={{ marginTop: 24, color: BRAND.textDim, fontSize: 16 }}>{players.length} playing</div>}
+      </div>
+      <BuiltOnBadge />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MAIN GAME
+// ══════════════════════════════════════════════════════════════════
+function F1R3Pix() {
+  const [phase, setPhase] = useState("loading");
+  const [myId, setMyId] = useState(null);
+  const [myName, setMyName] = useState("");
+  const [players, setPlayers] = useState([]);
+  const [canvasShape, setCanvasShape] = useState(DEFAULT_SHAPE);
+  const [hostId, setHostId] = useState(null);
+  const [hostName, setHostName] = useState("");
+  const [shapeUnlocked, setShapeUnlocked] = useState(false);
+  const gridW = SHAPES[canvasShape]?.w || SHAPES[DEFAULT_SHAPE].w;
+  const gridH = SHAPES[canvasShape]?.h || SHAPES[DEFAULT_SHAPE].h;
+  const [grid, setGrid] = useState({});
+  const [selColor, setSelColor] = useState(PALETTE[8]);
+  const [shardOk, setShardOk] = useState(false);
+  const [hoverCell, setHoverCell] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [signal, setSignal] = useState(null);
+  const [signalConfirm, setSignalConfirm] = useState(false);
+  const pollRef = useRef(null);
+  const gridContainerRef = useRef(null);
+
+  const buildEmptyGrid = useCallback((w, h) => {
+    const g = {}; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) g[`${x},${y}`] = { color: "#1a1a2e", by: null, ts: 0 }; return g;
+  }, []);
+  useEffect(() => {
+    setGrid(prev => { const g = buildEmptyGrid(gridW, gridH); Object.entries(prev).forEach(([key, px]) => { if (px.by && g[key] !== undefined) g[key] = px; }); return g; });
+  }, [canvasShape, gridW, gridH, buildEmptyGrid]);
+
+  const fakeUsers = [
+    { id: "sim-claude", name: "Claude", joinedAt: Date.now() - 300000 },
+    { id: "sim-gemini", name: "Gemini", joinedAt: Date.now() - 240000 },
+    { id: "sim-grok", name: "Grok", joinedAt: Date.now() - 180000 },
+    { id: "sim-llama", name: "Llama", joinedAt: Date.now() - 120000 },
+    { id: "sim-scarlet", name: "Scarlet", joinedAt: Date.now() - 60000 },
+  ];
+  const allPlayers = [...players, ...fakeUsers];
+  const loadPlayers = useCallback(async () => { const keys = await sh.list(PFX_P); const all = []; for (const k of keys) { const p = await sh.get(k); if (p) all.push(p); } setPlayers(all); return all; }, []);
+  const loadGrid = useCallback(async () => { const keys = await sh.list(PFX_PX); const updates = {}; for (const k of keys) { const px = await sh.get(k); if (px) updates[`${px.x},${px.y}`] = px; } setGrid(prev => ({ ...prev, ...updates })); }, []);
+  const loadShardSettings = useCallback(async () => {
+    const shape = await sh.get(SHARD_SHAPE); if (shape && SHAPES[shape]) setCanvasShape(shape);
+    const host = await sh.get(SHARD_HOST); if (host) { setHostId(host.id); setHostName(host.name); }
+    const unlocked = await sh.get(SHARD_SHAPE_UNLOCKED); setShapeUnlocked(!!unlocked);
+  }, []);
+  const syncAll = useCallback(async () => { try { await loadPlayers(); await loadGrid(); await loadShardSettings(); setShardOk(true); } catch { setShardOk(false); } }, [loadPlayers, loadGrid, loadShardSettings]);
+  useEffect(() => { (async () => { await loadShardSettings(); const sid = await sh.get(MY_ID, false); if (sid) { const p = await sh.get(`${PFX_P}${sid}`); if (p) { setMyId(sid); setMyName(p.name); await syncAll(); setPhase("play"); return; } } await loadPlayers(); setPhase("join"); })() }, []);
+  useEffect(() => { if (phase !== "play") return; pollRef.current = setInterval(syncAll, POLL); return () => clearInterval(pollRef.current); }, [phase, syncAll]);
+
+  const handleJoin = async (name) => {
+    const id = `px-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+    await sh.set(`${PFX_P}${id}`, { id, name, joinedAt: Date.now() }); await sh.set(MY_ID, id, false);
+    const existingHost = await sh.get(SHARD_HOST);
+    if (!existingHost) { await sh.set(SHARD_HOST, { id, name }); await sh.set(SHARD_SHAPE, DEFAULT_SHAPE); setHostId(id); setHostName(name); }
+    setMyId(id); setMyName(name); await syncAll(); setPhase("play");
+  };
+  const handleChangeShape = async (s) => { setCanvasShape(s); await sh.set(SHARD_SHAPE, s); };
+  const handleToggleLock = async () => { const v = !shapeUnlocked; setShapeUnlocked(v); await sh.set(SHARD_SHAPE_UNLOCKED, v); };
+  const placePixel = async (x, y) => { if (!myId) return; const px = { x, y, color: selColor, by: myId, byName: myName, ts: Date.now() }; await sh.set(`${PFX_PX}${x}-${y}`, px); setGrid(prev => ({ ...prev, [`${x},${y}`]: px })); };
+  const leave = async () => { if (myId) { await sh.del(`${PFX_P}${myId}`); await sh.set(MY_ID, null, false); } setMyId(null); setPhase("join"); await loadPlayers(); };
+
+  const handleWheel = useCallback((e) => { e.preventDefault(); setZoom(z => { const next = e.deltaY > 0 ? z - 0.1 : z + 0.1; return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 10) / 10)); }); }, []);
+  useEffect(() => { const el = gridContainerRef.current; if (!el) return; el.addEventListener("wheel", handleWheel, { passive: false }); return () => el.removeEventListener("wheel", handleWheel); }, [handleWheel, phase]);
+  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 560 : 0;
+  // Scroll to top on mobile so header is visible on load
+  if (window.innerWidth <= 768) { setTimeout(() => { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, 100); } const vw = window.innerWidth - sW; const vh = window.innerWidth <= 768 ? window.innerHeight * 0.55 : window.innerHeight - 90; const gpw = gridW * (CELL + 1); const gph = gridH * (CELL + 1); const fit = Math.min(vw / gpw, vh / gph, MAX_ZOOM); setZoom(Math.max(MIN_ZOOM, Math.round(fit * 10) / 10)); }, [phase, gridW, gridH]);
+
+  const pixelCount = Object.values(grid).filter(p => p.by).length;
+  const isHost = myId === hostId;
+  const canChange = isHost || shapeUnlocked;
+
+  if (phase === "loading") return (
+    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <style>{BRAND_FONTS}{`@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}`}</style>
+      <div style={{ color: "#fff", fontSize: 16, letterSpacing: 2, fontFamily: FH, animation: "pulse 1.5s ease-in-out infinite" }}>connecting to shard...</div>
+    </div>
+  );
+  if (phase === "join") return <JoinScreen onJoin={handleJoin} players={players} />;
+  const hovInfo = hoverCell ? grid[hoverCell] : null;
+
+  // ── GAME VIEW ──────────────────────────────────────────────
+  return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FB, display: "flex", flexDirection: "column" }}>
+      <style>{BRAND_FONTS}{`
+        ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+        *{box-sizing:border-box}
+      `}</style>
+
+      {/* Header */}
+      <div className="game-header" style={{ padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#000", minHeight: 70 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: "#fff" }}>F1R3<span style={{ color: BRAND.yellow }}>PIX</span></span>
+          <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
+        </div>
+        <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, justifyContent: "space-between" }}>
+          <button className="tour-btn" style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 13, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0, marginLeft: 16 }}>TAKE A TOUR</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
+          <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+          </div>
+          <button className="storm-btn" onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, padding: "6px 12px", fontSize: 14, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>STORM OUT!</button>
+        </div>
+      </div>
+
+      {/* Brand gradient stroke — matches f1r3fly.io nav line */}
+      <div style={{ width: "100%", height: "0.5px", background: BRAND.stroke, opacity: 0.8 }} />
+
+      <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+        {/* Left Sidebar: Canvas + Signals */}
+        <div className="game-sidebar game-sidebar-left" style={{ width: 280, borderRight: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+          <CanvasShapeControls currentShape={canvasShape} hostName={hostName || "host"} isHost={isHost} isUnlocked={shapeUnlocked} canChange={canChange} onChangeShape={handleChangeShape} onToggleLock={handleToggleLock} pixelCount={pixelCount} />
+
+          {/* F1R3 SIGNALS */}
+          <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
+            <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
+            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
+              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
+                <div key={`sig-l-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
+                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
+                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
+                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
+                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
+              ))}
+            </div>
+            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
+            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
+            <div style={{ marginTop: 10, fontSize: 13, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
+          </div>
+        </div>
+
+        {/* Grid */}
+        <div ref={gridContainerRef} className="game-grid-wrap" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 8, overflow: "auto", background: "#000" }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridW}, ${CELL}px)`, gap: 1, background: "rgba(255,255,255,0.08)", padding: 1, borderRadius: 4, transform: `scale(${zoom})`, transformOrigin: "center center", transition: "transform 0.1s ease-out" }}>
+            {Array.from({ length: gridH }, (_, y) =>
+              Array.from({ length: gridW }, (_, x) => {
+                const key = `${x},${y}`; const px = grid[key];
+                return (
+                  <div key={key} onClick={() => placePixel(x, y)} onMouseEnter={() => setHoverCell(key)} onMouseLeave={() => setHoverCell(null)}
+                    style={{ width: CELL, height: CELL, background: px?.color || "#1a1a2e", cursor: "pointer", transition: "background .1s", outline: hoverCell === key ? `2px solid ${selColor}` : "none", outlineOffset: -2, borderRadius: 1 }} />
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar — wider (240px), more breathing room */}
+        <div className="game-sidebar" style={{ width: 280, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>PALETTE</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
+            {PALETTE.map(c => (
+              <div key={c} onClick={() => setSelColor(c)} style={{ width: 28, height: 28, borderRadius: 4, background: c, cursor: "pointer",
+                border: selColor === c ? "2px solid #fff" : c === "#000000" ? "1px solid #333" : "1px solid transparent",
+                transition: "transform .1s", transform: selColor === c ? "scale(1.15)" : "scale(1)" }} />
+            ))}
+          </div>
+
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>ACTIVE</div>
+          <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span></div>
+          {hovInfo?.by && <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>by: {hovInfo.byName || "?"}<br />{new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>}
+
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginTop: 8 }}>PLAYERS</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {allPlayers.map(p => (
+              <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 6, opacity: p.id === myId ? 1 : .6 }}>
+                <Sigil seed={hSeed(p.id)} size={18} />
+                <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#ccc", fontFamily: FB }}>
+                  {p.name}{p.id === hostId && <span style={{ fontSize: 12, color: BRAND.textDim, marginLeft: 4, fontStyle: "italic" }}>(Host)</span>}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <BuiltOnBadge />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(F1R3Pix));
+</script>
+</body>
+</html>
