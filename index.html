@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>F1R3PIX — Brand Correct v6 (Hannah Adams, April 2026)</title>
+<title>F1R3PIX — Brand Correct v8 (Hannah Adams, April 2026)</title>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-
-<!-- Mock shard storage -->
 <script>
 (function() {
   var store = {};
@@ -20,25 +18,17 @@
   };
 })();
 </script>
-
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
   @media (max-width: 768px) { html, body { overflow: auto; } }
-
-  /* Mobile responsive */
   @media (max-width: 768px) {
     .game-layout { flex-direction: column !important; }
     .game-sidebar {
-      width: 100% !important;
-      border-left: none !important;
-      border-top: 1px solid #1a1a30;
-      flex-direction: row !important;
-      flex-wrap: wrap;
-      gap: 12px !important;
-      padding: 12px !important;
-      max-height: 240px;
-      overflow-y: auto;
+      width: 100% !important; border-left: none !important;
+      border-top: 1px solid rgba(255,255,255,0.2); flex-direction: row !important;
+      flex-wrap: wrap; gap: 12px !important; padding: 12px 16px !important;
+      max-height: 280px; overflow-y: auto;
     }
     .game-sidebar > div { min-width: 140px; }
     .game-header { flex-wrap: wrap; gap: 8px; min-height: auto !important; padding: 10px 12px !important; }
@@ -60,49 +50,43 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useCallback, useRef, useMemo } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 
 // ══════════════════════════════════════════════════════════════════
-// F1R3PIX — Brand Correct v6
+// F1R3PIX — Brand Correct v8
 // F1R3FLY Brand Book March 27, 2026 — Hannah Adams
-// Canvas shape: portrait default, selectable at shard creation
+// Canvas shape: in-game host controls, portrait default
+// Brand border: rgba(255,255,255,0.2) per f1r3fly.io site
 // ══════════════════════════════════════════════════════════════════
 
-// ── Brand System ─────────────────────────────────────────────────
 const BRAND = {
   yellow: "#F3D630", sage: "#8BB999", sky: "#3FA9F5",
-  surface: "#000000", card: "#0c0c18", border: "#1a1a30",
-  text: "#ffffff", textSec: "#ffffff", textMuted: "#cccccc", textDim: "#999999",
+  surface: "#000000", card: "#0c0c18", border: "rgba(255,255,255,0.2)",
+  text: "#ffffff", textMuted: "#cccccc", textDim: "#999999",
 };
+const BRAND_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');`;
+const FH = "'Josefin Sans', 'Source Sans 3', sans-serif";
+const FB = "'Source Sans 3', 'Josefin Sans', sans-serif";
+const FM = "'Source Code Pro', 'Courier New', monospace";
 
-const BRAND_FONTS = `
-  @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
-`;
-
-const FONT_HEADING = "'Josefin Sans', 'Source Sans 3', sans-serif";
-const FONT_BODY = "'Source Sans 3', 'Josefin Sans', sans-serif";
-const FONT_MONO = "'Source Code Pro', 'Courier New', monospace";
-
-// ── Canvas Shape Presets ────────────────────────────────────────
-const CANVAS_SHAPES = {
+const SHAPES = {
   portrait:  { w: 32, h: 48, label: "PORTRAIT",  desc: "32 × 48" },
   landscape: { w: 48, h: 32, label: "LANDSCAPE", desc: "48 × 32" },
   square:    { w: 40, h: 40, label: "SQUARE",    desc: "40 × 40" },
 };
-
 const DEFAULT_SHAPE = "portrait";
 
-// ── Config ───────────────────────────────────────────────────────
 const PFX_PX = "f1r3pix-pixel:";
 const PFX_P = "f1r3pix-player:";
 const MY_ID = "f1r3pix-myid";
-const SHARD_SHAPE = "f1r3pix-canvas-shape"; // stored on shard
+const SHARD_SHAPE = "f1r3pix-canvas-shape";
+const SHARD_HOST = "f1r3pix-host";
+const SHARD_SHAPE_UNLOCKED = "f1r3pix-shape-unlocked";
 const POLL = 1500;
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 2.5;
-const CELL_BASE = 16; // base cell size in px before zoom
+const CELL = 16;
 
-// ── Brand Palette (from brand book) ──────────────────────────────
 const PALETTE = [
   "#000000","#1a1a30","#3f3f3f","#8E8E93","#FFFFFF",
   "#7b0429","#5c0269","#F7E478","#F3D630","#B3D1BC",
@@ -110,16 +94,6 @@ const PALETTE = [
   "#009188","#007bc4","#1114ad","#BF5AF2","#AF52DE",
 ];
 
-// ── F1R3Games Suite (for nav) ────────────────────────────────────
-const GAMES = [
-  { id: "f1r3pix", name: "F1R3PIX", desc: "Pixel Art", active: true },
-  { id: "f1r3beat", name: "F1R3BEAT", desc: "Music", active: false },
-  { id: "f1r3ink", name: "F1R3INK", desc: "Sentiment", active: false },
-  { id: "f1r3skein", name: "F1R3SKEIN", desc: "Generative", active: false },
-  { id: "f1r3sidechat", name: "SIDECHAT", desc: "Story", active: false },
-];
-
-// ── Storage helpers ──────────────────────────────────────────────
 const sh = {
   async get(k,s=true){try{const r=await window.storage.get(k,s);return r?.value?JSON.parse(r.value):null}catch{return null}},
   async set(k,v,s=true){try{await window.storage.set(k,JSON.stringify(v),s);return true}catch{return false}},
@@ -129,7 +103,6 @@ const sh = {
 
 function hSeed(id){let h=0;for(let i=0;i<id.length;i++)h=((h<<5)-h+id.charCodeAt(i))|0;return Math.abs(h)}
 
-// ── Sigil (player avatar) ────────────────────────────────────────
 function Sigil({seed, size=24}){
   const s=seed%10000, h1=s%360, h2=(s*7+120)%360, r=size*.38;
   return(
@@ -141,27 +114,54 @@ function Sigil({seed, size=24}){
   );
 }
 
-// ── "Built on F1R3FLY" Badge ─────────────────────────────────────
+// ── "Built on F1R3FLY.IO" Badge with logo ────────────────────────
 function BuiltOnBadge() {
   return (
     <div style={{
       position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 100,
-      display: "flex", alignItems: "center", gap: 8,
-      background: "rgba(0,0,0,0.8)", border: `1px solid ${BRAND.border}`,
+      display: "flex", alignItems: "center", gap: 10,
+      background: "rgba(0,0,0,0.85)", border: `1px solid ${BRAND.border}`,
       borderRadius: 8, padding: "8px 16px",
-      fontFamily: FONT_HEADING, fontSize: 14, letterSpacing: 2,
-      color: BRAND.textDim, cursor: "pointer",
-      backdropFilter: "blur(8px)",
-    }}
-    onClick={() => window.open && window.open("https://f1r3fly.io", "_blank")}
-    >
-      <span style={{ color: "#999" }}>BUILT ON</span>
-      <span style={{ color: BRAND.yellow, fontWeight: 700 }}>F1R3FLY</span>
+      fontFamily: FH, fontSize: 14, letterSpacing: 2,
+      color: BRAND.textDim, cursor: "pointer", backdropFilter: "blur(8px)",
+    }} onClick={() => window.open && window.open("https://f1r3fly.io", "_blank")}>
+      <span style={{ color: "#999", fontSize: 12, letterSpacing: 2 }}>BUILT ON</span>
+      <svg width="120" viewBox="0 0 2343 535" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <linearGradient id="b-lg" x1="620.975" y1="117.901" x2="793.518" y2="-180.951" gradientTransform="translate(-545.342 290.672) rotate(-4.856)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#009188"/><stop offset="1" stopColor="#007bc4"/>
+          </linearGradient>
+          <linearGradient id="b-lg1" x1="10868.88" y1="2958.368" x2="11042.919" y2="2656.923" gradientTransform="translate(11539.772 2556.8) rotate(-153.904) scale(1 -1)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#deffac"/><stop offset="1" stopColor="#8fc8e7"/>
+          </linearGradient>
+          <linearGradient id="b-lg2" x1="1278.548" y1="-693.973" x2="1379.282" y2="-693.973" gradientTransform="translate(-816.84 975.667) rotate(-11.485)" xlinkHref="#b-lg"/>
+          <radialGradient id="b-rg" cx="-507.17" cy="1315.506" fx="-507.17" fy="1166.669" r="148.898" gradientTransform="translate(-462.725 1690.402) rotate(-169.698) scale(1.001 1.048) skewX(.542)" gradientUnits="userSpaceOnUse">
+            <stop offset=".159" stopColor="#ebe1a3"/><stop offset=".243" stopColor="#ebdf96"/><stop offset=".395" stopColor="#eedc75"/><stop offset=".598" stopColor="#f1d741"/><stop offset=".658" stopColor="#f3d630"/><stop offset=".995" stopColor="#f3d630"/>
+          </radialGradient>
+        </defs>
+        <g>
+          <path fill="url(#b-lg)" d="M316.697,105.798c-37.703,124.422-167.35,232.91-298.749,218.058-19.188-3.649-20.283-20.828-15.672-37.06C31.864,162.855,152.312,70.533,276.989,74.429c21.882.057,44.988,2.747,39.708,31.368Z"/>
+          <path fill="url(#b-lg1)" d="M349.717,112.154c-8.765,129.993,73.792,279.334,201.506,314.364,19.172,3.736,26.255-11.869,27.685-28.713,16.157-126.526-63.53-257.377-181.112-300.119-20.416-8.086-42.901-14.173-48.079,14.468Z"/>
+          <path fill="url(#b-lg2)" d="M400.519,44.343c1.708-41.624-83.95-62.735-103.871-23.736-3.572,6.996-.071,15.53,6.922,17.387,25.852,6.863,56.168,11.194,82.282,18.292,7.128,1.934,14.336-3.926,14.667-11.944Z"/>
+          <path fill="url(#b-rg)" d="M378.911,353.267c-46.405,267.616-227.024,226.916-174.919-34.206,44.206-27.89,81.981-64.979,110.028-108.046,11.008,50.816,33.273,99.674,64.892,142.252Z"/>
+        </g>
+        <g>
+          <path fill="#fff" d="M755.273,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.271,0,5.652,2.677,5.652,5.652v24.391c0,2.975-2.381,5.652-5.652,5.652h-88.049v55.924h73.473c2.975,0,5.652,2.677,5.652,5.652v24.392c0,2.974-2.677,5.652-5.652,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/>
+          <path fill="#fff" d="M952.779,223.691l-26.177,5.652c-2.677.595-5.652-1.189-5.949-3.867l-1.785-14.576c-.297-2.379.297-4.164,1.488-5.353l42.834-35.993h20.822c2.975,0,5.355,2.677,5.355,5.652v190.971c0,2.975-2.379,5.652-5.355,5.652h-25.581c-3.272,0-5.652-2.677-5.652-5.652v-142.485Z"/>
+          <path fill="#fff" d="M1058.965,169.256c0-2.975,2.379-5.652,5.652-5.652h85.075c35.696,0,64.847,28.556,64.847,63.954,0,27.367-18.146,49.676-44.024,60.088l40.752,75.555c2.082,3.868,0,8.627-5.056,8.627h-31.234c-2.677,0-4.164-1.488-4.759-2.677l-39.563-78.828h-33.018v75.853c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92ZM1146.419,258.494c15.765,0,29.449-13.683,29.449-30.34,0-15.766-13.684-28.855-29.449-28.855h-48.486v59.195h48.486Z"/>
+          <path fill="#fff" d="M1255.873,340.892l15.171-14.576c2.677-2.379,5.355-2.379,7.734,0,.892,1.19,18.443,16.064,36.588,16.064,16.063,0,31.532-11.602,31.532-27.962,0-15.468-14.279-29.449-41.05-29.449h-16.658c-3.271,0-5.652-2.379-5.652-5.949v-18.74c0-3.867,2.082-5.949,5.652-5.949h16.658c24.392,0,36.885-12.196,36.885-27.366,0-16.361-13.683-27.366-28.854-27.366-15.468,0-24.987,8.329-30.044,14.278-2.082,2.379-5.353,2.677-8.031.297l-14.575-13.683c-2.381-2.082-2.082-5.652,0-7.734,0,0,22.606-26.177,55.923-26.177,34.506,0,63.359,21.12,63.359,54.436,0,22.905-17.253,40.157-30.639,46.404v.893c13.98,5.949,35.993,22.012,35.993,48.486,0,33.614-27.366,58.006-68.417,58.006-37.182,0-55.328-18.74-61.872-26.474-1.785-2.082-1.488-5.355.297-7.437Z"/>
+          <path fill="#fff" d="M1442.072,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.272,0,5.651,2.677,5.651,5.652v24.391c0,2.975-2.378,5.652-5.651,5.652h-88.049v55.924h73.473c2.975,0,5.653,2.677,5.653,5.652v24.392c0,2.974-2.678,5.652-5.653,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/>
+          <path fill="#fff" d="M1624.705,169.256c0-2.975,2.381-5.652,5.653-5.652h27.366c2.975,0,5.651,2.677,5.651,5.652v166.876h75.853c3.272,0,5.653,2.678,5.653,5.652v24.392c0,2.975-2.381,5.652-5.653,5.652h-108.87c-3.272,0-5.653-2.677-5.653-5.652v-196.92Z"/>
+          <path fill="#fff" d="M1815.074,271.582l-67.822-99.352c-2.381-3.867,0-8.626,4.759-8.626h30.341c2.381,0,3.867,1.486,4.759,2.677l47.595,68.417,47.593-68.417c.892-1.19,2.381-2.677,4.759-2.677h30.641c4.759,0,7.137,4.759,4.759,8.626l-68.714,99.055v94.891c0,2.975-2.678,5.652-5.653,5.652h-27.366c-3.272,0-5.651-2.677-5.651-5.652v-94.594Z"/>
+          <path fill="#fff" d="M1961.416,325.721c13.387,0,24.691,11.304,24.691,24.689s-11.304,24.392-24.691,24.392-24.391-11.006-24.391-24.392,11.006-24.689,24.391-24.689Z"/>
+          <path fill="#fff" d="M2036.073,169.256c0-2.975,2.678-5.652,5.653-5.652h27.663c2.975,0,5.651,2.677,5.651,5.652v196.92c0,2.975-2.676,5.652-5.651,5.652h-27.663c-2.975,0-5.653-2.677-5.653-5.652v-196.92Z"/>
+          <path fill="#fff" d="M2235.958,160.629c59.493,0,107.086,47.891,107.086,107.384s-47.593,106.79-107.086,106.79-106.789-47.297-106.789-106.79,47.298-107.384,106.789-107.384ZM2235.958,336.132c37.481,0,68.417-30.639,68.417-68.119s-30.936-68.714-68.417-68.714-68.119,31.234-68.119,68.714,30.639,68.119,68.119,68.119Z"/>
+        </g>
+      </svg>
     </div>
   );
 }
 
-// ── F1R3Games Logo (Hannah Adams, v1) ────────────────────────────
 function F1R3GamesLogo({ width = 300 }) {
   return (
     <svg width={width} viewBox="0 0 2042 1170" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", margin: "0 auto" }}>
@@ -185,81 +185,71 @@ function F1R3GamesLogo({ width = 300 }) {
   );
 }
 
-// ── Canvas Shape Selector ────────────────────────────────────────
-function ShapeSelector({ selected, onChange }) {
-  const shapes = Object.entries(CANVAS_SHAPES);
+// ── Canvas Shape Controls (in-game, sidebar) ─────────────────────
+function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canChange, onChangeShape, onToggleLock, pixelCount }) {
+  const [confirmTarget, setConfirmTarget] = useState(null);
+  const shapes = Object.entries(SHAPES);
+  const handleShapeClick = (key) => {
+    if (!canChange || key === currentShape) return;
+    const cur = SHAPES[currentShape]; const next = SHAPES[key];
+    if (pixelCount > 0 && (next.w < cur.w || next.h < cur.h)) { setConfirmTarget(key); } else { onChangeShape(key); }
+  };
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-      <div style={{
-        fontSize: 11, color: BRAND.textDim, letterSpacing: 2,
-        fontFamily: FONT_HEADING, textTransform: "uppercase",
-      }}>
-        CANVAS SHAPE
+    <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+        <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>CANVAS</div>
+        {isHost && (
+          <button onClick={onToggleLock} style={{
+            background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", cursor: "pointer",
+            fontSize: 10, letterSpacing: 1, fontFamily: FH, color: isUnlocked ? BRAND.sage : BRAND.textDim, display: "flex", alignItems: "center", gap: 4,
+          }}>{isUnlocked ? "\u{1F513}" : "\u{1F512}"}{isUnlocked ? "OPEN" : "LOCKED"}</button>
+        )}
       </div>
-      <div style={{ display: "flex", gap: 10 }}>
+      <div style={{ fontSize: 12, color: BRAND.textDim, fontFamily: FB, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ color: BRAND.yellow, fontWeight: 600 }}>{hostName}</span><span>picked</span>
+        <span style={{ color: "#fff", fontWeight: 600 }}>{SHAPES[currentShape]?.label}</span>
+      </div>
+      <div style={{ display: "flex", gap: 4 }}>
         {shapes.map(([key, shape]) => {
-          const isActive = selected === key;
-          // Mini preview proportions
-          const previewW = key === "portrait" ? 24 : key === "landscape" ? 36 : 30;
-          const previewH = key === "portrait" ? 36 : key === "landscape" ? 24 : 30;
+          const isActive = currentShape === key;
+          const pw = key === "portrait" ? 16 : key === "landscape" ? 24 : 20;
+          const ph = key === "portrait" ? 24 : key === "landscape" ? 16 : 20;
           return (
-            <button key={key} onClick={() => onChange(key)} style={{
-              background: isActive ? "rgba(243,214,48,0.08)" : "rgba(26,26,48,0.4)",
-              border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
-              borderRadius: 8, padding: "12px 16px",
-              cursor: "pointer", display: "flex", flexDirection: "column",
-              alignItems: "center", gap: 8, minWidth: 80,
-              transition: "all 0.15s ease",
-            }}>
-              {/* Mini grid preview */}
-              <div style={{
-                width: previewW, height: previewH,
-                border: isActive ? `2px solid ${BRAND.yellow}` : `2px solid ${BRAND.textDim}44`,
-                borderRadius: 3,
-                display: "grid",
-                gridTemplateColumns: `repeat(${key === "portrait" ? 4 : key === "landscape" ? 6 : 5}, 1fr)`,
-                gridTemplateRows: `repeat(${key === "portrait" ? 6 : key === "landscape" ? 4 : 5}, 1fr)`,
-                gap: 1, padding: 1,
-                opacity: isActive ? 1 : 0.5,
+            <button key={key} onClick={() => handleShapeClick(key)} style={{
+                flex: 1, background: isActive ? "rgba(243,214,48,0.08)" : "rgba(26,26,48,0.3)",
+                border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
+                borderRadius: 6, padding: "8px 4px", cursor: canChange && !isActive ? "pointer" : "default",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+                opacity: canChange || isActive ? 1 : 0.4, transition: "all 0.15s ease", position: "relative",
               }}>
-                {Array.from({ length: (key === "portrait" ? 24 : key === "landscape" ? 24 : 25) }, (_, i) => (
-                  <div key={i} style={{
-                    background: isActive ? `${BRAND.yellow}30` : `${BRAND.textDim}15`,
-                    borderRadius: 0.5,
-                  }} />
-                ))}
-              </div>
-              <div style={{
-                fontSize: 11, fontWeight: 600, letterSpacing: 1.5,
-                fontFamily: FONT_HEADING,
-                color: isActive ? BRAND.yellow : BRAND.textDim,
-              }}>
-                {shape.label}
-              </div>
-              <div style={{
-                fontSize: 10, color: isActive ? BRAND.textMuted : BRAND.textDim,
-                fontFamily: FONT_MONO,
-              }}>
-                {shape.desc}
-              </div>
+              {isActive && !canChange && <div style={{ position: "absolute", top: 2, right: 4, fontSize: 10 }}>{"\u{1F512}"}</div>}
+              <div style={{ width: pw, height: ph, border: isActive ? `2px solid ${BRAND.yellow}` : `1px solid rgba(255,255,255,0.15)`, borderRadius: 2 }} />
+              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, fontFamily: FH, color: isActive ? BRAND.yellow : BRAND.textDim }}>{shape.label}</div>
             </button>
           );
         })}
       </div>
+      {!isHost && !isUnlocked && <div style={{ marginTop: 8, fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>only {hostName} can change the canvas shape</div>}
+      {!isHost && isUnlocked && <div style={{ marginTop: 8, fontSize: 11, color: BRAND.sage, fontFamily: FB }}>{hostName} unlocked canvas shape — you can change it</div>}
+      {confirmTarget && (
+        <div style={{ marginTop: 10, padding: 10, borderRadius: 4, background: "rgba(123,4,41,0.15)", border: "1px solid #7b042966" }}>
+          <div style={{ fontSize: 12, color: "#ff6b6b", fontFamily: FB, marginBottom: 8, lineHeight: 1.4 }}>Changing to {SHAPES[confirmTarget]?.label} will cut the canvas. Pixels outside the new bounds will be lost.</div>
+          <div style={{ display: "flex", gap: 6 }}>
+            <button onClick={() => { onChangeShape(confirmTarget); setConfirmTarget(null); }} style={{ background: "linear-gradient(135deg, #7b0429, #5c0269)", color: "#fff", border: "none", borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>RESHAPE</button>
+            <button onClick={() => setConfirmTarget(null)} style={{ background: "none", color: BRAND.textDim, border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>CANCEL</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // ── Join Screen ──────────────────────────────────────────────────
-function JoinScreen({ onJoin, players, shardShape, onShapeChange, isNewShard }) {
+function JoinScreen({ onJoin, players }) {
   const [name, setName] = useState("");
   const go = () => { const n = name.trim(); if(n) onJoin(n); };
   return (
-    <div style={{
-      minHeight: "100vh", background: "#000",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      flexDirection: "column", fontFamily: FONT_HEADING
-    }}>
+    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", fontFamily: FH }}>
       <style>{BRAND_FONTS}{`
         @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
         * { box-sizing: border-box; }
@@ -268,71 +258,18 @@ function JoinScreen({ onJoin, players, shardShape, onShapeChange, isNewShard }) 
       <div style={{ animation: "fadeIn .6s ease-out", textAlign: "center" }}>
         <F1R3GamesLogo width={280} />
         <div style={{ height: 30 }} />
-        <div style={{ width: 160, height: 1, background: `${BRAND.border}`, margin: "0 auto" }} />
+        <div style={{ width: 160, height: 1, background: BRAND.border, margin: "0 auto" }} />
         <div style={{ height: 35 }} />
-        <h1 className="join-title" style={{
-          margin: "0 0 12px", fontSize: 34, fontWeight: 700,
-          letterSpacing: 8, color: "#ffffff", fontFamily: FONT_HEADING
-        }}>
+        <h1 className="join-title" style={{ margin: "0 0 12px", fontSize: 34, fontWeight: 700, letterSpacing: 8, color: "#fff", fontFamily: FH }}>
           F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
         </h1>
-        <div className="join-subtitle" style={{ fontSize: 18, color: "#ffffff", letterSpacing: 3, fontWeight: 400 }}>
-          COLLECTIVE VISUAL INTELLIGENCE
+        <div className="join-subtitle" style={{ fontSize: 18, color: "#fff", letterSpacing: 3, fontWeight: 400 }}>COLLECTIVE VISUAL INTELLIGENCE</div>
+        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          <input value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} placeholder="your name"
+            style={{ background: "#111", border: `1px solid ${BRAND.border}`, borderRadius: 6, color: "#fff", padding: "10px 16px", fontSize: 16, width: 260, fontFamily: FH, textAlign: "center", outline: "none" }} />
+          <button onClick={go} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#fff", border: "none", borderRadius: 6, padding: "10px 32px", fontSize: 16, fontFamily: FH, fontWeight: 600, cursor: "pointer", letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)" }}>JOIN</button>
         </div>
-
-        {/* Canvas shape selector — only shown when creating a new shard */}
-        {isNewShard && (
-          <div style={{ marginTop: 32 }}>
-            <ShapeSelector selected={shardShape} onChange={onShapeChange} />
-          </div>
-        )}
-
-        {/* If joining an existing shard, show the locked shape */}
-        {!isNewShard && (
-          <div style={{
-            marginTop: 24, padding: "10px 20px",
-            border: `1px solid ${BRAND.border}`, borderRadius: 6,
-            display: "inline-flex", alignItems: "center", gap: 10,
-          }}>
-            <span style={{ fontSize: 11, color: BRAND.textDim, letterSpacing: 1.5, fontFamily: FONT_HEADING }}>
-              CANVAS:
-            </span>
-            <span style={{ fontSize: 13, color: BRAND.yellow, letterSpacing: 1.5, fontFamily: FONT_HEADING, fontWeight: 600 }}>
-              {CANVAS_SHAPES[shardShape]?.label}
-            </span>
-            <span style={{ fontSize: 11, color: BRAND.textDim, fontFamily: FONT_MONO }}>
-              {CANVAS_SHAPES[shardShape]?.desc}
-            </span>
-            <span style={{
-              fontSize: 10, color: BRAND.textDim, fontFamily: FONT_BODY,
-              padding: "2px 6px", border: `1px solid ${BRAND.border}`, borderRadius: 3,
-            }}>
-              LOCKED
-            </span>
-          </div>
-        )}
-
-        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-          <input value={name} onChange={e => setName(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && go()}
-            placeholder="your name"
-            style={{
-              background: "#111", border: `1px solid ${BRAND.border}`, borderRadius: 6,
-              color: "#fff", padding: "10px 16px", fontSize: 16, width: 260,
-              fontFamily: FONT_HEADING, textAlign: "center", outline: "none"
-            }} />
-          <button onClick={go} style={{
-            background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#ffffff",
-            border: "none", borderRadius: 6, padding: "10px 32px", fontSize: 16,
-            fontFamily: FONT_HEADING, fontWeight: 600, cursor: "pointer",
-            letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)"
-          }}>JOIN</button>
-        </div>
-        {players.length > 0 && (
-          <div style={{ marginTop: 24, color: BRAND.textDim, fontSize: 16 }}>
-            {players.length} playing
-          </div>
-        )}
+        {players.length > 0 && <div style={{ marginTop: 24, color: BRAND.textDim, fontSize: 16 }}>{players.length} playing</div>}
       </div>
       <BuiltOnBadge />
     </div>
@@ -340,7 +277,7 @@ function JoinScreen({ onJoin, players, shardShape, onShapeChange, isNewShard }) 
 }
 
 // ══════════════════════════════════════════════════════════════════
-// MAIN GAME COMPONENT
+// MAIN GAME
 // ══════════════════════════════════════════════════════════════════
 function F1R3Pix() {
   const [phase, setPhase] = useState("loading");
@@ -348,14 +285,13 @@ function F1R3Pix() {
   const [myName, setMyName] = useState("");
   const [players, setPlayers] = useState([]);
   const [canvasShape, setCanvasShape] = useState(DEFAULT_SHAPE);
-  const [isNewShard, setIsNewShard] = useState(true);
-
-  // Grid dimensions derived from shape
-  const gridW = CANVAS_SHAPES[canvasShape]?.w || CANVAS_SHAPES[DEFAULT_SHAPE].w;
-  const gridH = CANVAS_SHAPES[canvasShape]?.h || CANVAS_SHAPES[DEFAULT_SHAPE].h;
-
+  const [hostId, setHostId] = useState(null);
+  const [hostName, setHostName] = useState("");
+  const [shapeUnlocked, setShapeUnlocked] = useState(false);
+  const gridW = SHAPES[canvasShape]?.w || SHAPES[DEFAULT_SHAPE].w;
+  const gridH = SHAPES[canvasShape]?.h || SHAPES[DEFAULT_SHAPE].h;
   const [grid, setGrid] = useState({});
-  const [selColor, setSelColor] = useState(PALETTE[8]); // brand yellow
+  const [selColor, setSelColor] = useState(PALETTE[8]);
   const [shardOk, setShardOk] = useState(false);
   const [hoverCell, setHoverCell] = useState(null);
   const [zoom, setZoom] = useState(1);
@@ -364,21 +300,13 @@ function F1R3Pix() {
   const pollRef = useRef(null);
   const gridContainerRef = useRef(null);
 
-  // Build empty grid when shape changes
   const buildEmptyGrid = useCallback((w, h) => {
-    const g = {};
-    for (let y = 0; y < h; y++)
-      for (let x = 0; x < w; x++)
-        g[`${x},${y}`] = { color: "#1a1a2e", by: null, ts: 0 };
-    return g;
+    const g = {}; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) g[`${x},${y}`] = { color: "#1a1a2e", by: null, ts: 0 }; return g;
   }, []);
-
-  // Initialize grid on shape load
   useEffect(() => {
-    setGrid(buildEmptyGrid(gridW, gridH));
+    setGrid(prev => { const g = buildEmptyGrid(gridW, gridH); Object.entries(prev).forEach(([key, px]) => { if (px.by && g[key] !== undefined) g[key] = px; }); return g; });
   }, [canvasShape, gridW, gridH, buildEmptyGrid]);
 
-  // Simulated players for demo
   const fakeUsers = [
     { id: "sim-claude", name: "Claude", joinedAt: Date.now() - 300000 },
     { id: "sim-gemini", name: "Gemini", joinedAt: Date.now() - 240000 },
@@ -387,345 +315,140 @@ function F1R3Pix() {
     { id: "sim-scarlet", name: "Scarlet", joinedAt: Date.now() - 60000 },
   ];
   const allPlayers = [...players, ...fakeUsers];
-
-  // ── Data loading ─────────────────────────────────────────────
-  const loadPlayers = useCallback(async () => {
-    const keys = await sh.list(PFX_P); const all = [];
-    for (const k of keys) { const p = await sh.get(k); if (p) all.push(p); }
-    setPlayers(all); return all;
+  const loadPlayers = useCallback(async () => { const keys = await sh.list(PFX_P); const all = []; for (const k of keys) { const p = await sh.get(k); if (p) all.push(p); } setPlayers(all); return all; }, []);
+  const loadGrid = useCallback(async () => { const keys = await sh.list(PFX_PX); const updates = {}; for (const k of keys) { const px = await sh.get(k); if (px) updates[`${px.x},${px.y}`] = px; } setGrid(prev => ({ ...prev, ...updates })); }, []);
+  const loadShardSettings = useCallback(async () => {
+    const shape = await sh.get(SHARD_SHAPE); if (shape && SHAPES[shape]) setCanvasShape(shape);
+    const host = await sh.get(SHARD_HOST); if (host) { setHostId(host.id); setHostName(host.name); }
+    const unlocked = await sh.get(SHARD_SHAPE_UNLOCKED); setShapeUnlocked(!!unlocked);
   }, []);
+  const syncAll = useCallback(async () => { try { await loadPlayers(); await loadGrid(); await loadShardSettings(); setShardOk(true); } catch { setShardOk(false); } }, [loadPlayers, loadGrid, loadShardSettings]);
+  useEffect(() => { (async () => { await loadShardSettings(); const sid = await sh.get(MY_ID, false); if (sid) { const p = await sh.get(`${PFX_P}${sid}`); if (p) { setMyId(sid); setMyName(p.name); await syncAll(); setPhase("play"); return; } } await loadPlayers(); setPhase("join"); })() }, []);
+  useEffect(() => { if (phase !== "play") return; pollRef.current = setInterval(syncAll, POLL); return () => clearInterval(pollRef.current); }, [phase, syncAll]);
 
-  const loadGrid = useCallback(async () => {
-    const keys = await sh.list(PFX_PX);
-    setGrid(prev => {
-      const g = { ...prev };
-      (async () => {
-        for (const k of keys) { const px = await sh.get(k); if (px) g[`${px.x},${px.y}`] = px; }
-        setGrid({ ...g });
-      })();
-      return g;
-    });
-  }, []);
-
-  const syncAll = useCallback(async () => {
-    try { await loadPlayers(); await loadGrid(); setShardOk(true); }
-    catch { setShardOk(false); }
-  }, [loadPlayers, loadGrid]);
-
-  // ── Init: check for existing session & shard shape ──────────
-  useEffect(() => { (async () => {
-    // Check if a canvas shape is already set on this shard
-    const existingShape = await sh.get(SHARD_SHAPE);
-    if (existingShape && CANVAS_SHAPES[existingShape]) {
-      setCanvasShape(existingShape);
-      setIsNewShard(false);
-    } else {
-      setIsNewShard(true);
-    }
-
-    // Check for existing session
-    const sid = await sh.get(MY_ID, false);
-    if (sid) {
-      const p = await sh.get(`${PFX_P}${sid}`);
-      if (p) { setMyId(sid); setMyName(p.name); await syncAll(); setPhase("play"); return; }
-    }
-    await loadPlayers(); setPhase("join");
-  })() }, []);
-
-  useEffect(() => {
-    if (phase !== "play") return;
-    pollRef.current = setInterval(syncAll, POLL);
-    return () => clearInterval(pollRef.current);
-  }, [phase, syncAll]);
-
-  // ── Actions ──────────────────────────────────────────────────
   const handleJoin = async (name) => {
-    // Lock the canvas shape to the shard on first join (if new shard)
-    if (isNewShard) {
-      await sh.set(SHARD_SHAPE, canvasShape);
-      setIsNewShard(false);
-    }
-
     const id = `px-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
-    await sh.set(`${PFX_P}${id}`, { id, name, joinedAt: Date.now() });
-    await sh.set(MY_ID, id, false);
+    await sh.set(`${PFX_P}${id}`, { id, name, joinedAt: Date.now() }); await sh.set(MY_ID, id, false);
+    const existingHost = await sh.get(SHARD_HOST);
+    if (!existingHost) { await sh.set(SHARD_HOST, { id, name }); await sh.set(SHARD_SHAPE, DEFAULT_SHAPE); setHostId(id); setHostName(name); }
     setMyId(id); setMyName(name); await syncAll(); setPhase("play");
   };
+  const handleChangeShape = async (s) => { setCanvasShape(s); await sh.set(SHARD_SHAPE, s); };
+  const handleToggleLock = async () => { const v = !shapeUnlocked; setShapeUnlocked(v); await sh.set(SHARD_SHAPE_UNLOCKED, v); };
+  const placePixel = async (x, y) => { if (!myId) return; const px = { x, y, color: selColor, by: myId, byName: myName, ts: Date.now() }; await sh.set(`${PFX_PX}${x}-${y}`, px); setGrid(prev => ({ ...prev, [`${x},${y}`]: px })); };
+  const leave = async () => { if (myId) { await sh.del(`${PFX_P}${myId}`); await sh.set(MY_ID, null, false); } setMyId(null); setPhase("join"); await loadPlayers(); };
 
-  const placePixel = async (x, y) => {
-    if (!myId) return;
-    const px = { x, y, color: selColor, by: myId, byName: myName, ts: Date.now() };
-    await sh.set(`${PFX_PX}${x}-${y}`, px);
-    setGrid(prev => ({ ...prev, [`${x},${y}`]: px }));
-  };
-
-  const leave = async () => {
-    if (myId) { await sh.del(`${PFX_P}${myId}`); await sh.set(MY_ID, null, false); }
-    setMyId(null); setPhase("join"); await loadPlayers();
-  };
-
-  // ── Zoom handler (scroll wheel — snaps to 10%) ───────────────
-  const handleWheel = useCallback((e) => {
-    e.preventDefault();
-    setZoom(z => {
-      const step = 0.1;
-      const next = e.deltaY > 0 ? z - step : z + step;
-      const snapped = Math.round(next * 10) / 10;
-      return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, snapped));
-    });
-  }, []);
-
-  useEffect(() => {
-    const el = gridContainerRef.current;
-    if (!el) return;
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [handleWheel, phase]);
-
-  // ── Calculate initial zoom to fit screen ─────────────────────
-  useEffect(() => {
-    if (phase !== "play") return;
-    const sidebarW = window.innerWidth > 768 ? 200 : 0;
-    const vw = window.innerWidth - sidebarW;
-    const vh = window.innerHeight - (window.innerWidth > 768 ? 90 : 70);
-    if (window.innerWidth <= 768) {
-      const mobileGridH = window.innerHeight * 0.55;
-      const gridPxW = gridW * (CELL_BASE + 1);
-      const gridPxH = gridH * (CELL_BASE + 1);
-      const fitZoom = Math.min(vw / gridPxW, mobileGridH / gridPxH, MAX_ZOOM);
-      setZoom(Math.max(MIN_ZOOM, Math.round(fitZoom * 10) / 10));
-    } else {
-      const gridPxW = gridW * (CELL_BASE + 1);
-      const gridPxH = gridH * (CELL_BASE + 1);
-      const fitZoom = Math.min(vw / gridPxW, vh / gridPxH, MAX_ZOOM);
-      setZoom(Math.max(MIN_ZOOM, Math.round(fitZoom * 10) / 10));
-    }
-  }, [phase, gridW, gridH]);
+  const handleWheel = useCallback((e) => { e.preventDefault(); setZoom(z => { const next = e.deltaY > 0 ? z - 0.1 : z + 0.1; return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 10) / 10)); }); }, []);
+  useEffect(() => { const el = gridContainerRef.current; if (!el) return; el.addEventListener("wheel", handleWheel, { passive: false }); return () => el.removeEventListener("wheel", handleWheel); }, [handleWheel, phase]);
+  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 240 : 0; const vw = window.innerWidth - sW; const vh = window.innerWidth <= 768 ? window.innerHeight * 0.55 : window.innerHeight - 90; const gpw = gridW * (CELL + 1); const gph = gridH * (CELL + 1); const fit = Math.min(vw / gpw, vh / gph, MAX_ZOOM); setZoom(Math.max(MIN_ZOOM, Math.round(fit * 10) / 10)); }, [phase, gridW, gridH]);
 
   const pixelCount = Object.values(grid).filter(p => p.by).length;
+  const isHost = myId === hostId;
+  const canChange = isHost || shapeUnlocked;
 
-  // ── Render: Loading ──────────────────────────────────────────
   if (phase === "loading") return (
     <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <style>{BRAND_FONTS}{`@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}`}</style>
-      <div style={{ color: "#fff", fontSize: 16, letterSpacing: 2, fontFamily: FONT_HEADING, animation: "pulse 1.5s ease-in-out infinite" }}>
-        connecting to shard...
-      </div>
+      <div style={{ color: "#fff", fontSize: 16, letterSpacing: 2, fontFamily: FH, animation: "pulse 1.5s ease-in-out infinite" }}>connecting to shard...</div>
     </div>
   );
-
-  if (phase === "join") return (
-    <JoinScreen
-      onJoin={handleJoin}
-      players={players}
-      shardShape={canvasShape}
-      onShapeChange={setCanvasShape}
-      isNewShard={isNewShard}
-    />
-  );
-
+  if (phase === "join") return <JoinScreen onJoin={handleJoin} players={players} />;
   const hovInfo = hoverCell ? grid[hoverCell] : null;
-  const shapeInfo = CANVAS_SHAPES[canvasShape];
 
-  // ── Render: Game View ───────────────────────────────────────
+  // ── GAME VIEW ──────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FONT_BODY, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FB, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <style>{BRAND_FONTS}{`
         ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:${BRAND.border};border-radius:2px}
+        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
         *{box-sizing:border-box}
       `}</style>
 
       {/* Header */}
-      <div className="game-header" style={{
-        padding: "14px 20px", borderBottom: `1px solid ${BRAND.border}`,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        background: "#000", minHeight: 70,
-      }}>
+      <div className="game-header" style={{ padding: "14px 20px", borderBottom: `1px solid ${BRAND.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", background: "#000", minHeight: 70 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FONT_HEADING, color: "#fff" }}>
-            F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
-          </span>
-          <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FONT_BODY }}>
-            {allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}
-          </span>
+          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: "#fff" }}>F1R3<span style={{ color: BRAND.yellow }}>PIX</span></span>
+          <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{
-            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
-            borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer",
-            fontFamily: FONT_HEADING, display: "flex", alignItems: "center", justifyContent: "center",
-          }}>-</button>
-          <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FONT_MONO, minWidth: 50, textAlign: "center" }}>
-            {Math.round(zoom * 100)}%
-          </span>
-          <button onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{
-            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
-            borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer",
-            fontFamily: FONT_HEADING, display: "flex", alignItems: "center", justifyContent: "center",
-          }}>+</button>
-          <button onClick={leave} style={{
-            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
-            borderRadius: 4, padding: "4px 10px", fontSize: 16, cursor: "pointer",
-            fontFamily: FONT_HEADING, letterSpacing: 1,
-          }}>LEAVE</button>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
+          <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
+          <button onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+          <button onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, padding: "4px 10px", fontSize: 16, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>STORM OUT</button>
         </div>
       </div>
 
-      {/* Main area: Grid + Sidebar */}
       <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-
-        {/* Grid with zoom */}
-        <div ref={gridContainerRef} className="game-grid-wrap" style={{
-          flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-          padding: 8, overflow: "auto", background: "#000",
-        }}>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${gridW}, ${CELL_BASE}px)`,
-            gap: 1, background: "#0a0a14", padding: 1, borderRadius: 4,
-            transform: `scale(${zoom})`,
-            transformOrigin: "center center",
-            transition: "transform 0.1s ease-out",
-          }}>
+        {/* Grid */}
+        <div ref={gridContainerRef} className="game-grid-wrap" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 8, overflow: "auto", background: "#000" }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridW}, ${CELL}px)`, gap: 1, background: "#0a0a14", padding: 1, borderRadius: 4, transform: `scale(${zoom})`, transformOrigin: "center center", transition: "transform 0.1s ease-out" }}>
             {Array.from({ length: gridH }, (_, y) =>
               Array.from({ length: gridW }, (_, x) => {
                 const key = `${x},${y}`; const px = grid[key];
                 return (
-                  <div key={key}
-                    onClick={() => placePixel(x, y)}
-                    onMouseEnter={() => setHoverCell(key)}
-                    onMouseLeave={() => setHoverCell(null)}
-                    style={{
-                      width: CELL_BASE, height: CELL_BASE,
-                      background: px?.color || "#1a1a2e",
-                      cursor: "pointer", transition: "background .1s",
-                      outline: hoverCell === key ? `2px solid ${selColor}` : "none",
-                      outlineOffset: -2, borderRadius: 1,
-                    }} />
+                  <div key={key} onClick={() => placePixel(x, y)} onMouseEnter={() => setHoverCell(key)} onMouseLeave={() => setHoverCell(null)}
+                    style={{ width: CELL, height: CELL, background: px?.color || "#1a1a2e", cursor: "pointer", transition: "background .1s", outline: hoverCell === key ? `2px solid ${selColor}` : "none", outlineOffset: -2, borderRadius: 1 }} />
                 );
               })
             )}
           </div>
         </div>
 
-        {/* Sidebar: Palette + Info */}
-        <div className="game-sidebar" style={{
-          width: 200, borderLeft: `1px solid ${BRAND.border}`,
-          padding: "16px 12px", display: "flex", flexDirection: "column", gap: 16,
-          overflowY: "auto", background: "#000",
-        }}>
-          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING }}>PALETTE</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4 }}>
+        {/* Sidebar — wider (240px), more breathing room */}
+        <div className="game-sidebar" style={{ width: 240, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 18px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>PALETTE</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
             {PALETTE.map(c => (
-              <div key={c} onClick={() => setSelColor(c)}
-                style={{
-                  width: 28, height: 28, borderRadius: 4, background: c, cursor: "pointer",
-                  border: selColor === c ? "2px solid #fff" : c === "#000000" ? "1px solid #333" : "1px solid transparent",
-                  transition: "transform .1s",
-                  transform: selColor === c ? "scale(1.15)" : "scale(1)",
-                }} />
+              <div key={c} onClick={() => setSelColor(c)} style={{ width: 28, height: 28, borderRadius: 4, background: c, cursor: "pointer",
+                border: selColor === c ? "2px solid #fff" : c === "#000000" ? "1px solid #333" : "1px solid transparent",
+                transition: "transform .1s", transform: selColor === c ? "scale(1.15)" : "scale(1)" }} />
             ))}
           </div>
 
-          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING }}>ACTIVE</div>
-          <div style={{ fontSize: 16, color: "#ccc", fontFamily: FONT_BODY }}>
-            Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span>
-          </div>
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>ACTIVE</div>
+          <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span></div>
+          {hovInfo?.by && <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>by: {hovInfo.byName || "?"}<br />{new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>}
 
-          {hovInfo?.by && (
-            <div style={{ fontSize: 16, color: "#ccc", fontFamily: FONT_BODY }}>
-              by: {hovInfo.byName || "?"}<br />
-              {new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-            </div>
-          )}
+          {/* Canvas Shape Controls */}
+          <CanvasShapeControls currentShape={canvasShape} hostName={hostName || "host"} isHost={isHost} isUnlocked={shapeUnlocked} canChange={canChange} onChangeShape={handleChangeShape} onToggleLock={handleToggleLock} pixelCount={pixelCount} />
 
-          {/* Canvas shape indicator */}
-          <div style={{
-            padding: "8px 10px", borderRadius: 4,
-            border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.4)",
-            display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{ fontSize: 10, color: BRAND.textDim, letterSpacing: 1.5, fontFamily: FONT_HEADING }}>
-              CANVAS
-            </span>
-            <span style={{ fontSize: 12, color: BRAND.yellow, fontFamily: FONT_MONO, fontWeight: 600 }}>
-              {shapeInfo?.desc}
-            </span>
-            <span style={{ fontSize: 10, color: BRAND.textDim, fontFamily: FONT_MONO }}>
-              {shapeInfo?.label}
-            </span>
-          </div>
-
-          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING, marginTop: 8 }}>PLAYERS</div>
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginTop: 8 }}>PLAYERS</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {allPlayers.map(p => (
               <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 6, opacity: p.id === myId ? 1 : .6 }}>
                 <Sigil seed={hSeed(p.id)} size={18} />
-                <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#ccc", fontFamily: FONT_BODY }}>{p.name}</span>
+                <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#ccc", fontFamily: FB }}>
+                  {p.name}{p.id === hostId && <span style={{ fontSize: 10, color: BRAND.textDim, marginLeft: 4 }}>HOST</span>}
+                </span>
               </div>
             ))}
           </div>
 
-          {/* F1R3INK — Color as Signal */}
-          <div style={{
-            marginTop: 16, padding: 12, borderRadius: 6,
-            border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)",
-          }}>
-            <div style={{ fontSize: 11, color: BRAND.textDim, letterSpacing: 2, fontFamily: FONT_HEADING, marginBottom: 8 }}>
-              F1R3 SIGNALS
-            </div>
-            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FONT_BODY, marginBottom: 10, lineHeight: 1.4 }}>
-              How does this F1R3PIX make you feel?
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 3 }}>
-              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269",
-                "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
-                <div key={`sig-${c}`} style={{
-                  width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
+          {/* F1R3 SIGNALS — same size heading as PALETTE and PLAYERS */}
+          <div style={{ marginTop: 16, padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)" }}>
+            <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
+            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
+              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
+                <div key={`sig-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
                   border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
-                  transition: "transform 0.15s, box-shadow 0.15s",
-                  transform: signal === c ? "scale(1.3)" : "scale(1)",
-                }}
+                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
                 onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
                 onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
-                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}}
-                />
+                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
               ))}
             </div>
-            {signalConfirm && (
-              <div style={{
-                marginTop: 10, padding: "8px 10px", borderRadius: 4,
-                background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`,
-                fontSize: 13, color: BRAND.yellow, fontFamily: FONT_BODY, lineHeight: 1.4,
-              }}>
-                noted. we wrote that down.
-              </div>
-            )}
-            {signal && !signalConfirm && (
-              <div style={{
-                marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FONT_BODY,
-                display: "flex", alignItems: "center", gap: 6,
-              }}>
-                {myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} />
-              </div>
-            )}
-            <div style={{
-              marginTop: 10, fontSize: 11, color: BRAND.textDim, fontFamily: FONT_BODY, fontStyle: "italic",
-            }}>
-              powered by F1R3INK
-            </div>
+            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
+            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
+            <div style={{ marginTop: 10, fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
           </div>
         </div>
       </div>
-
-      {/* Built on F1R3FLY badge */}
       <BuiltOnBadge />
     </div>
   );
 }
 
-// ── Mount ─────────────────────────────────────────────────────────
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(F1R3Pix));
 </script>
