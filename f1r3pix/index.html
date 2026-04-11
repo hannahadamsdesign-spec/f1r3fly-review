@@ -68,7 +68,7 @@ const { useState, useEffect, useCallback, useRef } = React;
 const BRAND = {
   yellow: "#F3D630", sage: "#8BB999", sky: "#3FA9F5",
   surface: "#000000", card: "#0c0c18", border: "rgba(255,255,255,0.2)", stroke: "linear-gradient(90deg, #F3D630, #8BB999)",
-  text: "#ffffff", textMuted: "#cccccc", textDim: "#999999",
+  text: "#ffffff", textMuted: "#ffffff", textDim: "#ffffff",
 };
 const BRAND_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');`;
 const FH = "'Josefin Sans', 'Source Sans 3', sans-serif";
@@ -237,7 +237,7 @@ function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canCh
       </div>
       {!isHost && !isUnlocked && <div style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>only {hostName} can change shape</div>
-        <button style={{ background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, fontFamily: FH, letterSpacing: 1, color: BRAND.sky, cursor: "pointer" }}>ASK TO UNLOCK</button>
+        <button style={{ background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, fontFamily: FH, letterSpacing: 1, color: "#3FA9F5", cursor: "pointer" }}>ASK TO UNLOCK</button>
       </div>}
       {!isHost && isUnlocked && <div style={{ marginTop: 8, fontSize: 11, color: BRAND.sage, fontFamily: FB }}>{hostName} unlocked canvas shape — you can change it</div>}
       {confirmTarget && (
@@ -382,7 +382,7 @@ function F1R3Pix() {
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, justifyContent: "space-between" }}>
           <button className="tour-btn" style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 13, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0, marginLeft: 16 }}>TAKE A TOUR</button>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, justifyContent: "center" }}>
           <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
           <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
           <button className="zoom-btn" onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
