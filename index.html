@@ -37,7 +37,7 @@
     .game-header { flex-wrap: nowrap; gap: 6px; min-height: auto !important; padding: 8px 12px !important; position: sticky; top: 0; z-index: 50; }
     .game-header-title { font-size: 18px !important; }
     .game-header-stats { font-size: 11px !important; display: none !important; }
-    .game-grid-wrap { flex: 1 1 auto !important; min-height: 40vh !important; max-height: 55vh !important; }
+    .game-grid-wrap { flex: 1 1 auto !important; min-height: 35vh !important; max-height: 50vh !important; overflow: auto !important; }
     .zoom-controls { gap: 4px !important; }
     .zoom-btn { width: 28px !important; height: 28px !important; font-size: 16px !important; }
   }
@@ -198,7 +198,7 @@ function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canCh
     if (pixelCount > 0 && (next.w < cur.w || next.h < cur.h)) { setConfirmTarget(key); } else { onChangeShape(key); }
   };
   return (
-    <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)" }}>
+    <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
         <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>CANVAS</div>
         {isHost && (
@@ -219,7 +219,7 @@ function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canCh
           const ph = key === "portrait" ? 24 : key === "landscape" ? 16 : 20;
           return (
             <button key={key} onClick={() => handleShapeClick(key)} style={{
-                flex: 1, background: isActive ? "rgba(243,214,48,0.08)" : "rgba(26,26,48,0.3)",
+                flex: 1, background: isActive ? "rgba(243,214,48,0.08)" : "rgba(255,255,255,0.03)",
                 border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
                 borderRadius: 6, padding: "8px 4px", cursor: canChange && !isActive ? "pointer" : "default",
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
@@ -374,10 +374,11 @@ function F1R3Pix() {
           <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 4, padding: "4px 12px", fontSize: 12, cursor: "pointer", fontFamily: FH, letterSpacing: 1, fontWeight: 600 }}>TAKE A TOUR</button>
           <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
           <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
           <button onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
-          <button onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, padding: "4px 10px", fontSize: 16, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>STORM OUT</button>
+          <button onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, padding: "4px 10px", fontSize: 16, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>STORM OUT!</button>
         </div>
       </div>
 
@@ -421,14 +422,14 @@ function F1R3Pix() {
               <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 6, opacity: p.id === myId ? 1 : .6 }}>
                 <Sigil seed={hSeed(p.id)} size={18} />
                 <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#ccc", fontFamily: FB }}>
-                  {p.name}{p.id === hostId && <span style={{ fontSize: 10, color: BRAND.textDim, marginLeft: 4 }}>HOST</span>}
+                  {p.name}{p.id === hostId && <span style={{ fontSize: 12, color: BRAND.textDim, marginLeft: 4, fontStyle: "italic" }}>(Host)</span>}
                 </span>
               </div>
             ))}
           </div>
 
           {/* F1R3 SIGNALS — same size heading as PALETTE and PLAYERS */}
-          <div style={{ marginTop: 16, padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)" }}>
+          <div style={{ marginTop: 16, padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
             <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
             <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
