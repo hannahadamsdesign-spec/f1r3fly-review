@@ -2,170 +2,732 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>F1R3FLY.IO — Spatial Navigation Concept</title>
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#000;--surface:#060610;--border:#1a1a30;--stroke:#1c1c32;
---text:#fff;--text-light:#aaa;--text-faint:#555;--text-dim:#333;
---yellow:#F3D630;--sage:#8BB999;--sky:#3FA9F5;
---dev-blue:#007bc4;--dev-teal:#009188;
---client-purple:#5c0269;--client-scarlet:#7b0429;
---partner-green:#0c8e23;--partner-lime:#7a9d0e;
---heading:'Josefin Sans',sans-serif;--body:'Source Sans Pro',sans-serif;
---ease:cubic-bezier(0.4,0,0.15,1)}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
-</style>
-<style>
-.floating-logo{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.7;transition:opacity .3s}
-.floating-logo:hover{opacity:1}
-.floating-logo img{height:28px}
-.floating-logo span{font-family:var(--heading);font-size:9px;color:#444;letter-spacing:3px;text-transform:uppercase}
-.stage{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden}
-.world{position:absolute;top:0;left:0;transition:transform .7s var(--ease);transform-origin:0 0}
-.slide{position:absolute;top:0;width:1920px;height:1080px;cursor:pointer;border-radius:6px;overflow:hidden;border:1px solid var(--stroke);box-shadow:0 0 0 1px rgba(255,255,255,.03)}
-.slide:hover{border-color:#2a2a44}
-.controls{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100}
-.ctrl-btn{width:34px;height:34px;border:1px solid var(--border);border-radius:50%;background:rgba(0,0,0,.85);color:var(--text-faint);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(8px)}
-.ctrl-btn:hover{color:var(--yellow);border-color:var(--yellow)}
-.ctrl-btn.nav-arrow{width:38px;height:38px}
-.ctrl-indicator{font-size:10px;color:var(--text-faint);letter-spacing:2px;font-weight:300;min-width:60px;text-align:center;font-family:var(--heading)}
-.ctrl-btn:disabled{opacity:.15;cursor:default}
-</style>
-<style>
-/* ── S1: Hero ── */
-.s1{height:100%;background:radial-gradient(ellipse at 50% 60%,#0c0c1a 0%,#000 65%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px}
-.s1 img.logo{height:160px;margin-bottom:32px;opacity:.85}
-.s1 .sub{font-family:var(--heading);font-size:13px;color:#555;letter-spacing:3px;margin-bottom:48px}
-.s1 .sub a{color:var(--sky);text-decoration:none}
-.s1 h2{font-family:var(--heading);font-size:36px;font-weight:300;color:var(--text-light);line-height:1.5;max-width:900px;margin-bottom:32px}
-.s1 h2 strong{color:#fff;font-weight:600}
-.s1 .body-text{font-size:20px;color:#666;max-width:800px;line-height:1.7;font-weight:300}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>F1R3PIX — Brand Correct v6 (Hannah Adams, April 2026)</title>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 
-/* ── S2: Audiences (Dev/Client/Partner gradient panels) ── */
-.s2{display:grid;grid-template-columns:1fr 1fr 1fr;height:100%}
-.s2 .panel{padding:80px 60px;display:flex;flex-direction:column;justify-content:center;gap:20px;position:relative;overflow:hidden}
-.s2 .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.s2 .dev{background:linear-gradient(180deg,#040810,#060610)}
-.s2 .dev::before{background:linear-gradient(90deg,var(--dev-blue),var(--dev-teal))}
-.s2 .client{background:linear-gradient(180deg,#080410,#060610)}
-.s2 .client::before{background:linear-gradient(90deg,var(--client-purple),var(--client-scarlet))}
-.s2 .partner{background:linear-gradient(180deg,#040a06,#060610)}
-.s2 .partner::before{background:linear-gradient(90deg,var(--partner-green),var(--partner-lime))}
-.s2 .eyebrow{font-family:var(--heading);font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase}
-.s2 h3{font-family:var(--heading);font-size:32px;font-weight:400;line-height:1.3}
-.s2 p{font-size:17px;font-weight:300;color:var(--text-light);line-height:1.7}
-.s2 ul{list-style:none;padding:0;margin-top:8px}
-.s2 li{font-size:15px;color:var(--text-light);padding:5px 0 5px 20px;position:relative}
-.s2 li::before{content:'→';position:absolute;left:0;color:var(--text-faint)}
-.s2 .demo-link{display:inline-block;margin-top:16px;font-family:var(--heading);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--sky);text-decoration:none;border-bottom:1px solid var(--sky);padding-bottom:2px}
-</style>
-<style>
-/* ── S3: Technology pillars ── */
-.s3{height:100%;background:#050510;display:flex;flex-direction:column;justify-content:center;padding:80px 100px;gap:24px}
-.s3 .eyebrow{font-family:var(--heading);font-size:11px;letter-spacing:4px;color:#444;text-transform:uppercase}
-.s3 h2{font-family:var(--heading);font-size:38px;font-weight:300;color:var(--text-light);max-width:850px;line-height:1.4;margin-bottom:8px}
-.s3 .body{font-size:18px;color:#555;max-width:800px;line-height:1.7;font-weight:300;margin-bottom:16px}
-.tech-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
-.tc{background:#08080f;border:1px solid var(--border);border-radius:8px;padding:40px 36px}
-.tc .icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.tc .icon img{width:26px;height:26px;opacity:.8}
-.tc h4{font-family:var(--heading);font-size:20px;font-weight:600;margin-bottom:10px;letter-spacing:.5px}
-.tc p{font-size:15px;color:var(--text-light);line-height:1.7;font-weight:300}
-.tc ul{list-style:none;padding:0;margin-top:12px}
-.tc li{font-size:14px;color:#777;padding:4px 0 4px 16px;position:relative}
-.tc li::before{content:'•';position:absolute;left:0;color:var(--text-faint)}
-
-/* ── S4: Rholang ── */
-.s4{display:grid;grid-template-columns:1.1fr 1fr;height:100%}
-.s4l{padding:80px 70px;display:flex;flex-direction:column;justify-content:center;gap:20px;background:#050510}
-.s4l .eyebrow{font-family:var(--heading);font-size:11px;letter-spacing:4px;color:#444;text-transform:uppercase}
-.s4l h2{font-family:var(--heading);font-size:44px;font-weight:300;line-height:1.25}
-.s4l h2 em{color:var(--sky);font-style:normal}
-.s4l p{font-size:18px;font-weight:300;color:var(--text-light);line-height:1.7;max-width:540px}
-.s4r{background:#030308;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:60px}
-.code{background:#08080f;border:1px solid var(--border);border-radius:8px;padding:36px;font-family:'SF Mono','Fira Code',monospace;font-size:14px;color:var(--sage);line-height:2.2;width:100%;max-width:460px}
-.code .k{color:var(--sky)} .code .s{color:var(--yellow)} .code .c{color:#333}
-.feat-row{display:flex;gap:48px}
-.feat-item{text-align:center}
-.feat-item img{width:44px;height:44px;opacity:.5;margin-bottom:8px}
-.feat-item span{display:block;font-family:var(--heading);font-size:10px;color:#444;letter-spacing:2px}
-</style>
-<style>
-/* ── S5: Team ── */
-.s5{height:100%;background:#050510;display:flex;flex-direction:column;padding:60px 80px;gap:32px}
-.s5 .eyebrow{font-family:var(--heading);font-size:11px;letter-spacing:4px;color:#444;text-transform:uppercase;text-align:center}
-.s5 h2{font-family:var(--heading);font-size:40px;font-weight:300;text-align:center}
-.s5 .desc{font-size:17px;color:#666;text-align:center;max-width:700px;margin:0 auto;line-height:1.6;font-weight:300}
-.tg{display:grid;grid-template-columns:repeat(5,1fr);gap:28px;margin-top:8px}
-.tm{display:flex;flex-direction:column;align-items:center;gap:10px}
-.tm img{width:96px;height:96px;border-radius:50%;object-fit:cover;border:1px solid var(--border);background:#111}
-.tm .nm{font-family:var(--heading);font-size:14px;font-weight:600;letter-spacing:1px}
-.tm .rl{font-size:12px;color:var(--text-faint);font-weight:300}
-.s5 .contrib{font-family:var(--heading);font-size:11px;letter-spacing:3px;color:#333;text-transform:uppercase;text-align:center;margin-top:16px}
-.tg2{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
-.tm2{display:flex;flex-direction:column;align-items:center;gap:6px}
-.tm2 img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid #1a1a2a;background:#0a0a12}
-.tm2 .nm{font-family:var(--heading);font-size:11px;font-weight:400;color:#555}
-.tm2 .rl{font-size:10px;color:#333}
-.marquee-wrap{width:100%;overflow:hidden;margin-top:auto}
-.marquee{font-family:var(--heading);font-size:12px;color:#151520;letter-spacing:4px;white-space:nowrap;animation:m 25s linear infinite}
-@keyframes m{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-</style>
-
-<div class="floating-logo" onclick="goOverview()">
-  <img src="https://f1r3fly.io/images/f1r3fly-io-horizontal-logo-color-on-dark.svg" alt="F1R3FLY.IO">
-  <span>Spatial Navigation Concept</span>
-</div>
-<div class="stage"><div class="world" id="world"></div></div>
-<div class="controls">
-  <button class="ctrl-btn nav-arrow" id="btnPrev" onclick="goPrev()">&#8592;</button>
-  <button class="ctrl-btn" onclick="doZoomOut()">&#8722;</button>
-  <span class="ctrl-indicator" id="indicator">Overview</span>
-  <button class="ctrl-btn" onclick="doZoomIn()">+</button>
-  <button class="ctrl-btn nav-arrow" id="btnNext" onclick="goNext()">&#8594;</button>
-</div>
+<!-- Mock shard storage -->
 <script>
-var I='https://f1r3fly.io/images/';
-var SLIDES=[
-// S1: Hero
-'<div class="s1"><img class="logo" src="'+I+'f1r3fly-io-vertical-logo.svg"><div class="sub">A Subsidiary of <a>F1R3FLY Industries</a></div><h2>A <strong>verifiable execution layer</strong> for AI&#8209;native systems, concurrent workflows, and high&#8209;trust coordination.</h2><p class="body-text">F1R3FLY is an AI&#8209;native execution layer built on Rholang and validator nodes. It is designed for teams that need more than another chain: they need verifiable concurrency, safe composition of AI and Web3, and infrastructure that can explain what actually happened.</p></div>',
+(function() {
+  var store = {};
+  window.storage = {
+    get: function(key, shared) { var v = store[key]; return v !== undefined ? Promise.resolve({ key: key, value: v, shared: !!shared }) : Promise.resolve(null); },
+    set: function(key, value, shared) { store[key] = value; return Promise.resolve({ key: key, value: value, shared: !!shared }); },
+    delete: function(key, shared) { delete store[key]; return Promise.resolve({ key: key, deleted: true, shared: !!shared }); },
+    list: function(prefix, shared) { var keys = Object.keys(store).filter(function(k) { return !prefix || k.startsWith(prefix); }); return Promise.resolve({ keys: keys, prefix: prefix, shared: !!shared }); }
+  };
+})();
+</script>
 
-// S2: Audiences
-'<div class="s2"><div class="panel dev"><div class="eyebrow" style="color:var(--sky)">Developers</div><h3>From global state chaos to verifiable concurrency</h3><p>F1R3FLY provides a concurrency&#8209;native model to run processes in parallel with a verifiable record of every interaction.</p><ul><li>Model complex workflows without shared&#8209;state hacks</li><li>Connect on&#8209;chain logic to off&#8209;chain services seamlessly</li><li>Debug with tamper&#8209;evident records, not guesswork</li></ul><a class="demo-link">Watch Shard Controller Demo &#8594;</a></div><div class="panel client"><div class="eyebrow" style="color:var(--client-scarlet)">Clients</div><h3>Connect AI, data, and Web3 without fragile glue</h3><p>Skip fragile one&#8209;off integrations. F1R3FLY composes AI calls, smart contracts, and data as repeatable workflows on validator&#8209;backed infrastructure.</p><ul><li>Manage data flow across AI and services in one place</li><li>Tamper&#8209;evident records of what was executed, when, and by whom</li><li>Less maintenance, more time shipping features</li></ul></div><div class="panel partner"><div class="eyebrow" style="color:var(--partner-green)">Partners</div><h3>Infrastructure for high&#8209;trust, AI&#8209;native ecosystems</h3><p>Partners need an environment where AI and data work under clear rules of evidence.</p><ul><li>A credible technical story for AI&#8209;native networks</li><li>Transparency and auditability for complex workflows</li><li>A foundation from pilot to production&#8209;grade scale</li></ul><a class="demo-link" style="color:var(--partner-green);border-color:var(--partner-green)">Watch All Demos &#8594;</a></div></div>',
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  @media (max-width: 768px) { html, body { overflow: auto; } }
 
-// S3: Technology
-'<div class="s3"><div class="eyebrow">Scalable. Storable. Searchable.</div><h2>An AI&#8209;native execution layer for mission&#8209;critical coordination systems</h2><p class="body">F1R3FLY provides developers with concurrency&#8209;native execution, validator&#8209;backed data, and formally grounded Rholang contracts, ensuring real&#8209;world, data&#8209;heavy workloads remain fast and verifiable.</p><div class="tech-cards"><div class="tc"><div class="icon" style="background:rgba(63,169,245,.1)"><img src="'+I+'icon-math.svg"></div><h4>Concurrency&#8209;Native Scalability</h4><p>No single global state or transaction queue to fight with. Transactions execute concurrently across validators.</p><ul><li>Capacity scales with hardware and network topology</li><li>No global bottleneck</li></ul></div><div class="tc"><div class="icon" style="background:rgba(139,185,153,.1)"><img src="'+I+'icon-search-scale.svg"></div><h4>Validator&#8209;Backed Data</h4><p>Application state and key datasets live directly on the network. Verifiable logs that AI agents and services can trust.</p><ul><li>Built&#8209;in auditability and replay</li><li>Regulated, high&#8209;trust scenarios</li></ul></div><div class="tc"><div class="icon" style="background:rgba(243,214,48,.1)"><img src="'+I+'icon-rebuild.svg"></div><h4>Correct&#8209;by&#8209;Construction</h4><p>Smart contracts written in Rholang with strong concurrency semantics. Behavior modeled as processes and channels.</p><ul><li>Reduces race conditions</li><li>Simplifies complex logic</li></ul></div></div></div>',
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .game-layout { flex-direction: column !important; }
+    .game-sidebar {
+      width: 100% !important;
+      border-left: none !important;
+      border-top: 1px solid #1a1a30;
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      gap: 12px !important;
+      padding: 12px !important;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .game-sidebar > div { min-width: 140px; }
+    .game-header { flex-wrap: wrap; gap: 8px; min-height: auto !important; padding: 10px 12px !important; }
+    .game-header-title { font-size: 22px !important; }
+    .game-header-stats { font-size: 13px !important; }
+    .game-grid-wrap { flex: 1; min-height: 50vh; }
+    .zoom-controls { gap: 6px !important; }
+    .zoom-btn { width: 32px !important; height: 32px !important; font-size: 18px !important; }
+  }
+  @media (max-width: 480px) {
+    .game-header-title { font-size: 18px !important; letter-spacing: 2px !important; }
+    .game-header-stats { font-size: 12px !important; display: block !important; margin-left: 0 !important; margin-top: 4px !important; }
+    .join-title { font-size: 28px !important; letter-spacing: 4px !important; }
+    .join-subtitle { font-size: 14px !important; }
+    .join-logo { width: 200px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef, useMemo } = React;
 
-// S4: Rholang
-'<div class="s4"><div class="s4l"><div class="eyebrow">Deep dive into Rholang and Concurrency</div><h2>Concurrent by design, secure by <em>math</em></h2><p>Rholang is a concurrent smart contract language based on the rho&#8209;calculus, a formal model for communicating processes. Instead of mutating global variables, Rholang contracts send and receive messages over channels.</p><p style="color:#555;font-size:16px;margin-top:4px"><strong style="color:#777">Spatial&#8209;behavioral types</strong> &#8212; a mathematical framework that lets you prove properties of contracts before they touch mainnet, catching whole classes of bugs by construction.</p><p style="color:#555;font-size:16px;margin-top:4px"><strong style="color:#777">OSLF Algorithm</strong> &#8212; dramatically expands what can be searched and indexed on&#8209;chain by reasoning about processes instead of static data.</p><p style="color:#555;font-size:16px;margin-top:4px"><strong style="color:#777">Casper Consensus</strong> &#8212; a Proof&#8209;of&#8209;Stake protocol that is energy&#8209;efficient, finality&#8209;oriented, and grounded in peer&#8209;reviewed research.</p></div><div class="s4r"><div class="code"><span class="c">// Rholang contract</span><br><span class="k">new</span> channel <span class="k">in</span> {<br>&nbsp;&nbsp;channel!(<span class="s">"hello"</span>) |<br>&nbsp;&nbsp;<span class="k">for</span> (msg &lt;- channel) {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">// concurrent receive</span><br>&nbsp;&nbsp;&nbsp;&nbsp;stdout!(*msg)<br>&nbsp;&nbsp;}<br>}</div><div class="feat-row"><div class="feat-item"><img src="'+I+'icon-math.svg"><span>Rholang</span></div><div class="feat-item"><img src="'+I+'icon-search-scale.svg"><span>OSLF</span></div><div class="feat-item"><img src="'+I+'icon-rebuild.svg"><span>Casper</span></div></div><p style="font-size:15px;color:#333;text-align:center;max-width:400px;line-height:1.6">Legacy chains execute transactions one after another, turning global state into a single bottleneck. F1R3FLY follows a different path.</p></div></div>',
+// ══════════════════════════════════════════════════════════════════
+// F1R3PIX — Brand Correct v6
+// F1R3FLY Brand Book March 27, 2026 — Hannah Adams
+// Canvas shape: portrait default, selectable at shard creation
+// ══════════════════════════════════════════════════════════════════
 
-// S5: Team
-'<div class="s5"><div class="eyebrow">The People Behind the Platform</div><h2>Team</h2><p class="desc">F1R3FLY is built by a small team of researchers, engineers, and product people who have spent years thinking about concurrent computation, smart contract safety, and real&#8209;world systems.</p><div class="tg"><div class="tm"><img src="'+I+'greg-meredith.jpg"><div class="nm">Greg Meredith</div><div class="rl">Founder</div></div><div class="tm"><img src="'+I+'stephen-alexander.jpg"><div class="nm">Stephen Alexander</div><div class="rl">President and CEO</div></div><div class="tm"><img src="'+I+'mike-stay.jpg"><div class="nm">Mike Stay</div><div class="rl">Director of Research</div></div><div class="tm"><img src="'+I+'jeff-turner.jpg"><div class="nm">Jeff Turner</div><div class="rl">Product Manager</div></div><div class="tm"><img src="'+I+'nicolas-riddle.jpg"><div class="nm">Nicolas Riddle</div><div class="rl">Board Director &amp; COO</div></div><div class="tm"><img src="'+I+'hannah-adams.jpg"><div class="nm">Hannah Adams</div><div class="rl">Creative Director</div></div><div class="tm"><img src="'+I+'lilia-rusu.jpg"><div class="nm">Lilia Rusu</div><div class="rl">General Manager</div></div><div class="tm"><img src="'+I+'ralph-benko.jpg"><div class="nm">Ralph Benko</div><div class="rl">General Counsel</div></div><div class="tm"><img src="'+I+'dylon-edwards.jpg"><div class="nm">Dylon Edwards</div><div class="rl">Language Tools</div></div><div class="tm"><img src="'+I+'steven-preston.jpg"><div class="nm">Steven Preston</div><div class="rl">Integration Team</div></div></div><div class="contrib">Contributors</div><div class="tg2"><div class="tm2"><img src="'+I+'daria-bohdanova.jpg"><div class="nm">Daria Bohdanova</div></div><div class="tm2"><img src="'+I+'serhii-lypko.jpg"><div class="nm">Serhii Lypko</div></div><div class="tm2"><img src="'+I+'christian-b-wells.jpg"><div class="nm">Christian Wells</div></div><div class="tm2"><img src="'+I+'adam-vandervorst.jpg"><div class="nm">Adam Vandervorst</div></div><div class="tm2"><img src="'+I+'nash-foster.jpg"><div class="nm">Nash Foster</div></div></div><div class="marquee-wrap"><div class="marquee">the network is the computer is the network is the computer is the network is the computer is the network is the computer is the network is the computer is the network is the computer is the network is the computer is the network is the computer is </div></div></div>'
+// ── Brand System ─────────────────────────────────────────────────
+const BRAND = {
+  yellow: "#F3D630", sage: "#8BB999", sky: "#3FA9F5",
+  surface: "#000000", card: "#0c0c18", border: "#1a1a30",
+  text: "#ffffff", textSec: "#ffffff", textMuted: "#cccccc", textDim: "#999999",
+};
+
+const BRAND_FONTS = `
+  @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+`;
+
+const FONT_HEADING = "'Josefin Sans', 'Source Sans 3', sans-serif";
+const FONT_BODY = "'Source Sans 3', 'Josefin Sans', sans-serif";
+const FONT_MONO = "'Source Code Pro', 'Courier New', monospace";
+
+// ── Canvas Shape Presets ────────────────────────────────────────
+const CANVAS_SHAPES = {
+  portrait:  { w: 32, h: 48, label: "PORTRAIT",  desc: "32 × 48" },
+  landscape: { w: 48, h: 32, label: "LANDSCAPE", desc: "48 × 32" },
+  square:    { w: 40, h: 40, label: "SQUARE",    desc: "40 × 40" },
+};
+
+const DEFAULT_SHAPE = "portrait";
+
+// ── Config ───────────────────────────────────────────────────────
+const PFX_PX = "f1r3pix-pixel:";
+const PFX_P = "f1r3pix-player:";
+const MY_ID = "f1r3pix-myid";
+const SHARD_SHAPE = "f1r3pix-canvas-shape"; // stored on shard
+const POLL = 1500;
+const MIN_ZOOM = 0.3;
+const MAX_ZOOM = 2.5;
+const CELL_BASE = 16; // base cell size in px before zoom
+
+// ── Brand Palette (from brand book) ──────────────────────────────
+const PALETTE = [
+  "#000000","#1a1a30","#3f3f3f","#8E8E93","#FFFFFF",
+  "#7b0429","#5c0269","#F7E478","#F3D630","#B3D1BC",
+  "#0c8e23","#8BB999","#7a9d0e","#82C7F8","#3FA9F5",
+  "#009188","#007bc4","#1114ad","#BF5AF2","#AF52DE",
 ];
 
-var COLS=3,ROWS=2,SW=1920,SH=1080,GAP=40;
-var currentSlide=-1,zoomLevel=0;
-var world=document.getElementById('world');
-SLIDES.forEach(function(html,i){var col=i%COLS,row=Math.floor(i/COLS);var el=document.createElement('div');el.className='slide';el.style.left=(col*(SW+GAP))+'px';el.style.top=(row*(SH+GAP))+'px';el.innerHTML=html;el.addEventListener('click',function(){goSlide(i)});world.appendChild(el)});
-var worldW=COLS*SW+(COLS-1)*GAP,worldH=ROWS*SH+(ROWS-1)*GAP;
-function getStageSize(){return{w:window.innerWidth,h:window.innerHeight}}
-function getOverviewScale(){var s=getStageSize(),p=64;return Math.min((s.w-p*2)/worldW,(s.h-p*2)/worldH)}
-function getSlideScale(){var s=getStageSize(),p=40;return Math.min((s.w-p*2)/SW,(s.h-p*2)/SH)}
-function getSlideCenter(i){var c=i%COLS,r=Math.floor(i/COLS);return{x:c*(SW+GAP)+SW/2,y:r*(SH+GAP)+SH/2}}
-function applyTransform(sc,fx,fy){var s=getStageSize();world.style.transform='translate('+(s.w/2-fx*sc)+'px,'+(s.h/2-fy*sc)+'px) scale('+sc+')'}
-function goOverview(){currentSlide=-1;zoomLevel=0;applyTransform(getOverviewScale(),worldW/2,worldH/2);updateUI()}
-function goSlide(i){currentSlide=i;zoomLevel=1;var c=getSlideCenter(i);applyTransform(getSlideScale(),c.x,c.y);updateUI()}
-function goPrev(){if(currentSlide<=0)return;goSlide(currentSlide-1)}
-function goNext(){if(currentSlide>=SLIDES.length-1)return;goSlide(currentSlide+1)}
-function doZoomIn(){if(currentSlide<0){goSlide(0);return}zoomLevel=Math.min(zoomLevel+.3,2.5);var c=getSlideCenter(currentSlide);applyTransform(getSlideScale()*zoomLevel,c.x,c.y);updateUI()}
-function doZoomOut(){if(currentSlide<0)return;zoomLevel=Math.max(zoomLevel-.3,0);if(zoomLevel<.5){goOverview();return}var c=getSlideCenter(currentSlide);applyTransform(getSlideScale()*zoomLevel,c.x,c.y);updateUI()}
-function updateUI(){var ind=document.getElementById('indicator');ind.textContent=currentSlide<0?'Overview':(currentSlide+1)+' / '+SLIDES.length;document.getElementById('btnPrev').disabled=(currentSlide<=0);document.getElementById('btnNext').disabled=(currentSlide>=SLIDES.length-1||currentSlide<0)}
-document.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')goPrev();if(e.key==='ArrowRight')goNext();if(e.key==='='||e.key==='+'){e.preventDefault();doZoomIn()}if(e.key==='-'){e.preventDefault();doZoomOut()}if(e.key==='Escape')goOverview()});
-window.addEventListener('resize',function(){if(currentSlide<0)goOverview();else goSlide(currentSlide)});
-goOverview();
+// ── F1R3Games Suite (for nav) ────────────────────────────────────
+const GAMES = [
+  { id: "f1r3pix", name: "F1R3PIX", desc: "Pixel Art", active: true },
+  { id: "f1r3beat", name: "F1R3BEAT", desc: "Music", active: false },
+  { id: "f1r3ink", name: "F1R3INK", desc: "Sentiment", active: false },
+  { id: "f1r3skein", name: "F1R3SKEIN", desc: "Generative", active: false },
+  { id: "f1r3sidechat", name: "SIDECHAT", desc: "Story", active: false },
+];
+
+// ── Storage helpers ──────────────────────────────────────────────
+const sh = {
+  async get(k,s=true){try{const r=await window.storage.get(k,s);return r?.value?JSON.parse(r.value):null}catch{return null}},
+  async set(k,v,s=true){try{await window.storage.set(k,JSON.stringify(v),s);return true}catch{return false}},
+  async del(k,s=true){try{await window.storage.delete(k,s);return true}catch{return false}},
+  async list(p){try{const r=await window.storage.list(p,true);return r?.keys||[]}catch{return[]}},
+};
+
+function hSeed(id){let h=0;for(let i=0;i<id.length;i++)h=((h<<5)-h+id.charCodeAt(i))|0;return Math.abs(h)}
+
+// ── Sigil (player avatar) ────────────────────────────────────────
+function Sigil({seed, size=24}){
+  const s=seed%10000, h1=s%360, h2=(s*7+120)%360, r=size*.38;
+  return(
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <circle cx={size/2} cy={size/2} r={r} fill={`hsl(${h1},25%,15%)`} stroke={`hsl(${h1},50%,40%)`} strokeWidth="1"/>
+      <circle cx={size/2} cy={size/2-r*.3} r={size*.1} fill={`hsl(${h1},70%,65%)`} opacity=".8"/>
+      <circle cx={size/2+r*.3} cy={size/2+r*.2} r={size*.08} fill={`hsl(${h2},70%,65%)`} opacity=".7"/>
+    </svg>
+  );
+}
+
+// ── "Built on F1R3FLY" Badge ─────────────────────────────────────
+function BuiltOnBadge() {
+  return (
+    <div style={{
+      position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 100,
+      display: "flex", alignItems: "center", gap: 8,
+      background: "rgba(0,0,0,0.8)", border: `1px solid ${BRAND.border}`,
+      borderRadius: 8, padding: "8px 16px",
+      fontFamily: FONT_HEADING, fontSize: 14, letterSpacing: 2,
+      color: BRAND.textDim, cursor: "pointer",
+      backdropFilter: "blur(8px)",
+    }}
+    onClick={() => window.open && window.open("https://f1r3fly.io", "_blank")}
+    >
+      <span style={{ color: "#999" }}>BUILT ON</span>
+      <span style={{ color: BRAND.yellow, fontWeight: 700 }}>F1R3FLY</span>
+    </div>
+  );
+}
+
+// ── F1R3Games Logo (Hannah Adams, v1) ────────────────────────────
+function F1R3GamesLogo({ width = 300 }) {
+  return (
+    <svg width={width} viewBox="0 0 2042 1170" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", margin: "0 auto" }}>
+      <defs>
+        <linearGradient id="fg-g1" x1="930" y1="748" x2="930" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#9ec597"/><stop offset=".519" stopColor="#5fb7e7"/><stop offset="1" stopColor="#1c6d8d"/>
+        </linearGradient>
+        <linearGradient id="fg-g2" x1="771.5" y1="405.6" x2="1465.1" y2="405.6" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#f4d633"/><stop offset="1" stopColor="#a82933"/>
+        </linearGradient>
+      </defs>
+      <path fill="#fff" d="M0,924.4c0-3.5,2.8-6.7,6.7-6.7h144.3c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7H46.1v66.7h87.6c3.5,0,6.7,3.2,6.7,6.7v29.1c0,3.5-3.2,6.7-6.7,6.7H46.1v89.7c0,3.5-3.2,6.7-6.7,6.7H6.7c-3.9,0-6.7-3.2-6.7-6.7V924.4ZM235.4,989.3l-31.2,6.7c-3.2.7-6.7-1.4-7.1-4.6l-2.1-17.4c-.4-2.8.4-5,1.8-6.4l51.1-42.9h24.8c3.5,0,6.4,3.2,6.4,6.7v227.6c0,3.5-2.8,6.7-6.4,6.7h-30.5c-3.9,0-6.7-3.2-6.7-6.7V989.3ZM362,924.4c0-3.5,2.8-6.7,6.7-6.7h101.4c42.5,0,77.3,34,77.3,76.2,0,32.6-21.6,59.2-52.5,71.6l48.6,90.1c2.5,4.6,0,10.3-6,10.3h-37.2c-3.2,0-5-1.8-5.7-3.2l-47.2-94h-39.4v90.4c0,3.5-3.2,6.7-6.7,6.7h-32.6c-3.9,0-6.7-3.2-6.7-6.7V924.4ZM466.2,1030.8c18.8,0,35.1-16.3,35.1-36.2,0-18.8-16.3-34.4-35.1-34.4h-57.8v70.6h57.8ZM596.7,1129l18.1-17.4c3.2-2.8,6.4-2.8,9.2,0,1.1,1.4,22,19.1,43.6,19.1,19.1,0,37.6-13.8,37.6-33.3,0-18.4-17-35.1-48.9-35.1h-19.9c-3.9,0-6.7-2.8-6.7-7.1v-22.3c0-4.6,2.5-7.1,6.7-7.1h19.9c29.1,0,44-14.5,44-32.6,0-19.5-16.3-32.6-34.4-32.6-18.4,0-29.8,9.9-35.8,17-2.5,2.8-6.4,3.2-9.6.4l-17.4-16.3c-2.8-2.5-2.5-6.7,0-9.2,0,0,27-31.2,66.7-31.2,41.1,0,75.5,25.2,75.5,64.9,0,27.3-20.6,47.9-36.5,55.3v1.1c16.7,7.1,42.9,26.2,42.9,57.8,0,40.1-32.6,69.1-81.6,69.1-44.3,0-65.9-22.3-73.7-31.6-2.1-2.5-1.8-6.4.4-8.9Z"/>
+      <path fill="#fff" d="M928.2,914.2c31.9,0,62.4,12.4,86.5,33,2.8,2.8,3.2,7.1.4,9.9l-22,23c-2.8,2.8-6,2.8-9.2,0-15.2-13.5-34-20.6-53.5-20.6-44.3,0-79.4,37.9-79.4,82.3,0,44,35.1,81.2,79.8,81.2,19.9,0,35.1-6,42.2-8.9v-30.1h-28.4c-3.9,0-6.7-2.8-6.7-6.4v-28c0-3.9,2.8-6.7,6.7-6.7h68.1c3.5,0,6.4,3.2,6.4,6.7v90.8c0,2.8-1.4,4.6-2.8,5.7,0,0-36.5,23-87.9,23-70.6,0-127.3-56-127.3-126.9s56.7-128,127.3-128Z"/>
+      <path fill="#fff" d="M1056.6,1156.7l110.3-238.6c1.1-2.1,2.8-3.9,6-3.9h3.5c3.5,0,5,1.8,6,3.9l109.2,238.6c2.1,4.6-.7,9.2-6,9.2h-30.8c-5.3,0-7.8-2.1-10.3-7.1l-17.4-38.3h-106l-17.4,38.3c-1.4,3.5-4.6,7.1-10.3,7.1h-30.8c-5.3,0-8.2-4.6-6-9.2ZM1209.8,1081.2l-35.5-78h-1.1l-34.7,78h71.3Z"/>
+      <path fill="#fff" d="M1367.5,919.5c.4-2.8,2.5-5.3,6.4-5.3h5.7c2.8,0,5,1.4,6,3.5l78,167.4h1.1l78-167.4c1.1-2.1,2.8-3.5,6-3.5h5.7c3.9,0,6,2.5,6.4,5.3l41.8,238.3c1.1,5-1.8,8.2-6.4,8.2h-32.3c-3.2,0-6-2.8-6.7-5.3l-20.9-134.4h-1.1l-62,139.3c-.7,2.1-2.8,3.9-6,3.9h-6.4c-3.2,0-5-1.8-6-3.9l-62.8-139.3h-1.1l-20.6,134.4c-.4,2.5-3.2,5.3-6.4,5.3h-31.9c-4.6,0-7.4-3.2-6.7-8.2l42.2-238.3Z"/>
+      <path fill="#fff" d="M1668.9,924.4c0-3.5,2.8-6.7,6.7-6.7h144.3c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7h-105v58.1h87.6c3.5,0,6.7,3.2,6.7,6.7v29.4c0,3.9-3.2,6.7-6.7,6.7h-87.6v62.1h105c3.9,0,6.7,3.2,6.7,6.7v29.1c0,3.5-2.8,6.7-6.7,6.7h-144.3c-3.9,0-6.7-3.2-6.7-6.7V924.4Z"/>
+      <path fill="#fff" d="M1880.6,1131.2l12.8-22c2.8-5,8.9-5,12.1-2.5,1.8,1.1,30.5,22,53.5,22,18.4,0,32.3-12.1,32.3-27.3,0-18.1-15.2-30.5-45-42.5-33.3-13.5-66.7-34.7-66.7-76.6,0-31.6,23.4-68.1,79.8-68.1,36.2,0,63.8,18.4,70.9,23.8,3.5,2.1,4.6,8.2,2.1,11.7l-13.5,20.2c-2.8,4.3-8.2,7.1-12.4,4.3-2.8-1.8-29.8-19.5-49.3-19.5-20.2,0-31.2,13.5-31.2,24.8,0,16.7,13.1,28,41.8,39.7,34.4,13.8,74.1,34.4,74.1,80.1,0,36.5-31.6,70.2-81.6,70.2-44.7,0-70.9-20.9-78-27.7-3.2-3.2-5-5-1.8-10.6Z"/>
+      <path fill="url(#fg-g1)" d="M1142,0c46.3,37.9,87.2,88.1,111.2,144.5,43.2,100.5,38,218-4.5,317.9-38.9,93-108.7,173.1-196.6,223.9-60,35.1-128.1,58-198.3,61.1-87.4,4.4-180.3-25.7-234.7-98-30.1-39.8-44.7-89.2-41.9-138.6,6.1-108.8,82.2-204.1,172.7-258.3,23.4-14.1,46.9-25.6,71.5-35.8,9.4-4,31.6-12.2,41.5-16,15.3-5.8,37.7-14.4,52.6-20.5,32.2-13.4,62-32.8,85.9-58.5,24.6-26.1,43.7-59.4,55.3-97.3,1.3,9.9,1.8,19.9,1.5,30-1.9,79-48,149.4-112.1,193.9-20.1,14.5-41.3,28.5-62.1,42-9.6,6.1-19.6,12.7-28.9,19.2-49.8,35-89.9,73.8-116.5,126.5-14.2,29.1-24.4,62.3-17.5,93.6,4.4,19.1,17.1,34.5,33.4,44.9,19.9,12.9,47.1,20,71.5,21,162.4,4.7,311.5-124.8,357-278.8,10.1-33.2,15.3-68,16-102.6,2.5-74.2-23.9-147.5-57-214.1Z"/>
+      <path fill="url(#fg-g2)" d="M1385,397.3c57.8,42.2,91.5,118.5,76.5,189.8-4.7,22.6-13.8,44.5-26.9,63.6-30.7,47.4-82.4,80.5-136.5,94.7-86,23.1-182.5,7.8-262.7-28.3-96.8-44.8-177.3-123-225-217.6-40-83.6-48.7-180.8-28.3-270.7,7.5-32.2,19.3-63.5,35.3-92.4,13.2-23.4,29.2-45.5,48.4-64.2,6.3-6.2,13-11.9,20-17.2-2.1,14-4.3,27.2-5.5,40.4-6.3,60.8-1.2,122.1,14.8,180.9,10.7,40.1,25.1,79,46,114.7,5.4,9.4,11.6,19,18.1,27.7,7.2,8.9,14.4,17.9,22,26.5,41.2,46.4,90.9,86,146.8,112.7,9,4.1,19.3,8.4,28.5,11.8,43.9,16.2,93.7,28.1,139,21.2,18.5-2.8,35.5-9.4,51.1-20.2,5-3.1,9.5-7.1,13.7-11.3,38.8-40.7,34.8-108.9,24.7-162.1Z"/>
+    </svg>
+  );
+}
+
+// ── Canvas Shape Selector ────────────────────────────────────────
+function ShapeSelector({ selected, onChange }) {
+  const shapes = Object.entries(CANVAS_SHAPES);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+      <div style={{
+        fontSize: 11, color: BRAND.textDim, letterSpacing: 2,
+        fontFamily: FONT_HEADING, textTransform: "uppercase",
+      }}>
+        CANVAS SHAPE
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
+        {shapes.map(([key, shape]) => {
+          const isActive = selected === key;
+          // Mini preview proportions
+          const previewW = key === "portrait" ? 24 : key === "landscape" ? 36 : 30;
+          const previewH = key === "portrait" ? 36 : key === "landscape" ? 24 : 30;
+          return (
+            <button key={key} onClick={() => onChange(key)} style={{
+              background: isActive ? "rgba(243,214,48,0.08)" : "rgba(26,26,48,0.4)",
+              border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
+              borderRadius: 8, padding: "12px 16px",
+              cursor: "pointer", display: "flex", flexDirection: "column",
+              alignItems: "center", gap: 8, minWidth: 80,
+              transition: "all 0.15s ease",
+            }}>
+              {/* Mini grid preview */}
+              <div style={{
+                width: previewW, height: previewH,
+                border: isActive ? `2px solid ${BRAND.yellow}` : `2px solid ${BRAND.textDim}44`,
+                borderRadius: 3,
+                display: "grid",
+                gridTemplateColumns: `repeat(${key === "portrait" ? 4 : key === "landscape" ? 6 : 5}, 1fr)`,
+                gridTemplateRows: `repeat(${key === "portrait" ? 6 : key === "landscape" ? 4 : 5}, 1fr)`,
+                gap: 1, padding: 1,
+                opacity: isActive ? 1 : 0.5,
+              }}>
+                {Array.from({ length: (key === "portrait" ? 24 : key === "landscape" ? 24 : 25) }, (_, i) => (
+                  <div key={i} style={{
+                    background: isActive ? `${BRAND.yellow}30` : `${BRAND.textDim}15`,
+                    borderRadius: 0.5,
+                  }} />
+                ))}
+              </div>
+              <div style={{
+                fontSize: 11, fontWeight: 600, letterSpacing: 1.5,
+                fontFamily: FONT_HEADING,
+                color: isActive ? BRAND.yellow : BRAND.textDim,
+              }}>
+                {shape.label}
+              </div>
+              <div style={{
+                fontSize: 10, color: isActive ? BRAND.textMuted : BRAND.textDim,
+                fontFamily: FONT_MONO,
+              }}>
+                {shape.desc}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Join Screen ──────────────────────────────────────────────────
+function JoinScreen({ onJoin, players, shardShape, onShapeChange, isNewShard }) {
+  const [name, setName] = useState("");
+  const go = () => { const n = name.trim(); if(n) onJoin(n); };
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#000",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      flexDirection: "column", fontFamily: FONT_HEADING
+    }}>
+      <style>{BRAND_FONTS}{`
+        @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        * { box-sizing: border-box; }
+        input:focus { border-color: ${BRAND.sky}66 !important; }
+      `}</style>
+      <div style={{ animation: "fadeIn .6s ease-out", textAlign: "center" }}>
+        <F1R3GamesLogo width={280} />
+        <div style={{ height: 30 }} />
+        <div style={{ width: 160, height: 1, background: `${BRAND.border}`, margin: "0 auto" }} />
+        <div style={{ height: 35 }} />
+        <h1 className="join-title" style={{
+          margin: "0 0 12px", fontSize: 34, fontWeight: 700,
+          letterSpacing: 8, color: "#ffffff", fontFamily: FONT_HEADING
+        }}>
+          F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
+        </h1>
+        <div className="join-subtitle" style={{ fontSize: 18, color: "#ffffff", letterSpacing: 3, fontWeight: 400 }}>
+          COLLECTIVE VISUAL INTELLIGENCE
+        </div>
+
+        {/* Canvas shape selector — only shown when creating a new shard */}
+        {isNewShard && (
+          <div style={{ marginTop: 32 }}>
+            <ShapeSelector selected={shardShape} onChange={onShapeChange} />
+          </div>
+        )}
+
+        {/* If joining an existing shard, show the locked shape */}
+        {!isNewShard && (
+          <div style={{
+            marginTop: 24, padding: "10px 20px",
+            border: `1px solid ${BRAND.border}`, borderRadius: 6,
+            display: "inline-flex", alignItems: "center", gap: 10,
+          }}>
+            <span style={{ fontSize: 11, color: BRAND.textDim, letterSpacing: 1.5, fontFamily: FONT_HEADING }}>
+              CANVAS:
+            </span>
+            <span style={{ fontSize: 13, color: BRAND.yellow, letterSpacing: 1.5, fontFamily: FONT_HEADING, fontWeight: 600 }}>
+              {CANVAS_SHAPES[shardShape]?.label}
+            </span>
+            <span style={{ fontSize: 11, color: BRAND.textDim, fontFamily: FONT_MONO }}>
+              {CANVAS_SHAPES[shardShape]?.desc}
+            </span>
+            <span style={{
+              fontSize: 10, color: BRAND.textDim, fontFamily: FONT_BODY,
+              padding: "2px 6px", border: `1px solid ${BRAND.border}`, borderRadius: 3,
+            }}>
+              LOCKED
+            </span>
+          </div>
+        )}
+
+        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          <input value={name} onChange={e => setName(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && go()}
+            placeholder="your name"
+            style={{
+              background: "#111", border: `1px solid ${BRAND.border}`, borderRadius: 6,
+              color: "#fff", padding: "10px 16px", fontSize: 16, width: 260,
+              fontFamily: FONT_HEADING, textAlign: "center", outline: "none"
+            }} />
+          <button onClick={go} style={{
+            background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#ffffff",
+            border: "none", borderRadius: 6, padding: "10px 32px", fontSize: 16,
+            fontFamily: FONT_HEADING, fontWeight: 600, cursor: "pointer",
+            letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)"
+          }}>JOIN</button>
+        </div>
+        {players.length > 0 && (
+          <div style={{ marginTop: 24, color: BRAND.textDim, fontSize: 16 }}>
+            {players.length} playing
+          </div>
+        )}
+      </div>
+      <BuiltOnBadge />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MAIN GAME COMPONENT
+// ══════════════════════════════════════════════════════════════════
+function F1R3Pix() {
+  const [phase, setPhase] = useState("loading");
+  const [myId, setMyId] = useState(null);
+  const [myName, setMyName] = useState("");
+  const [players, setPlayers] = useState([]);
+  const [canvasShape, setCanvasShape] = useState(DEFAULT_SHAPE);
+  const [isNewShard, setIsNewShard] = useState(true);
+
+  // Grid dimensions derived from shape
+  const gridW = CANVAS_SHAPES[canvasShape]?.w || CANVAS_SHAPES[DEFAULT_SHAPE].w;
+  const gridH = CANVAS_SHAPES[canvasShape]?.h || CANVAS_SHAPES[DEFAULT_SHAPE].h;
+
+  const [grid, setGrid] = useState({});
+  const [selColor, setSelColor] = useState(PALETTE[8]); // brand yellow
+  const [shardOk, setShardOk] = useState(false);
+  const [hoverCell, setHoverCell] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [signal, setSignal] = useState(null);
+  const [signalConfirm, setSignalConfirm] = useState(false);
+  const pollRef = useRef(null);
+  const gridContainerRef = useRef(null);
+
+  // Build empty grid when shape changes
+  const buildEmptyGrid = useCallback((w, h) => {
+    const g = {};
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++)
+        g[`${x},${y}`] = { color: "#1a1a2e", by: null, ts: 0 };
+    return g;
+  }, []);
+
+  // Initialize grid on shape load
+  useEffect(() => {
+    setGrid(buildEmptyGrid(gridW, gridH));
+  }, [canvasShape, gridW, gridH, buildEmptyGrid]);
+
+  // Simulated players for demo
+  const fakeUsers = [
+    { id: "sim-claude", name: "Claude", joinedAt: Date.now() - 300000 },
+    { id: "sim-gemini", name: "Gemini", joinedAt: Date.now() - 240000 },
+    { id: "sim-grok", name: "Grok", joinedAt: Date.now() - 180000 },
+    { id: "sim-llama", name: "Llama", joinedAt: Date.now() - 120000 },
+    { id: "sim-scarlet", name: "Scarlet", joinedAt: Date.now() - 60000 },
+  ];
+  const allPlayers = [...players, ...fakeUsers];
+
+  // ── Data loading ─────────────────────────────────────────────
+  const loadPlayers = useCallback(async () => {
+    const keys = await sh.list(PFX_P); const all = [];
+    for (const k of keys) { const p = await sh.get(k); if (p) all.push(p); }
+    setPlayers(all); return all;
+  }, []);
+
+  const loadGrid = useCallback(async () => {
+    const keys = await sh.list(PFX_PX);
+    setGrid(prev => {
+      const g = { ...prev };
+      (async () => {
+        for (const k of keys) { const px = await sh.get(k); if (px) g[`${px.x},${px.y}`] = px; }
+        setGrid({ ...g });
+      })();
+      return g;
+    });
+  }, []);
+
+  const syncAll = useCallback(async () => {
+    try { await loadPlayers(); await loadGrid(); setShardOk(true); }
+    catch { setShardOk(false); }
+  }, [loadPlayers, loadGrid]);
+
+  // ── Init: check for existing session & shard shape ──────────
+  useEffect(() => { (async () => {
+    // Check if a canvas shape is already set on this shard
+    const existingShape = await sh.get(SHARD_SHAPE);
+    if (existingShape && CANVAS_SHAPES[existingShape]) {
+      setCanvasShape(existingShape);
+      setIsNewShard(false);
+    } else {
+      setIsNewShard(true);
+    }
+
+    // Check for existing session
+    const sid = await sh.get(MY_ID, false);
+    if (sid) {
+      const p = await sh.get(`${PFX_P}${sid}`);
+      if (p) { setMyId(sid); setMyName(p.name); await syncAll(); setPhase("play"); return; }
+    }
+    await loadPlayers(); setPhase("join");
+  })() }, []);
+
+  useEffect(() => {
+    if (phase !== "play") return;
+    pollRef.current = setInterval(syncAll, POLL);
+    return () => clearInterval(pollRef.current);
+  }, [phase, syncAll]);
+
+  // ── Actions ──────────────────────────────────────────────────
+  const handleJoin = async (name) => {
+    // Lock the canvas shape to the shard on first join (if new shard)
+    if (isNewShard) {
+      await sh.set(SHARD_SHAPE, canvasShape);
+      setIsNewShard(false);
+    }
+
+    const id = `px-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+    await sh.set(`${PFX_P}${id}`, { id, name, joinedAt: Date.now() });
+    await sh.set(MY_ID, id, false);
+    setMyId(id); setMyName(name); await syncAll(); setPhase("play");
+  };
+
+  const placePixel = async (x, y) => {
+    if (!myId) return;
+    const px = { x, y, color: selColor, by: myId, byName: myName, ts: Date.now() };
+    await sh.set(`${PFX_PX}${x}-${y}`, px);
+    setGrid(prev => ({ ...prev, [`${x},${y}`]: px }));
+  };
+
+  const leave = async () => {
+    if (myId) { await sh.del(`${PFX_P}${myId}`); await sh.set(MY_ID, null, false); }
+    setMyId(null); setPhase("join"); await loadPlayers();
+  };
+
+  // ── Zoom handler (scroll wheel — snaps to 10%) ───────────────
+  const handleWheel = useCallback((e) => {
+    e.preventDefault();
+    setZoom(z => {
+      const step = 0.1;
+      const next = e.deltaY > 0 ? z - step : z + step;
+      const snapped = Math.round(next * 10) / 10;
+      return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, snapped));
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = gridContainerRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [handleWheel, phase]);
+
+  // ── Calculate initial zoom to fit screen ─────────────────────
+  useEffect(() => {
+    if (phase !== "play") return;
+    const sidebarW = window.innerWidth > 768 ? 200 : 0;
+    const vw = window.innerWidth - sidebarW;
+    const vh = window.innerHeight - (window.innerWidth > 768 ? 90 : 70);
+    if (window.innerWidth <= 768) {
+      const mobileGridH = window.innerHeight * 0.55;
+      const gridPxW = gridW * (CELL_BASE + 1);
+      const gridPxH = gridH * (CELL_BASE + 1);
+      const fitZoom = Math.min(vw / gridPxW, mobileGridH / gridPxH, MAX_ZOOM);
+      setZoom(Math.max(MIN_ZOOM, Math.round(fitZoom * 10) / 10));
+    } else {
+      const gridPxW = gridW * (CELL_BASE + 1);
+      const gridPxH = gridH * (CELL_BASE + 1);
+      const fitZoom = Math.min(vw / gridPxW, vh / gridPxH, MAX_ZOOM);
+      setZoom(Math.max(MIN_ZOOM, Math.round(fitZoom * 10) / 10));
+    }
+  }, [phase, gridW, gridH]);
+
+  const pixelCount = Object.values(grid).filter(p => p.by).length;
+
+  // ── Render: Loading ──────────────────────────────────────────
+  if (phase === "loading") return (
+    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <style>{BRAND_FONTS}{`@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}`}</style>
+      <div style={{ color: "#fff", fontSize: 16, letterSpacing: 2, fontFamily: FONT_HEADING, animation: "pulse 1.5s ease-in-out infinite" }}>
+        connecting to shard...
+      </div>
+    </div>
+  );
+
+  if (phase === "join") return (
+    <JoinScreen
+      onJoin={handleJoin}
+      players={players}
+      shardShape={canvasShape}
+      onShapeChange={setCanvasShape}
+      isNewShard={isNewShard}
+    />
+  );
+
+  const hovInfo = hoverCell ? grid[hoverCell] : null;
+  const shapeInfo = CANVAS_SHAPES[canvasShape];
+
+  // ── Render: Game View ───────────────────────────────────────
+  return (
+    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", fontFamily: FONT_BODY, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <style>{BRAND_FONTS}{`
+        ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:${BRAND.border};border-radius:2px}
+        *{box-sizing:border-box}
+      `}</style>
+
+      {/* Header */}
+      <div className="game-header" style={{
+        padding: "14px 20px", borderBottom: `1px solid ${BRAND.border}`,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        background: "#000", minHeight: 70,
+      }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+          <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FONT_HEADING, color: "#fff" }}>
+            F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
+          </span>
+          <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FONT_BODY }}>
+            {allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}
+          </span>
+        </div>
+        <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{
+            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
+            borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer",
+            fontFamily: FONT_HEADING, display: "flex", alignItems: "center", justifyContent: "center",
+          }}>-</button>
+          <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FONT_MONO, minWidth: 50, textAlign: "center" }}>
+            {Math.round(zoom * 100)}%
+          </span>
+          <button onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{
+            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
+            borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer",
+            fontFamily: FONT_HEADING, display: "flex", alignItems: "center", justifyContent: "center",
+          }}>+</button>
+          <button onClick={leave} style={{
+            background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc",
+            borderRadius: 4, padding: "4px 10px", fontSize: 16, cursor: "pointer",
+            fontFamily: FONT_HEADING, letterSpacing: 1,
+          }}>LEAVE</button>
+        </div>
+      </div>
+
+      {/* Main area: Grid + Sidebar */}
+      <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+        {/* Grid with zoom */}
+        <div ref={gridContainerRef} className="game-grid-wrap" style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+          padding: 8, overflow: "auto", background: "#000",
+        }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${gridW}, ${CELL_BASE}px)`,
+            gap: 1, background: "#0a0a14", padding: 1, borderRadius: 4,
+            transform: `scale(${zoom})`,
+            transformOrigin: "center center",
+            transition: "transform 0.1s ease-out",
+          }}>
+            {Array.from({ length: gridH }, (_, y) =>
+              Array.from({ length: gridW }, (_, x) => {
+                const key = `${x},${y}`; const px = grid[key];
+                return (
+                  <div key={key}
+                    onClick={() => placePixel(x, y)}
+                    onMouseEnter={() => setHoverCell(key)}
+                    onMouseLeave={() => setHoverCell(null)}
+                    style={{
+                      width: CELL_BASE, height: CELL_BASE,
+                      background: px?.color || "#1a1a2e",
+                      cursor: "pointer", transition: "background .1s",
+                      outline: hoverCell === key ? `2px solid ${selColor}` : "none",
+                      outlineOffset: -2, borderRadius: 1,
+                    }} />
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar: Palette + Info */}
+        <div className="game-sidebar" style={{
+          width: 200, borderLeft: `1px solid ${BRAND.border}`,
+          padding: "16px 12px", display: "flex", flexDirection: "column", gap: 16,
+          overflowY: "auto", background: "#000",
+        }}>
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING }}>PALETTE</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4 }}>
+            {PALETTE.map(c => (
+              <div key={c} onClick={() => setSelColor(c)}
+                style={{
+                  width: 28, height: 28, borderRadius: 4, background: c, cursor: "pointer",
+                  border: selColor === c ? "2px solid #fff" : c === "#000000" ? "1px solid #333" : "1px solid transparent",
+                  transition: "transform .1s",
+                  transform: selColor === c ? "scale(1.15)" : "scale(1)",
+                }} />
+            ))}
+          </div>
+
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING }}>ACTIVE</div>
+          <div style={{ fontSize: 16, color: "#ccc", fontFamily: FONT_BODY }}>
+            Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span>
+          </div>
+
+          {hovInfo?.by && (
+            <div style={{ fontSize: 16, color: "#ccc", fontFamily: FONT_BODY }}>
+              by: {hovInfo.byName || "?"}<br />
+              {new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </div>
+          )}
+
+          {/* Canvas shape indicator */}
+          <div style={{
+            padding: "8px 10px", borderRadius: 4,
+            border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.4)",
+            display: "flex", alignItems: "center", gap: 8,
+          }}>
+            <span style={{ fontSize: 10, color: BRAND.textDim, letterSpacing: 1.5, fontFamily: FONT_HEADING }}>
+              CANVAS
+            </span>
+            <span style={{ fontSize: 12, color: BRAND.yellow, fontFamily: FONT_MONO, fontWeight: 600 }}>
+              {shapeInfo?.desc}
+            </span>
+            <span style={{ fontSize: 10, color: BRAND.textDim, fontFamily: FONT_MONO }}>
+              {shapeInfo?.label}
+            </span>
+          </div>
+
+          <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FONT_HEADING, marginTop: 8 }}>PLAYERS</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {allPlayers.map(p => (
+              <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 6, opacity: p.id === myId ? 1 : .6 }}>
+                <Sigil seed={hSeed(p.id)} size={18} />
+                <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#ccc", fontFamily: FONT_BODY }}>{p.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* F1R3INK — Color as Signal */}
+          <div style={{
+            marginTop: 16, padding: 12, borderRadius: 6,
+            border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.6)",
+          }}>
+            <div style={{ fontSize: 11, color: BRAND.textDim, letterSpacing: 2, fontFamily: FONT_HEADING, marginBottom: 8 }}>
+              F1R3 SIGNALS
+            </div>
+            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FONT_BODY, marginBottom: 10, lineHeight: 1.4 }}>
+              How does this F1R3PIX make you feel?
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 3 }}>
+              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269",
+                "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
+                <div key={`sig-${c}`} style={{
+                  width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
+                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  transition: "transform 0.15s, box-shadow 0.15s",
+                  transform: signal === c ? "scale(1.3)" : "scale(1)",
+                }}
+                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
+                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
+                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}}
+                />
+              ))}
+            </div>
+            {signalConfirm && (
+              <div style={{
+                marginTop: 10, padding: "8px 10px", borderRadius: 4,
+                background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`,
+                fontSize: 13, color: BRAND.yellow, fontFamily: FONT_BODY, lineHeight: 1.4,
+              }}>
+                noted. we wrote that down.
+              </div>
+            )}
+            {signal && !signalConfirm && (
+              <div style={{
+                marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FONT_BODY,
+                display: "flex", alignItems: "center", gap: 6,
+              }}>
+                {myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} />
+              </div>
+            )}
+            <div style={{
+              marginTop: 10, fontSize: 11, color: BRAND.textDim, fontFamily: FONT_BODY, fontStyle: "italic",
+            }}>
+              powered by F1R3INK
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Built on F1R3FLY badge */}
+      <BuiltOnBadge />
+    </div>
+  );
+}
+
+// ── Mount ─────────────────────────────────────────────────────────
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(F1R3Pix));
 </script>
 </body>
 </html>

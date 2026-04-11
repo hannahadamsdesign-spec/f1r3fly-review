@@ -1,15 +1,21 @@
-# F1R3FLY.IO — Spatial Navigation Concept
+# F1R3GAMES — Review
 
-A UX concept for the F1R3FLY.IO website using spatial zoom navigation.
-
-Click any section to zoom in. Use arrow keys to navigate between sections, +/− to zoom, Escape to return to overview.
+Game prototypes for F1R3FLY's creative suite. These are design explorations and UX concepts — not production code.
 
 ## Live Preview
 
-https://hannahadamsdesign-spec.github.io/f1r3fly-review/
+[https://hannahadamsdesign-spec.github.io/f1r3fly-review/](https://hannahadamsdesign-spec.github.io/f1r3fly-review/)
 
-## What This Is
+## What's Here
 
-This is a design exploration — not a production site. It demonstrates a spatial navigation model where all sections of the site exist on a single canvas that you fly through, rather than scrolling vertically.
+**F1R3PIX** — Collaborative pixel art canvas. Players join a shared shard and place pixels together. Brand-correct v6 with canvas shape selection (portrait/landscape/square), zoom controls, F1R3 SIGNALS sentiment widget, and mobile responsiveness.
 
-Content is pulled from the live f1r3fly.io site for context.
+## Previous Content
+
+The spatial navigation UX concept that was previously here is preserved on the `spatial-nav` branch.
+
+## Credits
+
+Design & UX: Hannah Adams  
+F1R3Games system: Greg Meredith / F1R3FLY  
+Brand system: F1R3FLY Industries Brand Book, March 27, 2026
