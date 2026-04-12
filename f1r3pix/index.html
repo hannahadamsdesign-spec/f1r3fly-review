@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>F1R3PIX — Draft Review v1r1 (Hannah Adams, April 2026)</title>
+<title>F1R3PIX — Draft Review v1r2 (Hannah Adams, April 2026)</title>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -49,7 +49,7 @@
     .join-subtitle { font-size: 14px !important; }
     .join-logo { width: 200px !important; }
     .tour-btn { font-size: 10px !important; padding: 4px 8px !important; }
-    .storm-btn { font-size: 12px !important; padding: 4px 8px !important; }
+    .leave-btn { font-size: 12px !important; padding: 4px 8px !important; }
   }
 </style>
 </head>
@@ -59,10 +59,9 @@
 const { useState, useEffect, useCallback, useRef } = React;
 
 // ══════════════════════════════════════════════════════════════════
-// F1R3PIX — Draft Review v1r1
+// F1R3PIX — Draft Review v1r2
 // F1R3FLY Brand Book March 27, 2026 — Hannah Adams
-// Canvas shape: in-game host controls, portrait default
-// Brand border: rgba(255,255,255,0.2) per f1r3fly.io site
+// v1r2: Position paper alignment — identity, signals, clone, tour
 // ══════════════════════════════════════════════════════════════════
 
 const BRAND = {
@@ -77,9 +76,9 @@ const FM = "'Source Code Pro', 'Courier New', monospace";
 const FP = "'Pixelify Sans', 'Josefin Sans', sans-serif";
 
 const SHAPES = {
-  portrait:  { w: 32, h: 48, label: "PORTRAIT",  desc: "32 × 48" },
-  landscape: { w: 48, h: 32, label: "LANDSCAPE", desc: "48 × 32" },
-  square:    { w: 40, h: 40, label: "SQUARE",    desc: "40 × 40" },
+  portrait:  { w: 32, h: 48, label: "PORT",  desc: "32 × 48" },
+  landscape: { w: 48, h: 32, label: "LAND", desc: "48 × 32" },
+  square:    { w: 40, h: 40, label: "SQ",    desc: "40 × 40" },
 };
 const DEFAULT_SHAPE = "portrait";
 
@@ -101,6 +100,9 @@ const PALETTE = [
   "#009188","#007bc4","#1114ad","#BF5AF2","#AF52DE",
 ];
 
+// ── AI agent IDs for distinguishing human/AI ─────────────────────
+const AI_IDS = new Set(["sim-claude", "sim-gemini", "sim-grok", "sim-llama"]);
+
 const sh = {
   async get(k,s=true){try{const r=await window.storage.get(k,s);return r?.value?JSON.parse(r.value):null}catch{return null}},
   async set(k,v,s=true){try{await window.storage.set(k,JSON.stringify(v),s);return true}catch{return false}},
@@ -121,6 +123,28 @@ function Sigil({seed, size=24}){
   );
 }
 
+// ── Player type icons (human / AI) ───────────────────────────────
+function HumanIcon({ size = 14, color = "#fff" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="5" r="3" stroke={color} strokeWidth="1.5" fill="none"/>
+      <path d="M2.5 15c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function AIIcon({ size = 14, color = BRAND.sky }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <rect x="3" y="3" width="10" height="10" rx="2" stroke={color} strokeWidth="1.3" fill="none"/>
+      <circle cx="6.5" cy="7.5" r="1" fill={color}/>
+      <circle cx="9.5" cy="7.5" r="1" fill={color}/>
+      <path d="M6 10.5c0 0 .8 1 2 1s2-1 2-1" stroke={color} strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <line x1="8" y1="1" x2="8" y2="3" stroke={color} strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
 // ── "Built on F1R3FLY.IO" Badge with logo ────────────────────────
 function BuiltOnBadge() {
   return (
@@ -129,10 +153,10 @@ function BuiltOnBadge() {
       display: "flex", alignItems: "center", gap: 10,
       background: "rgba(0,0,0,0.85)", border: `1px solid ${BRAND.border}`,
       borderRadius: 8, padding: "8px 16px",
-      fontFamily: FH, fontSize: 14, letterSpacing: 2,
+      fontFamily: FH, fontSize: 16, letterSpacing: 2,
       color: BRAND.textDim, cursor: "pointer", backdropFilter: "blur(8px)",
     }} onClick={() => window.open && window.open("https://f1r3fly.io", "_blank")}>
-      <span style={{ color: "#999", fontSize: 12, letterSpacing: 2 }}>BUILT ON</span>
+      <span style={{ color: "#fff", fontSize: 16, letterSpacing: 2 }}>BUILT ON</span>
       <svg width="120" viewBox="0 0 2343 535" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
         <defs>
           <linearGradient id="b-lg" x1="620.975" y1="117.901" x2="793.518" y2="-180.951" gradientTransform="translate(-545.342 290.672) rotate(-4.856)" gradientUnits="userSpaceOnUse">
@@ -192,15 +216,50 @@ function F1R3GamesLogo({ width = 300 }) {
   );
 }
 
-// ── Canvas Shape Controls (in-game, sidebar) ─────────────────────
+// ── Tour Overlay — "How This Works" ──────────────────────────────
+const TOUR_SLIDES = [
+  { icon: "\u{1F3A8}", title: "YOU OWN YOUR PIXELS", body: "Every pixel you place is yours. Recorded on the shard, attributed to you, permanent. This isn\u2019t rented space\u2014it\u2019s yours." },
+  { icon: "\u{1F310}", title: "YOUR NAME TRAVELS WITH YOU", body: "Your F1R3FLY identity isn\u2019t locked to this game. It moves with you across every service built on F1R3FLY. One name, one reputation, everywhere." },
+  { icon: "\u{1F916}", title: "AI AGENTS PLAY ALONGSIDE YOU", body: "This isn\u2019t single-player with bots. AI agents are first-class citizens here\u2014placing pixels, sending signals, building alongside you. Many minds, one canvas." },
+  { icon: "\u{1F500}", title: "ANYONE CAN CLONE THIS CANVAS", body: "No lock-in, no walled gardens. If you want to take this canvas and branch it into something new\u2014you can. Cloning isn\u2019t a threat. It\u2019s how the ecosystem grows." },
+];
+
+function TourOverlay({ onClose }) {
+  const [slide, setSlide] = useState(0);
+  const s = TOUR_SLIDES[slide];
+  const isLast = slide === TOUR_SLIDES.length - 1;
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>
+      <style>{`@keyframes tourIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}`}</style>
+      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 420, width: "90%", textAlign: "center", padding: "48px 32px 36px", borderRadius: 12, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.95)" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>{s.icon}</div>
+        <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16 }}>{s.title}</div>
+        <div style={{ fontSize: 17, color: "#fff", fontFamily: FB, lineHeight: 1.6, marginBottom: 32 }}>{s.body}</div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24 }}>
+          {TOUR_SLIDES.map((_, i) => (
+            <div key={i} onClick={() => setSlide(i)} style={{ width: 8, height: 8, borderRadius: "50%", background: i === slide ? BRAND.yellow : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "background .2s" }} />
+          ))}
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
+          {slide > 0 && <button onClick={() => setSlide(slide - 1)} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 16, fontFamily: FH, letterSpacing: 2, cursor: "pointer" }}>BACK</button>}
+          <button onClick={() => isLast ? onClose() : setSlide(slide + 1)} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 24px", fontSize: 16, fontFamily: FH, letterSpacing: 2, fontWeight: 600, cursor: "pointer", boxShadow: "0 0 12px rgba(123,4,41,0.3)" }}>{isLast ? "LET\u2019S GO" : "NEXT"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Canvas Shape Controls with CLONE button ──────────────────────
 function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canChange, onChangeShape, onToggleLock, pixelCount }) {
   const [confirmTarget, setConfirmTarget] = useState(null);
+  const [cloneMsg, setCloneMsg] = useState(false);
   const shapes = Object.entries(SHAPES);
   const handleShapeClick = (key) => {
     if (!canChange || key === currentShape) return;
     const cur = SHAPES[currentShape]; const next = SHAPES[key];
     if (pixelCount > 0 && (next.w < cur.w || next.h < cur.h)) { setConfirmTarget(key); } else { onChangeShape(key); }
   };
+  const handleClone = () => { setCloneMsg(true); setTimeout(() => setCloneMsg(false), 3000); };
   return (
     <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
@@ -208,11 +267,11 @@ function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canCh
         {isHost && (
           <button onClick={onToggleLock} style={{
             background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", cursor: "pointer",
-            fontSize: 10, letterSpacing: 1, fontFamily: FH, color: isUnlocked ? BRAND.sage : BRAND.textDim, display: "flex", alignItems: "center", gap: 4,
+            fontSize: 16, letterSpacing: 1, fontFamily: FH, color: isUnlocked ? BRAND.sage : BRAND.textDim, display: "flex", alignItems: "center", gap: 4,
           }}>{isUnlocked ? "\u{1F513}" : "\u{1F512}"}{isUnlocked ? "OPEN" : "LOCKED"}</button>
         )}
       </div>
-      <div style={{ fontSize: 12, color: BRAND.textDim, fontFamily: FB, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+      <div style={{ fontSize: 16, color: BRAND.textDim, fontFamily: FB, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
         <span style={{ color: BRAND.yellow, fontWeight: 600 }}>{hostName}</span><span>picked</span>
         <span style={{ color: "#fff", fontWeight: 600 }}>{SHAPES[currentShape]?.label}</span>
       </div>
@@ -225,38 +284,48 @@ function CanvasShapeControls({ currentShape, hostName, isHost, isUnlocked, canCh
             <button key={key} onClick={() => handleShapeClick(key)} style={{
                 flex: 1, background: isActive ? "rgba(243,214,48,0.08)" : "rgba(255,255,255,0.03)",
                 border: isActive ? `1px solid ${BRAND.yellow}66` : `1px solid ${BRAND.border}`,
-                borderRadius: 6, padding: "8px 4px", cursor: canChange && !isActive ? "pointer" : "default",
+                borderRadius: 6, padding: "10px 6px", cursor: canChange && !isActive ? "pointer" : "default",
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
                 opacity: canChange || isActive ? 1 : 0.4, transition: "all 0.15s ease", position: "relative",
               }}>
               {isActive && !canChange && <div style={{ position: "absolute", top: 2, right: 4, fontSize: 10 }}>{"\u{1F512}"}</div>}
               <div style={{ width: pw, height: ph, border: isActive ? `2px solid ${BRAND.yellow}` : `1px solid rgba(255,255,255,0.15)`, borderRadius: 2 }} />
-              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, fontFamily: FH, color: isActive ? BRAND.yellow : BRAND.textDim }}>{shape.label}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0, fontFamily: FH, color: isActive ? BRAND.yellow : BRAND.textDim, whiteSpace: "nowrap" }}>{shape.label}</div>
             </button>
           );
         })}
       </div>
       {!isHost && !isUnlocked && <div style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ fontSize: 11, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>only {hostName} can change shape</div>
-        <button style={{ background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, fontFamily: FH, letterSpacing: 1, color: "#3FA9F5", cursor: "pointer" }}>ASK TO UNLOCK</button>
+        <div style={{ fontSize: 16, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>only {hostName} can change shape</div>
+        <button style={{ background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "3px 8px", fontSize: 16, fontFamily: FH, letterSpacing: 1, color: "#3FA9F5", cursor: "pointer" }}>ASK TO UNLOCK</button>
       </div>}
-      {!isHost && isUnlocked && <div style={{ marginTop: 8, fontSize: 11, color: BRAND.sage, fontFamily: FB }}>{hostName} unlocked canvas shape — you can change it</div>}
+      {!isHost && isUnlocked && <div style={{ marginTop: 8, fontSize: 16, color: BRAND.sage, fontFamily: FB }}>{hostName} unlocked canvas shape — you can change it</div>}
       {confirmTarget && (
         <div style={{ marginTop: 10, padding: 10, borderRadius: 4, background: "rgba(123,4,41,0.15)", border: "1px solid #7b042966" }}>
-          <div style={{ fontSize: 12, color: "#ff6b6b", fontFamily: FB, marginBottom: 8, lineHeight: 1.4 }}>Changing to {SHAPES[confirmTarget]?.label} will cut the canvas. Pixels outside the new bounds will be lost.</div>
+          <div style={{ fontSize: 16, color: "#ff6b6b", fontFamily: FB, marginBottom: 8, lineHeight: 1.4 }}>Changing to {SHAPES[confirmTarget]?.label} will cut the canvas. Pixels outside the new bounds will be lost.</div>
           <div style={{ display: "flex", gap: 6 }}>
-            <button onClick={() => { onChangeShape(confirmTarget); setConfirmTarget(null); }} style={{ background: "linear-gradient(135deg, #7b0429, #5c0269)", color: "#fff", border: "none", borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>RESHAPE</button>
-            <button onClick={() => setConfirmTarget(null)} style={{ background: "none", color: BRAND.textDim, border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "6px 12px", fontSize: 11, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>CANCEL</button>
+            <button onClick={() => { onChangeShape(confirmTarget); setConfirmTarget(null); }} style={{ background: "linear-gradient(135deg, #7b0429, #5c0269)", color: "#fff", border: "none", borderRadius: 4, padding: "6px 12px", fontSize: 16, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>RESHAPE</button>
+            <button onClick={() => setConfirmTarget(null)} style={{ background: "none", color: BRAND.textDim, border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "6px 12px", fontSize: 16, fontFamily: FH, letterSpacing: 1, cursor: "pointer" }}>CANCEL</button>
           </div>
         </div>
       )}
+      {/* CLONE THIS CANVAS */}
+      <div style={{ marginTop: 12, borderTop: `1px solid ${BRAND.border}`, paddingTop: 10 }}>
+        <button onClick={handleClone} style={{ width: "100%", background: "none", border: `1px solid ${BRAND.border}`, borderRadius: 4, padding: "6px 10px", fontSize: 16, fontFamily: FH, letterSpacing: 2, color: BRAND.sky, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "border-color 0.2s" }}
+          onMouseEnter={e => e.target.style.borderColor = BRAND.sky} onMouseLeave={e => e.target.style.borderColor = BRAND.border}>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke={BRAND.sky} strokeWidth="1.5" fill="none"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H3.5A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke={BRAND.sky} strokeWidth="1.5" fill="none"/></svg>
+          CLONE THIS CANVAS
+        </button>
+        {cloneMsg && <div style={{ marginTop: 6, fontSize: 16, color: BRAND.sage, fontFamily: FB, textAlign: "center" }}>coming soon — branching is how ecosystems grow</div>}
+      </div>
     </div>
   );
 }
 
-// ── Join Screen ──────────────────────────────────────────────────
+// ── Join Screen — v1r2 ───────────────────────────────────────────
 function JoinScreen({ onJoin, players }) {
   const [name, setName] = useState("");
+  const [showTour, setShowTour] = useState(false);
   const go = () => { const n = name.trim(); if(n) onJoin(n); };
   return (
     <div style={{ height: "100vh", maxHeight: "100vh", overflow: "hidden", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", fontFamily: FH }}>
@@ -273,21 +342,25 @@ function JoinScreen({ onJoin, players }) {
         <h1 className="join-title" style={{ margin: "0 0 12px", fontSize: 34, fontWeight: 700, letterSpacing: 8, color: "#fff", fontFamily: FP }}>
           F1R3<span style={{ color: BRAND.yellow }}>PIX</span>
         </h1>
-        <div className="join-subtitle" style={{ fontSize: 18, color: "#fff", letterSpacing: 3, fontWeight: 400 }}>COLLECTIVE VISUAL INTELLIGENCE</div>
-        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+        <div className="join-subtitle" style={{ fontSize: 18, color: "#fff", letterSpacing: 3, fontWeight: 400 }}>MANY MINDS. ONE CANVAS.</div>
+        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+          <div style={{ fontSize: 16, color: BRAND.textDim, letterSpacing: 2, fontFamily: FH }}>CHOOSE YOUR F1R3FLY NAME</div>
           <input value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} placeholder="your name"
             style={{ background: "#111", border: `1px solid ${BRAND.border}`, borderRadius: 6, color: "#fff", padding: "10px 16px", fontSize: 16, width: 260, fontFamily: FH, textAlign: "center", outline: "none" }} />
-          <button onClick={go} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#fff", border: "none", borderRadius: 20, padding: "10px 32px", fontSize: 16, fontFamily: FH, fontWeight: 600, cursor: "pointer", letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)" }}>JOIN</button>
+          <div style={{ fontSize: 16, color: "#fff", fontFamily: FB }}>your name travels with you across F1R3FLY</div>
+          <button onClick={go} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", color: "#fff", border: "none", borderRadius: 20, padding: "10px 32px", fontSize: 16, fontFamily: FH, fontWeight: 600, cursor: "pointer", letterSpacing: 3, boxShadow: "0 0 20px rgba(123,4,41,0.4)", marginTop: 4 }}>JOIN</button>
         </div>
-        {players.length > 0 && <div style={{ marginTop: 24, color: BRAND.textDim, fontSize: 16 }}>{players.length} playing</div>}
+        <button onClick={() => setShowTour(true)} style={{ marginTop: 24, background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 20, padding: "6px 18px", fontSize: 16, fontFamily: FH, letterSpacing: 2, cursor: "pointer" }}>HOW THIS WORKS</button>
+        {players.length > 0 && <div style={{ marginTop: 16, color: BRAND.textDim, fontSize: 16 }}>{players.length} playing</div>}
       </div>
       <BuiltOnBadge />
+      {showTour && <TourOverlay onClose={() => setShowTour(false)} />}
     </div>
   );
 }
 
 // ══════════════════════════════════════════════════════════════════
-// MAIN GAME
+// MAIN GAME — v1r2
 // ══════════════════════════════════════════════════════════════════
 function F1R3Pix() {
   const [phase, setPhase] = useState("loading");
@@ -307,6 +380,7 @@ function F1R3Pix() {
   const [zoom, setZoom] = useState(1);
   const [signal, setSignal] = useState(null);
   const [signalConfirm, setSignalConfirm] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const pollRef = useRef(null);
   const gridContainerRef = useRef(null);
 
@@ -350,7 +424,7 @@ function F1R3Pix() {
 
   const handleWheel = useCallback((e) => { e.preventDefault(); setZoom(z => { const next = e.deltaY > 0 ? z - 0.1 : z + 0.1; return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 10) / 10)); }); }, []);
   useEffect(() => { const el = gridContainerRef.current; if (!el) return; el.addEventListener("wheel", handleWheel, { passive: false }); return () => el.removeEventListener("wheel", handleWheel); }, [handleWheel, phase]);
-  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 560 : 0; const vw = window.innerWidth - sW; const vh = window.innerWidth <= 768 ? window.innerHeight * 0.55 : window.innerHeight - 90; const gpw = gridW * (CELL + 1); const gph = gridH * (CELL + 1); const fit = Math.min(vw / gpw, vh / gph, MAX_ZOOM); setZoom(Math.max(MIN_ZOOM, Math.round(fit * 10) / 10)); }, [phase, gridW, gridH]);
+  useEffect(() => { if (phase !== "play") return; const sW = window.innerWidth > 768 ? 600 : 0; const vw = window.innerWidth - sW; const vh = window.innerWidth <= 768 ? window.innerHeight * 0.55 : window.innerHeight - 90; const gpw = gridW * (CELL + 1); const gph = gridH * (CELL + 1); const fit = Math.min(vw / gpw, vh / gph, MAX_ZOOM); setZoom(Math.max(MIN_ZOOM, Math.round(fit * 10) / 10)); }, [phase, gridW, gridH]);
 
   const pixelCount = Object.values(grid).filter(p => p.by).length;
   const isHost = myId === hostId;
@@ -379,45 +453,47 @@ function F1R3Pix() {
       <div className="game-header" style={{ padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#000", minHeight: 70 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
           <span className="game-header-title" style={{ fontSize: 29, fontWeight: 700, letterSpacing: 4, fontFamily: FP, color: "#fff" }}>F1R3<span style={{ color: BRAND.yellow }}>PIX</span></span>
-          <span className="game-header-stats" style={{ fontSize: 16, color: "#ccc", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
+          <span className="game-header-stats" style={{ fontSize: 16, color: "#fff", letterSpacing: 2, fontFamily: FB }}>{allPlayers.length} players | {pixelCount} pixels | shard {shardOk ? "live" : "offline"}</span>
         </div>
         <div className="zoom-controls" style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, justifyContent: "space-between" }}>
-          <button className="tour-btn" style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 13, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0, marginLeft: 16 }}>TAKE A TOUR</button>
+          <button className="tour-btn" onClick={() => setShowTour(true)} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 16, cursor: "pointer", fontFamily: FH, letterSpacing: 2, fontWeight: 600, boxShadow: "0 0 12px rgba(123,4,41,0.3)", flexShrink: 0, marginLeft: 16 }}>HOW THIS WORKS</button>
           <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, justifyContent: "center" }}>
-          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(MIN_ZOOM, Math.round((z - 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>-</button>
           <span style={{ fontSize: 16, color: BRAND.textMuted, fontFamily: FM, minWidth: 50, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
-          <button className="zoom-btn" onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+          <button className="zoom-btn" onClick={() => setZoom(z => Math.min(MAX_ZOOM, Math.round((z + 0.1) * 10) / 10))} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 4, width: 36, height: 36, fontSize: 22, cursor: "pointer", fontFamily: FH, display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
           </div>
-          <button className="storm-btn" onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#ccc", borderRadius: 4, padding: "6px 12px", fontSize: 14, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>STORM OUT!</button>
+          <button className="leave-btn" onClick={leave} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 4, padding: "6px 12px", fontSize: 16, cursor: "pointer", fontFamily: FH, letterSpacing: 1 }}>LEAVE</button>
         </div>
       </div>
 
-      {/* Brand gradient stroke — matches f1r3fly.io nav line */}
+      {/* Brand gradient stroke */}
       <div style={{ width: "100%", height: "0.5px", background: BRAND.stroke, opacity: 0.8 }} />
 
       <div className="game-layout" style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
         {/* Left Sidebar: Canvas + Signals */}
-        <div className="game-sidebar game-sidebar-left" style={{ width: 280, borderRight: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+        <div className="game-sidebar game-sidebar-left" style={{ width: 300, borderRight: `1px solid ${BRAND.border}`, padding: "20px 16px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
           <CanvasShapeControls currentShape={canvasShape} hostName={hostName || "host"} isHost={isHost} isUnlocked={shapeUnlocked} canChange={canChange} onChangeShape={handleChangeShape} onToggleLock={handleToggleLock} pixelCount={pixelCount} />
 
-          {/* F1R3 SIGNALS */}
-          <div style={{ padding: 12, borderRadius: 6, border: `1px solid ${BRAND.border}`, background: "rgba(0,0,0,0.4)" }}>
-            <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginBottom: 8 }}>F1R3 SIGNALS</div>
-            <div style={{ fontSize: 14, color: "#ccc", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
+          {/* F1R3 SIGNALS — expanded */}
+          <div style={{ padding: 16, borderRadius: 6, border: `1px solid ${BRAND.sky}33`, background: "rgba(63,169,245,0.04)" }}>
+            <div style={{ fontSize: 20, color: BRAND.sky, letterSpacing: 3, fontFamily: FH, marginBottom: 4, fontWeight: 600 }}>F1R3 SIGNALS</div>
+            <div style={{ fontSize: 18, color: "#fff", fontFamily: FB, marginBottom: 12, fontWeight: 300, letterSpacing: 1 }}>not a like button — a feeling</div>
+            <div style={{ fontSize: 15, color: "#fff", fontFamily: FB, marginBottom: 14, lineHeight: 1.5 }}>How does this F1R3PIX make you feel?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "14px 8px", justifyItems: "center" }}>
               {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
-                <div key={`sig-l-${c}`} style={{ width: 22, height: 22, borderRadius: "50%", background: c, cursor: "pointer",
+                <div key={`sig-l-${c}`} style={{ width: 28, height: 28, borderRadius: "50%", background: c, cursor: "pointer",
                   border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
                   transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
                 onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
-                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 8px ${c}66`; }}}
+                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 10px ${c}66`; }}}
                 onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
               ))}
             </div>
-            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
-            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 12, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
-            <div style={{ marginTop: 10, fontSize: 13, color: BRAND.textDim, fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
+            <div style={{ marginTop: 12, fontSize: 16, color: "#fff", fontFamily: FB }}>your signal helps others find this canvas</div>
+            {signalConfirm && <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 16, color: BRAND.yellow, fontFamily: FB, lineHeight: 1.4 }}>noted. we wrote that down.</div>}
+            {signal && !signalConfirm && <div style={{ marginTop: 10, fontSize: 16, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 14, height: 14, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
+            <div style={{ marginTop: 12, fontSize: 16, color: "#fff", fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
           </div>
         </div>
 
@@ -436,8 +512,8 @@ function F1R3Pix() {
           </div>
         </div>
 
-        {/* Sidebar — wider (240px), more breathing room */}
-        <div className="game-sidebar" style={{ width: 280, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 20px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
+        {/* Right Sidebar */}
+        <div className="game-sidebar" style={{ width: 300, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 16px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>PALETTE</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
             {PALETTE.map(c => (
@@ -448,26 +524,33 @@ function F1R3Pix() {
           </div>
 
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>ACTIVE</div>
-          <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span></div>
-          {hovInfo?.by && <div style={{ fontSize: 16, color: "#ccc", fontFamily: FB }}>by: {hovInfo.byName || "?"}<br />{new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>}
+          <div style={{ fontSize: 16, color: "#fff", fontFamily: FB }}>Selected: <span style={{ color: selColor, fontWeight: 600 }}>{selColor}</span></div>
+          {hovInfo?.by && <div style={{ fontSize: 16, color: "#fff", fontFamily: FB }}>by: {hovInfo.byName || "?"}<br />{new Date(hovInfo.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>}
 
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH, marginTop: 8 }}>PLAYERS</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {allPlayers.map(p => (
-              <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 8, opacity: p.id === myId ? 1 : .7 }}>
-                <div style={{ position: "relative" }}>
-                  <Sigil seed={hSeed(p.id)} size={26} />
-                  <div style={{ position: "absolute", bottom: -1, right: -1, width: 8, height: 8, borderRadius: "50%", background: "#4CD964", border: "2px solid #000" }} />
+            {allPlayers.map(p => {
+              const isAI = AI_IDS.has(p.id);
+              return (
+                <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 8, opacity: p.id === myId ? 1 : .7 }}>
+                  <div style={{ position: "relative" }}>
+                    <Sigil seed={hSeed(p.id)} size={26} />
+                    <div style={{ position: "absolute", bottom: -1, right: -1, width: 8, height: 8, borderRadius: "50%", background: "#4CD964", border: "2px solid #000" }} />
+                  </div>
+                  <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    {isAI ? <AIIcon size={13} /> : <HumanIcon size={13} />}
+                    <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#fff", fontFamily: FB }}>
+                      {p.name}{p.id === hostId && <span style={{ fontSize: 16, color: BRAND.textDim, marginLeft: 4, fontStyle: "italic" }}>(Host)</span>}
+                    </span>
+                  </span>
                 </div>
-                <span style={{ fontSize: 16, color: p.id === myId ? BRAND.yellow : "#fff", fontFamily: FB }}>
-                  {p.name}{p.id === hostId && <span style={{ fontSize: 12, color: BRAND.textDim, marginLeft: 4, fontStyle: "italic" }}>(Host)</span>}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
       <BuiltOnBadge />
+      {showTour && <TourOverlay onClose={() => setShowTour(false)} />}
     </div>
   );
 }
