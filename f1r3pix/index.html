@@ -244,20 +244,21 @@ function TourOverlay({ onClose }) {
   const s = TOUR_SLIDES[slide];
   const isLast = slide === TOUR_SLIDES.length - 1;
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>
       <style>{`@keyframes tourIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}`}</style>
-      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 420, width: "90%", textAlign: "center", padding: "48px 32px 36px", borderRadius: 12, border: `1px solid ${BRAND.border}`, background: "rgba(12,12,24,0.95)" }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>{s.icon}</div>
-        <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16 }}>{s.title}</div>
-        <div style={{ fontSize: 17, color: "#fff", fontFamily: FB, lineHeight: 1.6, marginBottom: 32 }}>{s.body}</div>
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 460, width: "90%", textAlign: "center", padding: "48px 36px 40px", borderRadius: 12, border: `1px solid ${BRAND.border}`, background: "#000" }}>
+        <div style={{ fontSize: 48, marginBottom: 20 }}>{s.icon}</div>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16 }}>{s.title}</div>
+        <div style={{ width: 80, height: 1, background: "linear-gradient(90deg, #F3D630, #8BB999)", margin: "0 auto 20px" }} />
+        <div style={{ fontSize: 17, color: "#fff", fontFamily: FB, lineHeight: 1.6, marginBottom: 36 }}>{s.body}</div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 28 }}>
           {TOUR_SLIDES.map((_, i) => (
-            <div key={i} onClick={() => setSlide(i)} style={{ width: 8, height: 8, borderRadius: "50%", background: i === slide ? BRAND.yellow : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "background .2s" }} />
+            <div key={i} onClick={() => setSlide(i)} style={{ width: 10, height: 10, borderRadius: "50%", background: i === slide ? BRAND.yellow : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "background .2s" }} />
           ))}
         </div>
-        <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
-          {slide > 0 && <button onClick={() => setSlide(slide - 1)} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 20, padding: "8px 20px", fontSize: 16, fontFamily: FH, letterSpacing: 2, cursor: "pointer" }}>BACK</button>}
-          <button onClick={() => isLast ? onClose() : setSlide(slide + 1)} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "8px 24px", fontSize: 16, fontFamily: FH, letterSpacing: 2, fontWeight: 600, cursor: "pointer", boxShadow: "0 0 12px rgba(123,4,41,0.3)" }}>{isLast ? "LET\u2019S GO" : "NEXT"}</button>
+        <div style={{ display: "flex", justifyContent: "center", gap: 16 }}>
+          {slide > 0 && <button onClick={() => setSlide(slide - 1)} style={{ background: "none", border: `1px solid ${BRAND.border}`, color: "#fff", borderRadius: 20, padding: "10px 24px", fontSize: 16, fontFamily: FH, letterSpacing: 2, cursor: "pointer" }}>BACK</button>}
+          <button onClick={() => isLast ? onClose() : setSlide(slide + 1)} style={{ background: "linear-gradient(135deg, #5c0269, #7b0429)", border: "none", color: "#fff", borderRadius: 20, padding: "10px 28px", fontSize: 16, fontFamily: FH, letterSpacing: 2, fontWeight: 600, cursor: "pointer", boxShadow: "0 0 16px rgba(123,4,41,0.4)" }}>{isLast ? "LET\u2019S GO" : "NEXT"}</button>
         </div>
       </div>
     </div>
