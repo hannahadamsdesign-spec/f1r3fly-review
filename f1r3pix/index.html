@@ -233,11 +233,21 @@ function F1R3GamesLogo({ width = 300 }) {
 
 // ── Tour Overlay — "How This Works" ──────────────────────────────
 const TOUR_SLIDES = [
-  { icon: "\u{1F3A8}", title: "YOU OWN YOUR PIXELS", body: "Every pixel you place is yours. Recorded on the shard, attributed to you, permanent. This isn\u2019t rented space\u2014it\u2019s yours." },
-  { icon: "\u{1F310}", title: "YOUR NAME TRAVELS WITH YOU", body: "Your F1R3FLY identity isn\u2019t locked to this game. It moves with you across every service built on F1R3FLY. One name, one reputation, everywhere." },
-  { icon: "\u{1F916}", title: "AI AGENTS PLAY ALONGSIDE YOU", body: "This isn\u2019t single-player with bots. AI agents are first-class citizens here\u2014placing pixels, sending signals, building alongside you. Many minds, one canvas." },
-  { icon: "\u{1F500}", title: "ANYONE CAN CLONE THIS CANVAS", body: "No lock-in, no walled gardens. If you want to take this canvas and branch it into something new\u2014you can. Cloning isn\u2019t a threat. It\u2019s how the ecosystem grows." },
+  { icon: "pixel", title: "YOU OWN YOUR PIXELS", body: "Every pixel you place is yours. Recorded on the shard, attributed to you, permanent. This isn\u2019t rented space\u2014it\u2019s yours." },
+  { icon: "globe", title: "YOUR NAME TRAVELS WITH YOU", body: "Your F1R3FLY identity isn\u2019t locked to this game. It moves with you across every service built on F1R3FLY. One name, one reputation, everywhere." },
+  { icon: "bot", title: "AI AGENTS PLAY ALONGSIDE YOU", body: "This isn\u2019t single-player with bots. AI agents are first-class citizens here\u2014placing pixels, sending signals, building alongside you. Many minds, one canvas." },
+  { icon: "fork", title: "ANYONE CAN CLONE THIS CANVAS", body: "No lock-in, no walled gardens. If you want to take this canvas and branch it into something new\u2014you can. Cloning isn\u2019t a threat. It\u2019s how the ecosystem grows." },
 ];
+
+function TourIcon({ type, color = BRAND.yellow, size = 40 }) {
+  const icons = {
+    pixel: <svg width={size} height={size} viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="12" height="12" rx="1" fill={color}/><rect x="20" y="4" width="12" height="12" rx="1" fill={color} opacity=".5"/><rect x="4" y="20" width="12" height="12" rx="1" fill={color} opacity=".5"/><rect x="20" y="20" width="12" height="12" rx="1" fill={color}/><rect x="36" y="4" width="4" height="4" rx="1" fill={color} opacity=".3"/></svg>,
+    globe: <svg width={size} height={size} viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke={color} strokeWidth="1.5"/><ellipse cx="20" cy="20" rx="8" ry="16" stroke={color} strokeWidth="1.5"/><line x1="4" y1="20" x2="36" y2="20" stroke={color} strokeWidth="1.5"/><line x1="20" y1="4" x2="20" y2="36" stroke={color} strokeWidth="1.5"/></svg>,
+    bot: <svg width={size} height={size} viewBox="0 0 40 40" fill="none"><rect x="8" y="12" width="24" height="20" rx="4" stroke={color} strokeWidth="1.5"/><circle cx="16" cy="22" r="2.5" fill={color}/><circle cx="24" cy="22" r="2.5" fill={color}/><path d="M15 28c0 0 2 2.5 5 2.5s5-2.5 5-2.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/><line x1="20" y1="6" x2="20" y2="12" stroke={color} strokeWidth="1.5" strokeLinecap="round"/><circle cx="20" cy="5" r="2" fill={color}/></svg>,
+    fork: <svg width={size} height={size} viewBox="0 0 40 40" fill="none"><circle cx="20" cy="8" r="3" stroke={color} strokeWidth="1.5"/><circle cx="10" cy="32" r="3" stroke={color} strokeWidth="1.5"/><circle cx="30" cy="32" r="3" stroke={color} strokeWidth="1.5"/><path d="M20 11v8c0 4-10 4-10 10" stroke={color} strokeWidth="1.5"/><path d="M20 19c0 4 10 4 10 10" stroke={color} strokeWidth="1.5"/></svg>,
+  };
+  return icons[type] || null;
+}
 
 function TourOverlay({ onClose }) {
   const [slide, setSlide] = useState(0);
@@ -246,8 +256,8 @@ function TourOverlay({ onClose }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>
       <style>{`@keyframes tourIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}`}</style>
-      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 460, width: "90%", textAlign: "center", padding: "48px 36px 40px", borderRadius: 12, border: `1px solid ${BRAND.border}`, background: "#000" }}>
-        <div style={{ fontSize: 48, marginBottom: 20 }}>{s.icon}</div>
+      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 460, width: "90%", textAlign: "center", padding: "48px 36px 40px", border: "1px solid transparent", borderImage: "linear-gradient(90deg, #3FA9F5, #8BB999) 1", background: "#000" }}>
+        <div style={{ marginBottom: 20 }}><TourIcon type={s.icon} color={BRAND.yellow} size={48} /></div>
         <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16 }}>{s.title}</div>
         <div style={{ width: 80, height: 1, background: "linear-gradient(90deg, #F3D630, #8BB999)", margin: "0 auto 20px" }} />
         <div style={{ fontSize: 17, color: "#fff", fontFamily: FB, lineHeight: 1.6, marginBottom: 36 }}>{s.body}</div>
