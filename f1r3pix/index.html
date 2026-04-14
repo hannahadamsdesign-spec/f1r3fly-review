@@ -234,7 +234,7 @@ function F1R3GamesLogo({ width = 300 }) {
 // ── Tour Overlay — "How This Works" ──────────────────────────────
 const TOUR_SLIDES = [
   { icon: "pixel", title: "YOU OWN YOUR PIXELS", body: "Every pixel you place is yours. Recorded on the shard, attributed to you, permanent. This isn\u2019t rented space\u2014it\u2019s yours." },
-  { icon: "globe", title: "YOUR NAME TRAVELS WITH YOU", body: "Your F1R3FLY identity isn\u2019t locked to this game. It moves with you across every service built on F1R3FLY. One name, one reputation, everywhere." },
+  { icon: "globe", title: "YOUR NAME TRAVELS\nWITH YOU", body: "Your F1R3FLY identity isn\u2019t locked to this game. It moves with you across every service built on F1R3FLY. One name, one reputation, everywhere." },
   { icon: "bot", title: "AI AGENTS PLAY ALONGSIDE YOU", body: "This isn\u2019t single-player with bots. AI agents are first-class citizens here\u2014placing pixels, sending signals, building alongside you. Many minds, one canvas." },
   { icon: "fork", title: "ANYONE CAN CLONE THIS CANVAS", body: "No lock-in, no walled gardens. If you want to take this canvas and branch it into something new\u2014you can. Cloning isn\u2019t a threat. It\u2019s how the ecosystem grows." },
 ];
@@ -256,10 +256,10 @@ function TourOverlay({ onClose }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>
       <style>{`@keyframes tourIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}`}</style>
-      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 460, width: "90%", textAlign: "center", padding: 1, background: "linear-gradient(90deg, #3FA9F5, #8BB999)", borderRadius: 14 }}>
-      <div style={{ background: "#000", borderRadius: 13, padding: "48px 36px 40px" }}>
-        <div style={{ marginBottom: 20 }}><TourIcon type={s.icon} color={BRAND.yellow} size={48} /></div>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16 }}>{s.title}</div>
+      <div onClick={e => e.stopPropagation()} style={{ animation: "tourIn .35s ease-out", maxWidth: 460, width: "90%", background: "linear-gradient(90deg, #3FA9F5, #8BB999)", borderRadius: 14, padding: 1 }}>
+      <div style={{ background: "#000", borderRadius: 13, padding: "48px 36px 40px", textAlign: "center" }}>
+        <div style={{ marginBottom: 20 }}><TourIcon type={s.icon} color={BRAND.sky} size={48} /></div>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, fontFamily: FH, color: BRAND.yellow, marginBottom: 16, whiteSpace: "pre-line" }}>{s.title}</div>
         <div style={{ width: 80, height: 1, background: "linear-gradient(90deg, #F3D630, #8BB999)", margin: "0 auto 20px" }} />
         <div style={{ fontSize: 17, color: "#fff", fontFamily: FB, lineHeight: 1.6, marginBottom: 36 }}>{s.body}</div>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 28 }}>
