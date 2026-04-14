@@ -619,27 +619,6 @@ function F1R3Pix() {
 
         {/* Right Sidebar */}
         <div className="game-sidebar" style={{ width: 300, borderLeft: `1px solid ${BRAND.border}`, padding: "20px 16px", display: "flex", flexDirection: "column", gap: 20, overflowY: "auto", background: "#000" }}>
-
-          {/* F1R3 SIGNALS */}
-          <div style={{ padding: 14, borderRadius: 6, border: `1px solid ${BRAND.sky}33`, background: "rgba(63,169,245,0.04)" }}>
-            <div style={{ fontSize: 16, color: BRAND.sky, letterSpacing: 3, fontFamily: FH, marginBottom: 4, fontWeight: 600 }}>F1R3 SIGNALS</div>
-            <div style={{ fontSize: 13, color: "#fff", fontFamily: FB, marginBottom: 10, fontWeight: 300, letterSpacing: 1 }}>not a like button — a feeling</div>
-            <div style={{ fontSize: 13, color: "#fff", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px 6px", justifyItems: "center" }}>
-              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
-                <div key={`sig-r-${c}`} style={{ width: 24, height: 24, borderRadius: "50%", background: c, cursor: "pointer",
-                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
-                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
-                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
-                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 10px ${c}66`; }}}
-                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
-              ))}
-            </div>
-            {signalConfirm && <div style={{ marginTop: 8, padding: "6px 8px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB }}>noted. we wrote that down.</div>}
-            {signal && !signalConfirm && <div style={{ marginTop: 8, fontSize: 13, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
-            <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
-          </div>
-
           <div style={{ fontSize: 16, color: BRAND.textMuted, letterSpacing: 2, fontFamily: FH }}>PALETTE</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px 6px" }}>
             {PALETTE.map(c => (
@@ -672,6 +651,26 @@ function F1R3Pix() {
                 </div>
               );
             })}
+          </div>
+
+          {/* F1R3 SIGNALS — bottom of right sidebar */}
+          <div style={{ padding: 14, borderRadius: 6, border: `1px solid ${BRAND.sky}33`, background: "rgba(63,169,245,0.04)" }}>
+            <div style={{ fontSize: 16, color: BRAND.sky, letterSpacing: 3, fontFamily: FH, marginBottom: 4, fontWeight: 600 }}>F1R3 SIGNALS</div>
+            <div style={{ fontSize: 13, color: "#fff", fontFamily: FB, marginBottom: 10, fontWeight: 300, letterSpacing: 1 }}>not a like button — a feeling</div>
+            <div style={{ fontSize: 13, color: "#fff", fontFamily: FB, marginBottom: 10, lineHeight: 1.4 }}>How does this F1R3PIX make you feel?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px 6px", justifyItems: "center" }}>
+              {[BRAND.yellow, BRAND.sage, BRAND.sky, "#7b0429", "#5c0269", "#009188", "#0c8e23", "#1114ad", "#FFFFFF", "#3f3f3f"].map(c => (
+                <div key={`sig-r-${c}`} style={{ width: 24, height: 24, borderRadius: "50%", background: c, cursor: "pointer",
+                  border: signal === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  transition: "transform 0.15s, box-shadow 0.15s", transform: signal === c ? "scale(1.3)" : "scale(1)" }}
+                onClick={() => { setSignal(c); setSignalConfirm(true); setTimeout(() => setSignalConfirm(false), 2500); }}
+                onMouseEnter={e => { if (signal !== c) { e.target.style.transform = "scale(1.3)"; e.target.style.boxShadow = `0 0 10px ${c}66`; }}}
+                onMouseLeave={e => { if (signal !== c) { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}} />
+              ))}
+            </div>
+            {signalConfirm && <div style={{ marginTop: 8, padding: "6px 8px", borderRadius: 4, background: "rgba(243,214,48,0.08)", border: `1px solid ${BRAND.yellow}33`, fontSize: 13, color: BRAND.yellow, fontFamily: FB }}>noted. we wrote that down.</div>}
+            {signal && !signalConfirm && <div style={{ marginTop: 8, fontSize: 13, color: BRAND.textDim, fontFamily: FB, display: "flex", alignItems: "center", gap: 6 }}>{myName}'s signal: <div style={{ width: 12, height: 12, borderRadius: "50%", background: signal, border: "1px solid rgba(255,255,255,0.2)" }} /></div>}
+            <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: FB, fontStyle: "italic" }}>powered by F1R3INK</div>
           </div>
         </div>
       </div>
