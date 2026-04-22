@@ -29,16 +29,16 @@ const { useState } = React;
 // F1R3FLY Brand Book March 27, 2026 — Hannah Adams
 // ══════════════════════════════════════════════════════════════
 
-const BRAND = { yellow:"#F3D630", sage:"#8BB999", sky:"#3FA9F5", border:"rgba(255,255,255,0.2)", stroke:"linear-gradient(90deg, #F3D630, #8BB999)" };
+const BRAND = { yellow:"#F3D630", sage:"#8BB999", sky:"#3FA9F5", surface:"#000000", card:"#0c0c18", border:"#3FA9F566", stroke:"linear-gradient(90deg, #F3D630, #8BB999)", text:"#ffffff", textMuted:"#ffffff", textDim:"#ffffff", textSecondary:"#A0A0A0" };
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap');`;
 const FH = "'Josefin Sans', sans-serif";
 const FB = "'Source Sans 3', sans-serif";
 const INK_ACCENT = "#DC2547";
 const INK_COLORS = [
-  {hex:"#FF2D55",name:"rose"},{hex:"#FF6B2B",name:"ember"},{hex:"#FFD60A",name:"gold"},
-  {hex:"#30D158",name:"verdant"},{hex:"#00C7BE",name:"teal"},{hex:"#40C8E0",name:"sky"},
-  {hex:"#5E5CE6",name:"indigo"},{hex:"#BF5AF2",name:"violet"},{hex:"#FF375F",name:"coral"},
-  {hex:"#FFFFFF",name:"light"},{hex:"#8E8E93",name:"ash"},{hex:"#1C1C1E",name:"void"}
+  {hex:"#7B0429",name:"scarlet"},{hex:"#FF6B2B",name:"ember"},{hex:"#F3D630",name:"yellow"},
+  {hex:"#0C8E23",name:"green"},{hex:"#009188",name:"teal"},{hex:"#3FA9F5",name:"sky"},
+  {hex:"#7A7DE8",name:"light-indigo"},{hex:"#5C0269",name:"purple"},{hex:"#7A9D0E",name:"lime"},
+  {hex:"#FFFFFF",name:"white"},{hex:"#8BB999",name:"sage"},{hex:"#3F3F3F",name:"gray"}
 ];
 
 const PORTRAITS = {
@@ -53,21 +53,21 @@ const PORTRAITS = {
 // Demo players — static data, no storage
 const DEMO_PLAYERS = [
   { id:"claude", name:"Greg", tags:["founder","rho-calculus"], isAI:false, portrait:PORTRAITS.claude,
-    inks:[{color:"#FF2D55",from:"Lilia"},{color:"#30D158",from:"Steve"},{color:"#5E5CE6",from:"Hannah"},{color:"#FFD60A",from:"Jeff"},{color:"#40C8E0",from:"Mike"}] },
+    inks:[{color:"#7B0429",from:"Lilia"},{color:"#0C8E23",from:"Steve"},{color:"#7A7DE8",from:"Hannah"},{color:"#F3D630",from:"Jeff"},{color:"#3FA9F5",from:"Mike"}] },
   { id:"gemini", name:"Mike", tags:["research"], isAI:false, portrait:PORTRAITS.gemini,
-    inks:[{color:"#FFD60A",from:"Greg"},{color:"#40C8E0",from:"Hannah"},{color:"#BF5AF2",from:"Lilia"}] },
+    inks:[{color:"#F3D630",from:"Greg"},{color:"#3FA9F5",from:"Hannah"},{color:"#5C0269",from:"Lilia"}] },
   { id:"grok", name:"Lilia", tags:["operations"], isAI:false, portrait:PORTRAITS.grok,
-    inks:[{color:"#BF5AF2",from:"Jeff"},{color:"#FF6B2B",from:"Hannah"},{color:"#00C7BE",from:"Greg"},{color:"#FF2D55",from:"Steve"}] },
+    inks:[{color:"#5C0269",from:"Jeff"},{color:"#FF6B2B",from:"Hannah"},{color:"#009188",from:"Greg"},{color:"#7B0429",from:"Steve"}] },
   { id:"llama", name:"Jeff", tags:["product"], isAI:false, portrait:PORTRAITS.llama,
-    inks:[{color:"#FF2D55",from:"Hannah"},{color:"#30D158",from:"Greg"},{color:"#5E5CE6",from:"Mike"}] },
+    inks:[{color:"#7B0429",from:"Hannah"},{color:"#0C8E23",from:"Greg"},{color:"#7A7DE8",from:"Mike"}] },
   { id:"scarlet", name:"Steve", tags:["CEO","London"], isAI:false, portrait:PORTRAITS.scarlet,
-    inks:[{color:"#30D158",from:"Hannah"},{color:"#FFD60A",from:"Greg"},{color:"#5E5CE6",from:"Lilia"},{color:"#FF6B2B",from:"Mike"},{color:"#00C7BE",from:"Jeff"},{color:"#BF5AF2",from:"Greg"}] }
+    inks:[{color:"#0C8E23",from:"Hannah"},{color:"#F3D630",from:"Greg"},{color:"#7A7DE8",from:"Lilia"},{color:"#FF6B2B",from:"Mike"},{color:"#009188",from:"Jeff"},{color:"#5C0269",from:"Greg"}] }
 ];
 
-const MY_INKS = [{color:"#BF5AF2",from:"Steve"},{color:"#FFD60A",from:"Greg"},{color:"#00C7BE",from:"Lilia"},{color:"#FF2D55",from:"Mike"},{color:"#30D158",from:"Jeff"}];
+const MY_INKS = [{color:"#5C0269",from:"Steve"},{color:"#F3D630",from:"Greg"},{color:"#009188",from:"Lilia"},{color:"#7B0429",from:"Mike"},{color:"#0C8E23",from:"Jeff"}];
 
 function Avatar({src, size=48}) {
-  return <img src={src} alt="" style={{width:size, height:size, borderRadius:"50%", objectFit:"cover", border:"2px solid rgba(255,255,255,0.15)", flexShrink:0}} />;
+  return <img src={src} alt="" style={{width:size, height:size, borderRadius:"50%", objectFit:"cover", border:`2px solid ${BRAND.border}`, flexShrink:0}} />;
 }
 
 function AIIcon({size=14, color=BRAND.sky}) {
@@ -88,7 +88,7 @@ function HumanIcon({size=14, color="#fff"}) {
 
 // HOW THIS WORKS button — neutral dark, NOT gradient (avoids competing with JOIN)
 function HowBtn({onClick}) {
-  return <button onClick={onClick} style={{background:"#000", border:`1px solid ${BRAND.border}`, color:"#fff", borderRadius:20, padding:"10px 24px", fontSize:16, cursor:"pointer", fontFamily:FH, letterSpacing:2, fontWeight:400, display:"inline-flex", alignItems:"center", justifyContent:"center", lineHeight:1, minHeight:38}}>HOW THIS WORKS</button>;
+  return <button onClick={onClick} style={{background:"#000", border:`1px solid ${BRAND.border}`, color:"#fff", borderRadius:20, padding:"12px 24px 8px", fontSize:16, cursor:"pointer", fontFamily:FH, letterSpacing:2, fontWeight:400, display:"inline-flex", alignItems:"center", justifyContent:"center", lineHeight:1, minHeight:38, whiteSpace:"nowrap"}}>HOW THIS WORKS</button>;
 }
 
 // Tour overlay
@@ -104,16 +104,16 @@ function TourOverlay({onClose}) {
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.92)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FH}} onClick={onClose}>
       <style>{`@keyframes tourIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}`}</style>
-      <div onClick={e=>e.stopPropagation()} style={{maxWidth:480,width:"90%",padding:"48px 40px",border:`1px dashed ${BRAND.sky}44`,borderRadius:14,background:"#000",animation:"tourIn 0.3s ease-out",textAlign:"center"}}>
-        <h2 style={{fontSize:22,fontWeight:700,letterSpacing:4,color:"#fff",lineHeight:1.5,whiteSpace:"pre-line",margin:"0 0 20px"}}>{s.title}</h2>
-        <p style={{fontSize:14,color:"#ccc",lineHeight:1.8,fontFamily:FB,margin:0}}>{s.body}</p>
+      <div onClick={e=>e.stopPropagation()} style={{maxWidth:480,width:"90%",padding:"48px 40px",border:`1px dashed ${BRAND.sky}66`,borderRadius:14,background:"#000",animation:"tourIn 0.3s ease-out",textAlign:"center"}}>
+        <h2 style={{fontSize:20,fontWeight:700,letterSpacing:4,fontFamily:FH,color:BRAND.yellow,lineHeight:1.5,whiteSpace:"pre-line",margin:"0 0 20px"}}>{s.title}</h2>
+        <p style={{fontSize:17,color:"#fff",lineHeight:1.6,fontFamily:FB,margin:0}}>{s.body}</p>
         <div style={{display:"flex",justifyContent:"center",gap:8,marginTop:32}}>
-          {slides.map((_,i)=><div key={i} onClick={()=>setSi(i)} style={{width:8,height:8,borderRadius:"50%",background:i===si?INK_ACCENT:"#333",cursor:"pointer"}} />)}
+          {slides.map((_,i)=><div key={i} onClick={()=>setSi(i)} style={{width:10,height:10,borderRadius:"50%",background:i===si?BRAND.yellow:"rgba(255,255,255,0.2)",cursor:"pointer"}} />)}
         </div>
         <div style={{marginTop:24}}>
           {si < slides.length-1
-            ? <button onClick={()=>setSi(si+1)} style={{background:"#000",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:20,padding:"10px 28px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:2,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38}}>NEXT</button>
-            : <button onClick={onClose} style={{background:"#000",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:20,padding:"10px 28px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:2,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38}}>LET'S GO</button>}
+            ? <button onClick={()=>setSi(si+1)} style={{background:"#000",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:20,padding:"12px 28px 8px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:2,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,whiteSpace:"nowrap"}}>NEXT</button>
+            : <button onClick={onClose} style={{background:"#000",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:20,padding:"12px 28px 8px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:2,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,whiteSpace:"nowrap"}}>LET'S GO</button>}
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@ function TourOverlay({onClose}) {
 // Built on F1R3FLY.IO badge
 function BuiltOnBadge() {
   return (
-    <div style={{position:"fixed",bottom:16,left:"50%",transform:"translateX(-50%)",zIndex:100,display:"flex",alignItems:"center",gap:10,background:"#000",border:`1px solid ${BRAND.border}`,borderRadius:8,padding:"8px 16px",fontFamily:FH,fontSize:16,letterSpacing:2,color:"#ccc",cursor:"pointer",backdropFilter:"blur(8px)"}} onClick={()=>window.open&&window.open("https://f1r3fly.io","_blank")}>
+    <div style={{position:"fixed",bottom:16,left:"50%",transform:"translateX(-50%)",zIndex:100,display:"flex",alignItems:"center",gap:10,background:"#000",border:`1px solid ${BRAND.border}`,borderRadius:8,padding:"8px 16px",fontFamily:FH,fontSize:16,letterSpacing:2,color:BRAND.textDim,cursor:"pointer",backdropFilter:"blur(8px)"}} onClick={()=>window.open&&window.open("https://f1r3fly.io","_blank")}>
       <span style={{color:"#fff",fontSize:16,letterSpacing:2}}>BUILT ON</span>
       <svg width="120" viewBox="0 0 2343 535" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="b-lg" x1="620.975" y1="117.901" x2="793.518" y2="-180.951" gradientTransform="translate(-545.342 290.672) rotate(-4.856)" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#009188"/><stop offset="1" stopColor="#007bc4"/></linearGradient><linearGradient id="b-lg1" x1="10868.88" y1="2958.368" x2="11042.919" y2="2656.923" gradientTransform="translate(11539.772 2556.8) rotate(-153.904) scale(1 -1)" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#009188"/><stop offset="1" stopColor="#007bc4"/></linearGradient><linearGradient id="b-lg2" x1="1278.548" y1="-693.973" x2="1379.282" y2="-693.973" gradientTransform="translate(-816.84 975.667) rotate(-11.485)" xlinkHref="#b-lg"/><radialGradient id="b-rg" cx="-507.17" cy="1315.506" fx="-507.17" fy="1166.669" r="148.898" gradientTransform="translate(-462.725 1690.402) rotate(-169.698) scale(1.001 1.048) skewX(.542)" gradientUnits="userSpaceOnUse"><stop offset=".159" stopColor="#ebe1a3"/><stop offset=".658" stopColor="#f3d630"/><stop offset=".995" stopColor="#f3d630"/></radialGradient></defs><g><path fill="url(#b-lg)" d="M316.697,105.798c-37.703,124.422-167.35,232.91-298.749,218.058-19.188-3.649-20.283-20.828-15.672-37.06C31.864,162.855,152.312,70.533,276.989,74.429c21.882.057,44.988,2.747,39.708,31.368Z"/><path fill="url(#b-lg1)" d="M349.717,112.154c-8.765,129.993,73.792,279.334,201.506,314.364,19.172,3.736,26.255-11.869,27.685-28.713,16.157-126.526-63.53-257.377-181.112-300.119-20.416-8.086-42.901-14.173-48.079,14.468Z"/><path fill="url(#b-lg2)" d="M400.519,44.343c1.708-41.624-83.95-62.735-103.871-23.736-3.572,6.996-.071,15.53,6.922,17.387,25.852,6.863,56.168,11.194,82.282,18.292,7.128,1.934,14.336-3.926,14.667-11.944Z"/><path fill="url(#b-rg)" d="M378.911,353.267c-46.405,267.616-227.024,226.916-174.919-34.206,44.206-27.89,81.981-64.979,110.028-108.046,11.008,50.816,33.273,99.674,64.892,142.252Z"/></g><g><path fill="#fff" d="M755.273,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.271,0,5.652,2.677,5.652,5.652v24.391c0,2.975-2.381,5.652-5.652,5.652h-88.049v55.924h73.473c2.975,0,5.652,2.677,5.652,5.652v24.392c0,2.974-2.677,5.652-5.652,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/><path fill="#fff" d="M952.779,223.691l-26.177,5.652c-2.677.595-5.652-1.189-5.949-3.867l-1.785-14.576c-.297-2.379.297-4.164,1.488-5.353l42.834-35.993h20.822c2.975,0,5.355,2.677,5.355,5.652v190.971c0,2.975-2.379,5.652-5.355,5.652h-25.581c-3.272,0-5.652-2.677-5.652-5.652v-142.485Z"/><path fill="#fff" d="M1058.965,169.256c0-2.975,2.379-5.652,5.652-5.652h85.075c35.696,0,64.847,28.556,64.847,63.954,0,27.367-18.146,49.676-44.024,60.088l40.752,75.555c2.082,3.868,0,8.627-5.056,8.627h-31.234c-2.677,0-4.164-1.488-4.759-2.677l-39.563-78.828h-33.018v75.853c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92ZM1146.419,258.494c15.765,0,29.449-13.683,29.449-30.34,0-15.766-13.684-28.855-29.449-28.855h-48.486v59.195h48.486Z"/><path fill="#fff" d="M1255.873,340.892l15.171-14.576c2.677-2.379,5.355-2.379,7.734,0,.892,1.19,18.443,16.064,36.588,16.064,16.063,0,31.532-11.602,31.532-27.962,0-15.468-14.279-29.449-41.05-29.449h-16.658c-3.271,0-5.652-2.379-5.652-5.949v-18.74c0-3.867,2.082-5.949,5.652-5.949h16.658c24.392,0,36.885-12.196,36.885-27.366,0-16.361-13.683-27.366-28.854-27.366-15.468,0-24.987,8.329-30.044,14.278-2.082,2.379-5.353,2.677-8.031.297l-14.575-13.683c-2.381-2.082-2.082-5.652,0-7.734,0,0,22.606-26.177,55.923-26.177,34.506,0,63.359,21.12,63.359,54.436,0,22.905-17.253,40.157-30.639,46.404v.893c13.98,5.949,35.993,22.012,35.993,48.486,0,33.614-27.366,58.006-68.417,58.006-37.182,0-55.328-18.74-61.872-26.474-1.785-2.082-1.488-5.355.297-7.437Z"/><path fill="#fff" d="M1442.072,169.256c0-2.975,2.379-5.652,5.652-5.652h121.068c3.272,0,5.651,2.677,5.651,5.652v24.391c0,2.975-2.378,5.652-5.651,5.652h-88.049v55.924h73.473c2.975,0,5.653,2.677,5.653,5.652v24.392c0,2.974-2.678,5.652-5.653,5.652h-73.473v75.258c0,2.975-2.678,5.652-5.652,5.652h-27.367c-3.272,0-5.652-2.677-5.652-5.652v-196.92Z"/><path fill="#fff" d="M1624.705,169.256c0-2.975,2.381-5.652,5.653-5.652h27.366c2.975,0,5.651,2.677,5.651,5.652v166.876h75.853c3.272,0,5.653,2.678,5.653,5.652v24.392c0,2.975-2.381,5.652-5.653,5.652h-108.87c-3.272,0-5.653-2.677-5.653-5.652v-196.92Z"/><path fill="#fff" d="M1815.074,271.582l-67.822-99.352c-2.381-3.867,0-8.626,4.759-8.626h30.341c2.381,0,3.867,1.486,4.759,2.677l47.595,68.417,47.593-68.417c.892-1.19,2.381-2.677,4.759-2.677h30.641c4.759,0,7.137,4.759,4.759,8.626l-68.714,99.055v94.891c0,2.975-2.678,5.652-5.653,5.652h-27.366c-3.272,0-5.651-2.677-5.651-5.652v-94.594Z"/><path fill="#fff" d="M1961.416,325.721c13.387,0,24.691,11.304,24.691,24.689s-11.304,24.392-24.691,24.392-24.391-11.006-24.391-24.392,11.006-24.689,24.391-24.689Z"/><path fill="#fff" d="M2036.073,169.256c0-2.975,2.678-5.652,5.653-5.652h27.663c2.975,0,5.651,2.677,5.651,5.652v196.92c0,2.975-2.676,5.652-5.651,5.652h-27.663c-2.975,0-5.653-2.677-5.653-5.652v-196.92Z"/><path fill="#fff" d="M2235.958,160.629c59.493,0,107.086,47.891,107.086,107.384s-47.593,106.79-107.086,106.79-106.789-47.297-106.789-106.79,47.298-107.384,106.789-107.384ZM2235.958,336.132c37.481,0,68.417-30.639,68.417-68.119s-30.936-68.714-68.417-68.714-68.119,31.234-68.119,68.714,30.639,68.119,68.119,68.119Z"/></g></svg>
     </div>
@@ -152,25 +152,25 @@ function F1R3Ink() {
   // ── JOIN SCREEN ──────────────────────────────────────────
   if (phase === "join") return (
     <div style={{height:"100vh",overflow:"hidden",background:"#000",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",fontFamily:FH,position:"relative"}}>
-      <style>{FONTS}{`@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}} input:focus{border-color:${BRAND.sky}66 !important;outline:none}`}</style>
+      <style>{FONTS}{`@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}} input:focus{border-color:${BRAND.sky}66 !important;outline:none} input::placeholder, textarea::placeholder { color: ${BRAND.textSecondary}; opacity: 1; }`}</style>
       <div style={{animation:"fadeIn .6s ease-out",textAlign:"center",marginTop:-75,position:"relative",zIndex:1}}>
         <F1R3GamesLogo width={196}/>
-        <div style={{fontSize:12,color:"#fff",letterSpacing:6,fontFamily:FH,fontWeight:400,marginTop:24}}>PRESENTS</div>
+        <div style={{fontSize:16,color:"#fff",letterSpacing:6,fontFamily:FH,fontWeight:400,marginTop:24}}>PRESENTS</div>
         <div style={{height:40}}/>
         <div style={{border:`1px dashed ${BRAND.sky}66`,borderRadius:14,padding:"40px 48px",display:"inline-block",background:"#000"}}>
           <h1 style={{margin:"0 0 12px",display:"flex",alignItems:"center",justifyContent:"center"}}><InkLogo height={57}/></h1>
-          <div style={{fontSize:12,color:"#fff",letterSpacing:4,fontWeight:400,fontFamily:FH}}>YOUR TRUE COLORS COME SHINING THROUGH</div>
+          <div style={{fontSize:16,color:"#fff",letterSpacing:4,fontWeight:400,fontFamily:FH}}>YOUR TRUE COLORS COME SHINING THROUGH</div>
         </div>
         <div style={{height:50}}/>
         <div style={{display:"flex",flexDirection:"column",gap:10,alignItems:"center"}}>
-          <div style={{fontSize:13,color:BRAND.yellow,letterSpacing:4,fontWeight:700,fontFamily:FH}}>CHOOSE YOUR F1R3SIGN</div>
+          <div style={{fontSize:16,color:BRAND.yellow,letterSpacing:4,fontWeight:700,fontFamily:FH}}>CHOOSE YOUR F1R3SIGN</div>
           <input value={myName} onChange={e=>setMyName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&myName.trim()&&setPhase("play")} placeholder="someone colorful" style={{background:"#000",border:`1px dashed ${BRAND.sky}66`,borderRadius:6,color:"#fff",padding:"10px 16px",fontSize:16,fontWeight:300,width:"100%",maxWidth:460,fontFamily:FH,textAlign:"center",outline:"none",marginTop:20}}/>
-          <input value={myTags} onChange={e=>setMyTags(e.target.value)} placeholder="tags: mood, vibe, role..." style={{background:"#000",border:`1px dashed ${BRAND.sky}33`,borderRadius:6,color:"#ccc",padding:"8px 16px",fontSize:12,width:"100%",maxWidth:460,fontFamily:FH,textAlign:"center",outline:"none"}}/>
-          <button onClick={()=>myName.trim()&&setPhase("play")} style={{background:"linear-gradient(135deg, #5c0269, #7b0429)",color:"#fff",border:"none",borderRadius:20,padding:"10px 32px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:3,boxShadow:"0 0 20px rgba(123,4,41,0.4)",marginTop:20,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38}}>JOIN</button>
-          <div style={{fontSize:12,color:"#fff",letterSpacing:4,fontWeight:400,fontFamily:FH,lineHeight:2.2,marginTop:20}}>YOUR F1R3SIGN TRAVELS<br/>WITH YOU ACROSS F1R3FLY</div>
+          <input value={myTags} onChange={e=>setMyTags(e.target.value)} placeholder="tags: mood, vibe, role..." style={{background:"#000",border:`1px dashed ${BRAND.sky}66`,borderRadius:6,color:"#fff",padding:"10px 16px",fontSize:16,width:"100%",maxWidth:460,fontFamily:FH,textAlign:"center",outline:"none"}}/>
+          <button onClick={()=>myName.trim()&&setPhase("play")} style={{background:"linear-gradient(135deg, #5c0269, #7b0429)",color:"#fff",border:"none",borderRadius:20,padding:"12px 32px 8px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:3,boxShadow:"0 0 20px rgba(123,4,41,0.4)",marginTop:20,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,whiteSpace:"nowrap"}}>JOIN</button>
+          <div style={{fontSize:16,color:"#fff",letterSpacing:4,fontWeight:400,fontFamily:FH,lineHeight:2.2,marginTop:20}}>YOUR F1R3SIGN TRAVELS<br/>WITH YOU ACROSS F1R3FLY</div>
           <div style={{marginTop:12}}><HowBtn onClick={()=>setShowTour(true)}/></div>
         </div>
-        {DEMO_PLAYERS.length > 0 && <div style={{marginTop:16,color:"#fff",fontSize:16}}>{DEMO_PLAYERS.length} playing</div>}
+        {DEMO_PLAYERS.length > 0 && <div style={{marginTop:16,color:BRAND.textDim,fontSize:16}}>{DEMO_PLAYERS.length} playing</div>}
       </div>
       <BuiltOnBadge/>
       {showTour && <TourOverlay onClose={()=>setShowTour(false)}/>}
@@ -183,7 +183,7 @@ function F1R3Ink() {
 
   return (
     <div style={{minHeight:"100vh",background:"#000",color:"#fff",fontFamily:FH,display:"flex",flexDirection:"column",overflow:"hidden",position:"relative"}}>
-      <style>{FONTS}{`::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px} *{box-sizing:border-box}`}</style>
+      <style>{FONTS}{`::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px} *{box-sizing:border-box} input::placeholder, textarea::placeholder { color: ${BRAND.textSecondary}; opacity: 1; }`}</style>
 
       {/* Header */}
       <div className="game-header" style={{padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"#000",minHeight:70}}>
@@ -193,7 +193,7 @@ function F1R3Ink() {
         </div>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           <HowBtn onClick={()=>setShowTour(true)}/>
-          <button onClick={()=>setPhase("join")} style={{background:"none",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:4,padding:"6px 12px",fontSize:16,cursor:"pointer",fontFamily:FH,letterSpacing:1}}>LEAVE</button>
+          <button onClick={()=>setPhase("join")} style={{background:"#000",border:`1px solid ${BRAND.border}`,color:"#fff",borderRadius:20,padding:"10px 18px 8px",fontSize:16,cursor:"pointer",fontFamily:FH,letterSpacing:1,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,whiteSpace:"nowrap"}}>LEAVE</button>
         </div>
       </div>
 
@@ -204,78 +204,84 @@ function F1R3Ink() {
       <div className="game-layout" style={{flex:1,display:"flex",overflow:"hidden"}}>
 
         {/* Left Sidebar — My Flag */}
-        <div className="game-sidebar game-sidebar-left" style={{width:300,minWidth:300,flexShrink:0,borderRight:`1px solid ${BRAND.border}`,padding:"20px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:16,overflowY:"auto",background:"#000"}}>
-          <div style={{fontSize:16,color:BRAND.sage,letterSpacing:3}}>MY FLAG</div>
-          <Avatar src={PORTRAITS.hannah} size={80}/>
-          <div style={{fontSize:18,color:"#fff",fontWeight:600}}>{displayName}</div>
+        <div className="game-sidebar game-sidebar-left" style={{width:300,minWidth:300,flexShrink:0,borderRight:`1px solid ${BRAND.border}`,padding:"20px 16px",display:"flex",flexDirection:"column",gap:20,overflowY:"auto",background:"#000"}}>
 
-          <div style={{width:"100%",maxWidth:240}}>
-            <div style={{fontSize:13,color:"#fff",marginBottom:4,letterSpacing:1,textTransform:"uppercase"}}>TAGS</div>
-            <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-              {(myTags.trim() ? myTags.split(",").map(t=>t.trim()).filter(Boolean) : ["Pooh"]).map((t,i) =>
-                <span key={i} style={{background:"#0c0c18",border:`1px solid ${BRAND.border}`,borderRadius:20,padding:"1px 10px",fontSize:13,color:BRAND.sage}}>{t}</span>
-              )}
+          {/* MY FLAG section */}
+          <div style={{paddingBottom:20,borderBottom:`1px solid ${BRAND.border}`,display:"flex",flexDirection:"column",gap:12,alignItems:"center"}}>
+            <div style={{fontSize:16,color:"#fff",letterSpacing:2,fontFamily:FH,textTransform:"uppercase",alignSelf:"flex-start"}}>MY FLAG</div>
+            <Avatar src={PORTRAITS.hannah} size={80}/>
+            <div style={{fontSize:16,color:BRAND.yellow,fontWeight:600,fontFamily:FB}}>{displayName}</div>
+            <div style={{width:"100%"}}>
+              <div style={{fontSize:16,color:"#fff",marginBottom:8,letterSpacing:2,fontFamily:FH,textTransform:"uppercase"}}>TAGS</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                {(myTags.trim() ? myTags.split(",").map(t=>t.trim()).filter(Boolean) : ["Pooh"]).map((t,i) =>
+                  <span key={i} style={{background:BRAND.card,border:`1px solid ${BRAND.border}`,borderRadius:20,padding:"2px 12px",fontSize:16,color:BRAND.sage,fontFamily:FB}}>{t}</span>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* F1R3 SIGNALS card */}
-          <div style={{width:"100%",maxWidth:240,padding:14,borderRadius:6,border:`1px solid ${BRAND.sky}33`,background:"rgba(63,169,245,0.04)"}}>
-            <div style={{fontSize:16,color:BRAND.sky,letterSpacing:3,marginBottom:4,fontWeight:600}}>F1R3 SIGNALS</div>
-            <div style={{fontSize:13,color:"#fff",fontFamily:FB,marginBottom:10,fontWeight:300,letterSpacing:1}}>not a like button — a feeling</div>
+          {/* F1R3 SIGNALS section */}
+          <div style={{paddingBottom:20,borderBottom:`1px solid ${BRAND.border}`,display:"flex",flexDirection:"column",gap:12}}>
+            <div style={{fontSize:16,color:"#fff",letterSpacing:2,fontFamily:FH,textTransform:"uppercase"}}>F1R3 SIGNALS</div>
+            <div style={{fontSize:16,color:BRAND.sky,fontFamily:FB,lineHeight:1.4}}>Not a &quot;like&quot; button — a feeling</div>
             {selectedTarget
-              ? <div style={{fontSize:13,color:"#fff",fontFamily:FB,marginBottom:10}}>How do you feel about <span style={{color:INK_ACCENT,fontWeight:600}}>{DEMO_PLAYERS.find(p=>p.id===selectedTarget)?.name}</span>?</div>
-              : <div style={{fontSize:13,color:"#ccc",fontFamily:FB,marginBottom:10,fontStyle:"italic"}}>select someone to ink</div>}
+              ? <div style={{fontSize:16,color:"#fff",fontFamily:FB}}>How do you feel about <span style={{color:BRAND.yellow,fontWeight:600}}>{DEMO_PLAYERS.find(p=>p.id===selectedTarget)?.name}</span>?</div>
+              : <div style={{fontSize:16,color:BRAND.textSecondary,fontFamily:FB}}>select someone to ink</div>}
             <div style={{display:"grid",gridTemplateColumns:"repeat(6, 1fr)",gap:"10px 6px",justifyItems:"center"}}>
               {INK_COLORS.map(c => (
-                <div key={c.hex} title={c.name} onClick={()=>setSelectedColor(c.hex)} style={{width:24,height:24,borderRadius:"50%",background:c.hex,cursor:"pointer",border:selectedColor===c.hex?"2px solid #fff":c.hex==="#1C1C1E"?"1px solid #444":"1px solid rgba(255,255,255,0.1)",transition:"transform 0.15s",transform:selectedColor===c.hex?"scale(1.3)":"scale(1)"}}/>
+                <div key={c.hex} title={c.name} onClick={()=>setSelectedColor(c.hex)} style={{width:24,height:24,borderRadius:"50%",background:c.hex,cursor:"pointer",border:selectedColor===c.hex?"2px solid #fff":`1px solid ${BRAND.border}`,transition:"transform 0.15s",transform:selectedColor===c.hex?"scale(1.3)":"scale(1)"}}/>
               ))}
             </div>
             {selectedColor && selectedTarget && (
-              <div style={{textAlign:"center",marginTop:10}}>
-                <button style={{background:selectedColor,color:(selectedColor==="#FFD60A"||selectedColor==="#FFFFFF")?"#111":"#fff",border:"none",borderRadius:20,padding:"10px 32px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:3,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,boxShadow:`0 0 20px ${selectedColor}44`}}>INK</button>
+              <div style={{textAlign:"center",marginTop:4}}>
+                <button style={{background:selectedColor,color:(selectedColor==="#F3D630"||selectedColor==="#FFFFFF"||selectedColor==="#7A9D0E")?"#111":"#fff",border:"none",borderRadius:20,padding:"12px 32px 8px",fontSize:16,fontFamily:FH,fontWeight:600,cursor:"pointer",letterSpacing:3,display:"inline-flex",alignItems:"center",justifyContent:"center",lineHeight:1,minHeight:38,whiteSpace:"nowrap",boxShadow:`0 0 20px ${selectedColor}44`}}>INK</button>
               </div>
             )}
-            <div style={{marginTop:8,fontSize:13,color:"rgba(255,255,255,0.3)",fontFamily:FB,fontStyle:"italic"}}>this is F1R3INK</div>
+            <div style={{fontSize:16,color:BRAND.textSecondary,fontFamily:FB}}>How does this F1R3INK make you feel?</div>
           </div>
 
-          {/* Inked By section */}
-          {MY_INKS.length > 0 ? (
-            <div style={{width:"100%",maxWidth:240}}>
-              <div style={{fontSize:13,color:"#fff",letterSpacing:1,marginBottom:6,textTransform:"uppercase"}}>INKED BY</div>
-              {MY_INKS.map((s,i) => (
-                <div key={i} style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
-                  <div style={{width:10,height:10,borderRadius:"50%",background:s.color,flexShrink:0}}/>
-                  <span style={{fontSize:13,color:"#ccc",fontFamily:FB}}>{s.from}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{color:"#fff",fontSize:12,fontStyle:"italic",textAlign:"center",marginTop:20,lineHeight:1.6,fontFamily:FB}}>no ink yet<br/><span style={{fontSize:12}}>others will color your flag</span></div>
-          )}
+          {/* INKED BY section */}
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <div style={{fontSize:16,color:"#fff",letterSpacing:2,fontFamily:FH,textTransform:"uppercase"}}>INKED BY</div>
+            {MY_INKS.length > 0 ? (
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {MY_INKS.map((s,i) => (
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:12,height:12,borderRadius:"50%",background:s.color,flexShrink:0,border:`1px solid ${BRAND.border}`}}/>
+                    <span style={{fontSize:16,color:"#fff",fontFamily:FB}}>{s.from}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{color:BRAND.textSecondary,fontSize:16,textAlign:"center",lineHeight:1.6,fontFamily:FB}}>no ink yet<br/><span>others will color your flag</span></div>
+            )}
+            <div style={{fontSize:16,color:BRAND.textSecondary,fontFamily:FB,marginTop:4}}>powered by F1R3INK</div>
+          </div>
         </div>
 
         {/* Center — Community */}
         <div style={{flex:1,overflowY:"auto",padding:"24px 32px",background:"#000"}}>
-          <div style={{fontSize:16,color:BRAND.yellow,letterSpacing:3,marginBottom:20}}>COMMUNITY WHEEL</div>
+          <div style={{fontSize:16,color:"#fff",letterSpacing:2,marginBottom:20,fontFamily:FH,textTransform:"uppercase"}}>COMMUNITY WHEEL</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(200px, 1fr))",gap:20}}>
             {/* My card */}
-            <div style={{padding:20,borderRadius:8,border:`1px solid ${BRAND.border}`,background:"rgba(255,255,255,0.02)",textAlign:"center"}}>
+            <div style={{padding:20,borderRadius:8,border:`1px solid ${BRAND.border}`,background:"#000",textAlign:"center"}}>
               <Avatar src={PORTRAITS.hannah} size={72}/>
-              <div style={{fontSize:16,color:BRAND.yellow,fontWeight:600,marginTop:8}}>{displayName}</div>
+              <div style={{fontSize:16,color:BRAND.yellow,fontWeight:600,marginTop:8,fontFamily:FB}}>{displayName}</div>
               <div style={{display:"flex",gap:3,justifyContent:"center",marginTop:10,flexWrap:"wrap"}}>
                 {MY_INKS.map((ink,i) => <div key={i} style={{width:16,height:16,borderRadius:"50%",background:ink.color}} title={`from ${ink.from}`}/>)}
               </div>
-              <div style={{fontSize:12,color:"#fff",marginTop:6,fontFamily:FB}}>{MY_INKS.length} inks</div>
+              <div style={{fontSize:16,color:BRAND.textSecondary,marginTop:6,fontFamily:FB}}>{MY_INKS.length} inks</div>
             </div>
             {/* Other players */}
             {DEMO_PLAYERS.map(p => (
-              <div key={p.id} onClick={()=>setSelectedTarget(selectedTarget===p.id ? null : p.id)} style={{padding:20,borderRadius:8,border:selectedTarget===p.id?`1px solid ${INK_ACCENT}44`:`1px solid ${BRAND.border}`,background:selectedTarget===p.id?"rgba(255,45,85,0.04)":"rgba(255,255,255,0.02)",textAlign:"center",cursor:"pointer",transition:"all 0.2s"}}>
+              <div key={p.id} onClick={()=>setSelectedTarget(selectedTarget===p.id ? null : p.id)} style={{padding:20,borderRadius:8,border:selectedTarget===p.id?`1px solid ${BRAND.sky}`:`1px solid ${BRAND.border}`,background:selectedTarget===p.id?"rgba(63,169,245,0.06)":"#000",textAlign:"center",cursor:"pointer",transition:"all 0.2s"}}>
                 <Avatar src={p.portrait} size={72}/>
-                <div style={{fontSize:16,color:selectedTarget===p.id?"#fff":"#ccc",fontWeight:600,marginTop:8}}>{p.name}</div>
+                <div style={{fontSize:16,color:selectedTarget===p.id?BRAND.sky:"#fff",fontWeight:600,marginTop:8,fontFamily:FB}}>{p.name}</div>
                 <div style={{display:"flex",gap:3,justifyContent:"center",marginTop:10,flexWrap:"wrap"}}>
                   {p.inks.map((ink,i) => <div key={i} style={{width:16,height:16,borderRadius:"50%",background:ink.color}} title={`from ${ink.from}`}/>)}
                 </div>
-                <div style={{fontSize:12,color:"#fff",marginTop:6,fontFamily:FB}}>{p.inks.length} ink{p.inks.length!==1?"s":""}</div>
+                <div style={{fontSize:16,color:BRAND.textSecondary,marginTop:6,fontFamily:FB}}>{p.inks.length} ink{p.inks.length!==1?"s":""}</div>
               </div>
             ))}
           </div>
