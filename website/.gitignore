@@ -1,0 +1,8 @@
+.DS_Store
+DEV_LOG.md
+generate_articles.py
+generate_white_papers.py
+
+# Local backup files
+*.bak-*
+.claude/

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1R3FLY.IO — The AI‑Native Execution Layer for Verifiable Web3 and Agentic Systems</title>
+  <meta name="description" content="F1R3FLY is an AI‑native execution layer built on Rholang and validator nodes. Connect AI agents, Web3, and real‑world data into verifiable, concurrent workflows without global state bottlenecks.">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="F1R3FLY.IO — AI‑Native Execution Layer">
+  <meta property="og:description" content="Verifiable concurrency for AI agents, Web3, and real‑world data.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://f1r3fly.io">
+
+  <!-- Google Fonts: Josefin Sans + Source Sans Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a href="#home" class="skip-link">Skip to main content</a>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-container">
+    <div class="nav-logo-area">
+      <a href="#home" class="nav-logo">
+        <img src="images/f1r3fly-io-horizontal-logo-color-on-dark.svg" alt="F1R3FLY.IO" class="nav-logo-wordmark">
+      </a>
+      <span class="nav-logo-subtitle">A Subsidiary of <a href="https://f1r3fly.com" target="_blank" rel="noopener">F1R3FLY Industries</a></span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#technology">Technology</a></li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li class="nav-dropdown">
+        <a href="#developers" class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">Solutions <span class="nav-caret">&#9662;</span></a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="#developers">Developers</a></li>
+          <li><a href="#clients">Clients</a></li>
+          <li><a href="#partners">Partners</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li class="nav-dropdown">
+        <a href="#blog" class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">Research <span class="nav-caret">&#9662;</span></a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#white-papers">White Papers</a></li>
+          <li><a href="#brain-candy">Brain Candy</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider" aria-hidden="true">|</li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenuOverlay">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div class="mobile-menu-panel" id="mobileMenuOverlay" aria-hidden="true">
+    <div class="mobile-menu">
+      <a href="#home">Home</a>
+      <a href="#technology">Technology</a>
+      <span class="mobile-section-label">Solutions</span>
+      <a href="#developers">Developers</a>
+      <a href="#clients">Clients</a>
+      <a href="#partners">Partners</a>
+      <span class="mobile-section-label">Research</span>
+      <a href="#blog">Blog</a>
+      <a href="#white-papers">White Papers</a>
+      <a href="#brain-candy">Brain Candy</a>
+      <span class="mobile-section-label">&nbsp;</span>
+      <a href="#team">Team</a>
+      <a href="#contact">Get In Touch</a>
+    </div>
+  </div>
+</nav>
+
+<main id="app">
+<!-- ============ HERO ============ -->
+<section id="hero" class="hero">
+  <div class="hero-parallax-bg" id="heroBg"></div>
+  <div class="hero-parallax-treeline hero-parallax-treeline-left" id="heroTreelineLeft"></div>
+  <div class="hero-parallax-treeline hero-parallax-treeline-right" id="heroTreelineRight"></div>
+  <div class="hero-parallax-branch hero-parallax-branch-left" id="heroBranchLeft"></div>
+  <div class="hero-parallax-branch hero-parallax-branch-right" id="heroBranchRight"></div>
+  <div class="hero-overlay"></div>
+  <canvas class="hero-fireflies" id="fireflyCanvas" aria-hidden="true"></canvas>
+  <div class="hero-bottom-fade"></div>
+
+  <div class="hero-content">
+    <h1 class="visually-hidden">F1R3FLY.IO: the AI-native execution layer for verifiable Web3 and agentic systems</h1>
+    <div class="hero-logo">
+      <img src="images/f1r3fly-io-vertical-logo.svg" alt="F1R3FLY.IO" loading="eager" width="200" height="178">
+    </div>
+    <p class="hero-subsidiary">A Subsidiary of <br class="mobile-break"><a href="https://f1r3fly.com" target="_blank" rel="noopener">F1R3FLY Industries</a></p>
+    <a href="#home" class="hero-arrow">
+      <img src="images/arrow.svg" alt="Scroll to top" width="55" height="55">
+    </a>
+  </div>
+</section>
+
+<!-- ============ HOME: What F1R3FLY Is ============ -->
+<section id="home" class="section section-page">
+  <h2 class="fade-in">A verifiable execution layer for AI‑native systems, concurrent workflows, and high‑trust coordination.</h2>
+  <p class="section-intro fade-in delay-1">F1R3FLY is an AI‑native execution layer built on Rholang and validator nodes. It is designed for teams that need more than another chain: they need verifiable concurrency, safe composition of AI and Web3, and infrastructure that can explain what actually happened.</p>
+
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <div class="label">Developers</div>
+      <h3>From global state chaos to verifiable concurrency</h3>
+      <p>F1R3FLY provides a concurrency‑native model to run processes in parallel with a verifiable record of every interaction.</p>
+      <ul>
+        <li>Model complex workflows without shared‑state hacks.</li>
+        <li>Connect on‑chain logic to off‑chain services seamlessly.</li>
+        <li>Debug with tamper‑evident records, not guesswork.</li>
+      </ul>
+      <ul style="list-style:none; padding:0; margin-top:5px; margin-bottom:0;">
+        <li style="margin-bottom:8px;"><a href="https://www.youtube.com/watch?v=mNbXqw3LX9c&t=547s" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none;">→ F1R3FLY Demos Shard Controller and more</a></li>
+        <li style="margin-bottom:0;"><a href="https://www.youtube.com/watch?v=viIeSsrUbIU&t=2112s" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none;">→ F1R3FLY Demos MeTTaCycle</a></li>
+      </ul>
+    </div>
+
+    <div class="card animate-in from-bottom delay-2">
+      <div class="label">Clients</div>
+      <h3>Connect AI, data, and Web3 without fragile glue</h3>
+      <p>Skip fragile one‑off integrations. F1R3FLY composes AI calls, smart contracts, and data as repeatable workflows on validator‑backed infrastructure.</p>
+      <ul>
+        <li>Manage data flow across AI and services in one place.</li>
+        <li>Tamper‑evident records of what was executed, when, and by whom.</li>
+        <li>Less maintenance, more time shipping features.</li>
+      </ul>
+    </div>
+
+    <div class="card animate-in from-right delay-3">
+      <div class="label">Partners</div>
+      <h3>Infrastructure for high‑trust, AI‑native ecosystems</h3>
+      <p>Partners need an environment where AI and data work under clear rules of evidence. F1R3FLY provides a single, composable layer for high‑trust apps.</p>
+      <ul>
+        <li>A credible technical story for AI‑native networks.</li>
+        <li>Transparency and auditability for complex workflows.</li>
+        <li>A foundation from pilot to production‑grade scale.</li>
+      </ul>
+      <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" rel="noopener" class="gradient-btn btn-developer" style="margin-top:auto; align-self:flex-end;">Watch All Our Demos</a>
+    </div>
+  </div>
+</section>
+
+<!-- Scalable. Storable. Searchable. -->
+<div class="section-band neutral" style="margin-bottom:0;">
+  <section class="section">
+    <div class="label fade-in">Scalable. Storable. Searchable.</div>
+    <h2 class="fade-in delay-1">An AI‑native execution layer for mission‑critical coordination systems</h2>
+    <p class="section-intro fade-in delay-2">F1R3FLY provides developers with concurrency‑native execution, validator‑backed data, and formally grounded Rholang contracts, ensuring real‑world, data-heavy workloads remain fast and verifiable.</p>
+
+    <div class="text-grid">
+      <div class="animate-in from-left delay-1">
+        <h3>Concurrency-Native Scalability</h3>
+        <ul>
+          <li>No single global state or transaction queue to fight with.</li>
+          <li>Transactions execute concurrently across validators.</li>
+          <li>Capacity scales with your hardware and network topology, not a global bottleneck.</li>
+        </ul>
+      </div>
+      <div class="animate-in from-bottom delay-2">
+        <h3>Validator-Backed Data</h3>
+        <ul>
+          <li>Application state and key datasets live directly on the network.</li>
+          <li>Verifiable logs and events that AI agents and services can trust.</li>
+          <li>Built-in auditability and replay for regulated, high‑trust scenarios.</li>
+        </ul>
+      </div>
+      <div class="animate-in from-right delay-3">
+        <h3>Correct-by-Construction</h3>
+        <ul>
+          <li>Smart contracts written in Rholang with strong concurrency semantics.</li>
+          <li>Behavior modeled as processes and channels, not ad-hoc callbacks.</li>
+          <li>Designed to reduce race conditions and simplify complex logic.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div><!-- /section-band neutral -->
+
+<!-- Ticker -->
+<div class="parallax-image" role="img" aria-label="Starfield background">
+  <div class="parallax-ticker" aria-hidden="true">
+    <span>the network is the computer is the network is the computer is the network is the computer is&nbsp;</span>
+    <span>the network is the computer is the network is the computer is the network is the computer is&nbsp;</span>
+  </div>
+  <div class="parallax-ticker parallax-ticker-boost" aria-hidden="true">
+    <span>the network is the computer is the network is the computer is the network is the computer is&nbsp;</span>
+    <span>the network is the computer is the network is the computer is the network is the computer is&nbsp;</span>
+  </div>
+</div>
+
+<!-- Toto Section -->
+<div class="section-band" style="background:#000;">
+  <section class="section">
+    <div class="label fade-in">Toto, I've a feeling we're not in Kansas anymore.</div>
+    <h2 class="fade-in delay-1">Most blockchains hit a wall when you ask them to handle <span style="white-space:nowrap">real‑world,</span> <span style="white-space:nowrap">data‑rich</span> workloads. F1R3FLY combines <span style="white-space:nowrap">concurrency‑native</span> execution with <span style="white-space:nowrap">validator‑backed</span> storage so you can build AI agents, <span style="white-space:nowrap">high‑frequency</span> trading infrastructure, or secure medical and enterprise systems without fighting global state.</h2>
+    <p class="section-intro fade-in delay-2"><strong>In one line:</strong> F1R3FLY is an AI‑native execution layer that unifies scalable concurrency, verifiable data, and Rholang-based contracts—with a tamper‑evident record of every state transition.</p>
+  </section>
+</div>
+
+<!-- ============ TECHNOLOGY ============ -->
+<section id="technology" class="section section-page">
+  <h2 class="fly-in-header">Deep dive into Rholang and Concurrency</h2>
+
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <img src="images/icon-math.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Concurrent by design, secure by math</div>
+      <h3>Rholang – an actor-style smart contract language designed for concurrent execution and verifiable coordination.</h3>
+      <p><strong>Spatial–behavioral types</strong> – a mathematical framework that lets you prove properties of contracts before they touch mainnet, catching whole classes of bugs by construction.</p>
+    </div>
+
+    <div class="card animate-in from-bottom delay-2">
+      <img src="images/icon-search-scale.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Built for scale and searchability</div>
+      <h3>OSLF Algorithm – an approach that dramatically expands what can be searched and indexed on‑chain by reasoning about processes instead of static data.</h3>
+      <p><strong>Casper Consensus</strong> – a Proof-of-Stake protocol that is energy-efficient, finality-oriented, and grounded in peer-reviewed research.</p>
+    </div>
+
+    <div class="card animate-in from-right delay-3">
+      <img src="images/icon-rebuild.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Rebuilt from the geometry of logic up</div>
+      <h3>Legacy chains execute transactions one after another, turning global state into a single bottleneck</h3>
+      <p>F1R3FLY follows a different path—Rholang contracts run in parallel while converging on a single shared state. Your AI agents, trading strategies, or mission-critical workflows don't have to stand in the same queue. You get blockchain-level trust without surrendering modern concurrency.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<div class="section-band neutral">
+  <section class="section faq-unified">
+    <span class="label">Frequently Asked Questions</span>
+    <h2 class="fly-in-header">Core Architecture</h2>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-1">What is Rholang?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-1">
+        <p>Rholang is a concurrent smart contract language based on the rho-calculus, a formal model for communicating processes. Instead of mutating global variables, Rholang contracts send and receive messages over channels.</p>
+        <p>This makes them naturally parallelizable and easier to reason about, which is a core ingredient of F1R3FLY's concurrent execution.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-2">How Does F1R3FLY work?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-2">
+        <p>F1R3FLY is a validator-based execution layer that runs Rholang contracts against a shared global state. Validators execute contracts as processes, agree on results via Proof-of-Stake consensus, and record an auditable history.</p>
+        <p>From your perspective, you get a familiar "blockchain trust" model; under the hood, you get a process-oriented engine rather than a single-threaded VM.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-3">How does F1R3FLY achieve 'linear-style' scalability without sharding?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-3">
+        <p>In most chains, every transaction must squeeze through the same global path, so adding more nodes mainly improves redundancy, not throughput. F1R3FLY uses a concurrent execution model: non-conflicting Rholang contracts can be evaluated in parallel across CPU cores and validator nodes.</p>
+        <p>In realistic workloads, this lets capacity grow with available hardware instead of hitting a sequential bottleneck. The exact performance curve depends on your contracts and network topology.</p>
+      </div>
+    </div>
+    <span class="label faq-subsection-label">Developer-Focused Questions</span>
+    <h2>Building on F1R3FLY</h2>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-4">How hard is it to integrate F1R3FLY into my existing stack?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-4">
+        <p>You don't have to rewrite everything to start using F1R3FLY. In most projects, F1R3FLY sits behind a service layer and communicates with your existing microservices, APIs, or event buses via adapters. You move high-value coordination logic into Rholang contracts.</p>
+        <p>That gives you an incremental, low-risk adoption path instead of a "big bang" rewrite.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-5">How do I debug and test Rholang contracts?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-5">
+        <p>You can run validators locally, deploy contracts to a dev shard, and inspect logs and state transitions for each step of a workflow. Because contracts are modeled as processes with explicit communication patterns, you can unit-test sub-protocols in isolation.</p>
+        <p>Over time, the validator toolchain is meant to feel like a modern CI/CD setup rather than a black box.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-6">Can I treat F1R3FLY like a normal database or message bus?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-6">
+        <p>F1R3FLY is not a drop-in replacement for Postgres or Kafka, but it complements them. You use F1R3FLY when you need verifiable coordination and shared state between many parties or agents; you keep traditional databases for bulk storage.</p>
+        <p>In practice, many architectures pair F1R3FLY with existing DBs and queues: contracts define the rules, while your data layer handles volume and indexing.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-7">How does F1R3FLY help with AI‑native or agentic systems?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-7">
+        <p>Agentic AI systems generate many concurrent actions on shared resources. F1R3FLY's Rholang model is a natural fit: each agent can be modeled as a process, and shared contracts govern how they interact with assets, permissions, or data.</p>
+        <p>Validators ensure that, even when thousands of agents act simultaneously, the resulting state transitions are consistent, auditable, and replayable.</p>
+      </div>
+    </div>
+    <span class="label faq-subsection-label">Client-Focused Questions</span>
+    <h2>Working with F1R3FLY</h2>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-8">What kind of problems is F1R3FLY actually good at solving?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-8">
+        <p>F1R3FLY shines wherever many independent actors need to coordinate on shared state with strong guarantees: financial rails, marketplaces, AI orchestration, supply chains, and high‑trust data platforms.</p>
+        <p>If you're hitting scaling limits or struggling to prove that critical workflows ran correctly, F1R3FLY helps you unify that complexity into one execution layer with an auditable history.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-9">How does F1R3FLY reduce my integration and operational risk?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-9">
+        <p>Traditional Web3 projects often rely on custom bridges and ad-hoc off‑chain logic that is hard to test or audit. F1R3FLY encourages you to move coordination logic into formally grounded contracts and interact with them via stable APIs.</p>
+        <p>Validators maintain a consistent global state and an evidence trail, which makes audits and incident analysis much more manageable.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-10">How does F1R3FLY help with transparency, auditability, and compliance?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-10">
+        <p>Every contract-driven state change passes through validators and becomes part of a verifiable history. You can reconstruct who did what, when, and under which contract rules, without correlating logs from half a dozen systems.</p>
+        <p>For regulated industries, F1R3FLY can serve as the backbone for high-risk workflows while existing reporting systems consume the evidence.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-11">Do we have to "go full blockchain" to benefit from F1R3FLY?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-11">
+        <p>No. Many teams start with a single high-value workflow—such as settlement, access control, or cross‑organization data sharing—while the rest of the stack stays on familiar Web2 infrastructure.</p>
+        <p>As confidence grows, you can migrate more processes into Rholang or connect additional services to the same global state. This keeps risk under control while providing blockchain-level guarantees where they matter most.</p>
+      </div>
+    </div>
+    <span class="label faq-subsection-label">Partner-Focused Questions</span>
+    <h2>The F1R3FLY Ecosystem</h2>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-12">What does it mean to be a F1R3FLY partner?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-12">
+        <p>Partnership usually means building on, running, or extending F1R3FLY in ways that strengthen the ecosystem: infrastructure providers operating validators, integration partners connecting F1R3FLY to enterprise systems, or projects choosing F1R3FLY as their execution layer.</p>
+        <p>The common thread is shared tooling, shared protocols, and shared responsibility for keeping the network healthy.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-13">How can infrastructure providers participate?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-13">
+        <p>Infra partners can run validators, host managed F1R3FLY clusters, or offer observability and evidence-collection services on top of the core stack.</p>
+        <p>Because F1R3FLY is built for concurrent execution on modern hardware, there is room for specialization around performance, reliability, and monitoring.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-14">How does F1R3FLY fit into existing L1/L2 ecosystems?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-14">
+        <p>F1R3FLY is not trying to replace every chain. It's designed as a powerful execution layer that can coexist with other networks. Assets or identities can originate from existing L1/L2s, while F1R3FLY coordinates higher-level logic and real-time workflows.</p>
+        <p>Integration partners can help design bridges, data pipelines, and governance that respect the guarantees of each chain, enabling ecosystems to share strengths.</p>
+      </div>
+    </div>
+
+    <div class="faq-accordion-item">
+      <h3 class="faq-question-heading"><button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-answer-15">How can integrators and consulting partners build on F1R3FLY?<span class="faq-icon" aria-hidden="true">+</span></button></h3>
+      <div class="faq-answer-accordion" id="faq-answer-15">
+        <p>If you design architectures or implement complex systems for clients, F1R3FLY gives you a formal yet flexible backbone. You can capture business rules in Rholang contracts, wire them into existing APIs, and provide clients with clear evidence of system behavior.</p>
+        <p>As patterns repeat across engagements, you can turn them into reusable playbooks and offerings built around the F1R3FLY stack.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DEVELOPERS ============ -->
+<section id="developers" class="section section-page">
+  <h2 class="fly-in-header">Developers</h2>
+
+  <div class="card-grid">
+    <div class="card animate-in from-left delay-1">
+      <img src="images/icon-doc.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Documentation</div>
+      <h3>Start here to understand how F1R3FLY works in production.</h3>
+      <p>Explore comprehensive developer documentation: core protocol overviews, Rholang language guides, and tutorials that walk you from "run a validator locally" to "ship a production‑grade app" on the F1R3FLY execution layer.</p>
+      <p>This is the canonical, always-up‑to‑date source for architects and developers.</p>
+      <p style="margin-top:auto;"><a href="https://github.com/F1R3FLY-io/.github/blob/master/docs/Documentation_Index.md" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ Documentation</a></p>
+    </div>
+
+    <div class="card animate-in from-bottom delay-2">
+      <img src="images/icon-repo.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Repositories</div>
+      <h3>Browse the official F1R3FLY GitHub repositories:</h3>
+      <ul>
+        <li>Validator nodes and Rholang tooling</li>
+        <li>Reference applications like FireSky</li>
+        <li>Example contracts you can copy, fork, and extend</li>
+      </ul>
+      <p>Clone the stack, open issues, and contribute fixes or new features.</p>
+      <p style="margin-top:auto;"><a href="https://github.com/orgs/F1R3FLY-io/repositories" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ Repositories</a></p>
+    </div>
+
+    <div class="card animate-in from-right delay-3">
+      <img src="images/icon-architect.svg" alt="" class="icon" width="50" height="55" aria-hidden="true">
+      <div class="label">Architecture &amp; Live Sessions</div>
+      <h3>Go deeper with architecture notes, design walkthroughs, and live session recordings.</h3>
+      <p>See how we model real‑world systems in Rholang, make concurrency safe, and design AI‑native, high‑trust applications on F1R3FLY.</p>
+      <ul style="list-style:none; padding:0; margin-top:auto;">
+        <li style="margin-bottom:10px;"><a href="https://www.youtube.com/watch?v=CEtn0_9AtmA" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ The Hypercube Functor and its applications to AI</a></li>
+        <li style="margin-bottom:10px;"><a href="https://www.youtube.com/watch?v=FN-nyBY9G9I" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ MeTTaIL and the Laws of Scale</a></li>
+        <li style="margin-bottom:10px;"><a href="https://www.youtube.com/watch?v=UjVuyRK7cG4" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ Finding Mind Pt III: The Prestige</a></li>
+        <li style="margin-bottom:10px;"><a href="https://www.youtube.com/watch?v=byUG2EVVFFI" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ Finding Mind Part II: The Turn</a></li>
+        <li><a href="https://www.youtube.com/watch?v=CtB5RRPFzZA" target="_blank" rel="noopener" style="color:var(--color-accent); text-decoration:none; transition:opacity 0.3s;">→ Finding Mind Part I: The Pledge</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Developer Transition Band -->
+<div class="section-band teal">
+  <section class="section">
+    <div class="label">Built on Rho-Calculus. Proven in production.</div>
+    <h2 class="fly-in-header">F1R3FLY's concurrent computing model isn't theoretical — it's the foundation for real applications in AI, healthcare, defence, and decentralised infrastructure. From namespace-level data control to mathematically verified smart contracts, every layer is designed for teams building at the edge of what's possible.</h2>
+  </section>
+</div>
+
+<!-- ============ CLIENTS ============ -->
+<section id="clients" class="section section-page">
+  <h2 class="fly-in-header">Clients</h2>
+  <h3>From decentralized AI networks to next-generation infrastructure, these teams trust F1R3FLY to power their most demanding workflows.</h3>
+
+  <!-- Client Logos (static grid) -->
+  <div class="client-logo-grid" style="margin-top:var(--space-lg);">
+    <a href="https://singularitynet.io/" target="_blank" rel="noopener" class="carousel-logo">
+      <img src="images/partner-singularitynet.svg" alt="SingularityNET" loading="lazy">
+    </a>
+    <a href="https://superintelligence.io/" target="_blank" rel="noopener" class="carousel-logo">
+      <img src="images/clients/asa.svg" alt="Artificial Superintelligence Alliance" loading="lazy">
+    </a>
+    <a href="https://www.boring.financial/" target="_blank" rel="noopener" class="carousel-logo">
+      <img src="images/clients/boring-financial.png" alt="Boring Financial" loading="lazy">
+    </a>
+    <a href="https://true.ai" target="_blank" rel="noopener" class="carousel-logo">
+      <img src="images/true-ai.webp" alt="TrueAI" loading="lazy">
+    </a>
+  </div>
+
+  <div class="label fade-in" style="margin-top:var(--space-xl);">They chose us because they need more than a blockchain.</div>
+
+  <div class="client-body-grid">
+    <p class="section-intro fade-in delay-1" style="margin:0;">They need verifiable concurrency, agentic coordination, and infrastructure that can explain what actually happened. Our clients operate at the intersection of AI and distributed systems, where traditional approaches break down. Whether scaling AI inference across a global network or coordinating complex multi‑party systems, our clients push the boundaries of what distributed systems can do. They need execution layers that can keep pace with autonomous agents, not bottleneck them. From financial infrastructure to decentralized intelligence networks, F1R3FLY provides the verifiable coordination layer that high‑stakes applications demand. Every client gets blockchain-grade trust with the concurrency their workloads require.</p>
+    <div style="display:flex; justify-content:flex-end; align-items:flex-end; height:100%;">
+      <a href="https://www.youtube.com/@f1r3fly-io/videos" target="_blank" rel="noopener" class="gradient-btn btn-client">Watch All Our Demos</a>
+    </div>
+  </div>
+</section>
+
+<!-- Case Studies -->
+<div class="section-band magenta">
+  <section class="section">
+    <div class="label">Example Use Cases</div>
+    <h2>Case Studies</h2>
+    <div class="text-grid">
+      <div>
+        <h3>Real-time workflows without a single global queue</h3>
+        <p>When many services, agents, or users compete for the same resources, traditional systems push everything into a single global queue. F1R3FLY's concurrent execution model lets non-conflicting workflows run in parallel while still converging on a single shared state.</p>
+        <p>This is a good fit for real-time trading, streaming data pipelines, or operational dashboards that need up‑to‑date, verifiable state.</p>
+      </div>
+      <div>
+        <h3>Agentic AI on a shared global state</h3>
+        <p>Agentic AI systems generate thousands of concurrent actions against shared resources. F1R3FLY lets you model each agent as a process and govern their behavior through contracts on a single global state.</p>
+        <p>AI agents can propose, negotiate, and execute actions in parallel while validators keep the resulting state consistent, replayable, and transparent.</p>
+      </div>
+      <div>
+        <h3>Cross-organization data sharing with evidence</h3>
+        <p>Cross-organization workflows usually rely on custom integrations, brittle APIs, and spreadsheets that are hard to audit. With F1R3FLY, shared rules live in Rholang contracts, and every state change leaves a verifiable trace.</p>
+        <p>F1R3FLY acts as the neutral execution layer that coordinates access, records decisions, and provides the evidence trail.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PARTNERS ============ -->
+<section id="partners" class="section section-page">
+  <h2 class="fly-in-header">Partners &amp; Ecosystem</h2>
+
+  <div class="text-grid">
+    <div>
+      <h3>We grow through teams we build with.</h3>
+      <p>Our partners range from infrastructure providers and research groups to AI and enterprise teams stress-testing real agentic systems on F1R3FLY.</p>
+      <p>Partnership is not just a logo on a slide—it's co-designing architectures and validating them in production.</p>
+    </div>
+    <div>
+      <h3>Building the next generation together.</h3>
+      <p>If you are building AI‑native applications or mission-critical coordination systems, F1R3FLY is the layer where we prove your designs scale.</p>
+      <p>Every partnership begins with a clear technical challenge and a shared commitment to solving it.</p>
+    </div>
+    <div>
+      <h3>From pilot to production.</h3>
+      <p>We turn the lessons learned into reusable patterns for the ecosystem—not just one‑off solutions.</p>
+      <p>Whether you're an infrastructure partner, research group, or enterprise team, we're building the foundation together.</p>
+    </div>
+  </div>
+
+  <div class="full-image">
+    <img src="images/team-photo.webp" alt="F1R3FLY Team" loading="lazy" style="object-position:15% 25%;">
+  </div>
+</section>
+
+<!-- How We Partner -->
+<div class="section-band green">
+  <section class="section">
+    <div class="label">Building Together</div>
+    <h2>How We Partner</h2>
+    <p class="section-intro">We don't just sign agreements and move on. Every partnership begins with a clear technical challenge and a shared commitment to solving it in production.</p>
+
+    <div class="card-grid">
+      <div class="card animate-in from-left delay-1">
+        <div class="label">Infrastructure Partners</div>
+        <h3>Scale the execution layer</h3>
+        <p>Work with us on validator operations, node infrastructure, and network topology. Help stress-test F1R3FLY under real‑world conditions and shape the protocols.</p>
+        <ul>
+          <li>Run validators and contribute to consensus.</li>
+          <li>Integrate F1R3FLY into existing cloud and edge infrastructure.</li>
+          <li>Co-develop tooling for monitoring and operations.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become an Infrastructure Partner</a>
+      </div>
+
+      <div class="card animate-in from-bottom delay-2">
+        <div class="label">Research Partners</div>
+        <h3>Push the boundaries of what's possible</h3>
+        <p>Collaborate on Rholang semantics, type systems, and formal verification. Help us publish, present, and advance concurrent smart contract research.</p>
+        <ul>
+          <li>Joint research on spatial-behavioral types.</li>
+          <li>Academic publications and conference talks.</li>
+          <li>Grants and fellowships for graduate researchers.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become a Research Partner</a>
+      </div>
+
+      <div class="card animate-in from-right delay-3">
+        <div class="label">Integration Partners</div>
+        <h3>Bring F1R3FLY to your platform</h3>
+        <p>Build connectors, SDKs, and reference architectures that make it easy for customers to use F1R3FLY as their coordination and verification layer.</p>
+        <ul>
+          <li>Early access to APIs and developer tooling.</li>
+          <li>Co-marketing and joint case studies.</li>
+          <li>Technical support for enterprise integrations.</li>
+        </ul>
+        <a href="#contact" class="gradient-btn btn-partner">Become an Integration Partner</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TEAM ============ -->
+<section id="team" class="section section-page">
+  <h2 class="fly-in-header">Team</h2>
+  <p class="section-intro">F1R3FLY is built by a small team of researchers, engineers, and product people who have spent years thinking about concurrent computation, smart contract safety, and real‑world systems.</p>
+
+  <div class="team-grid">
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/greg-meredith.webp" type="image/webp"><img src="images/greg-meredith.jpg" alt="Greg Meredith" loading="lazy"></picture></div>
+      <h3>Greg Meredith</h3><p class="role">Founder</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/stephen-alexander.webp" type="image/webp"><img src="images/stephen-alexander.jpg" alt="Stephen Alexander" loading="lazy"></picture></div>
+      <h3>Stephen Alexander</h3><p class="role">President and CEO</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"><picture><source srcset="images/nick-cooke-priest.webp" type="image/webp"><img src="images/nick-cooke-priest.jpg" alt="Nick Cooke-Priest" loading="lazy"></picture></div>
+      <h3>Nick Cooke-Priest</h3><p class="role">COO</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"><picture><source srcset="images/mike-stay.webp" type="image/webp"><img src="images/mike-stay.jpg" alt="Mike Stay" loading="lazy"></picture></div>
+      <h3>Mike Stay</h3><p class="role">Director of Research</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/lilia-rusu.webp" type="image/webp"><img src="images/lilia-rusu.jpg" alt="Lilia Rusu" loading="lazy"></picture></div>
+      <h3>Lilia Rusu</h3><p class="role">General Manager</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/nicholas-riddle.webp" type="image/webp"><img src="images/nicholas-riddle.jpg" alt="Nicholas Riddle" loading="lazy"></picture></div>
+      <h3>Nicholas Riddle</h3><p class="role">Director of Internal Relations &amp; Media</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"><picture><source srcset="images/hannah-adams.webp" type="image/webp"><img src="images/hannah-adams.jpg" alt="Hannah Adams" loading="lazy"></picture></div>
+      <h3>Hannah Adams</h3><p class="role">Creative Director</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"><picture><source srcset="images/jeff-turner.webp" type="image/webp"><img src="images/jeff-turner.jpg" alt="Jeff Turner" loading="lazy"></picture></div>
+      <h3>Jeff Turner</h3><p class="role">Product Manager</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/ralph-benko.webp" type="image/webp"><img src="images/ralph-benko.jpg" alt="Ralph Benko" loading="lazy"></picture></div>
+      <h3>Ralph Benko</h3><p class="role">General Counsel</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/dylon-edwards.webp" type="image/webp"><img src="images/dylon-edwards.jpg" alt="Dylon Edwards" loading="lazy"></picture></div>
+      <h3>Dylon Edwards</h3><p class="role">Language Tools</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"><picture><source srcset="images/steven-preston.webp" type="image/webp"><img src="images/steven-preston.jpg" alt="Steven Preston" loading="lazy"></picture></div>
+      <h3>Steven Preston</h3><p class="role">Integration Team</p>
+    </div>
+  </div>
+
+  <!-- Contributors -->
+  <h2 class="fly-in-header" style="margin-top:60px;">Contributors</h2>
+  <p class="section-intro">Engineers and researchers contributing to F1R3FLY's core infrastructure, tooling, and product development.</p>
+
+  <div class="team-grid">
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/daria-bohdanova.webp" type="image/webp"><img src="images/daria-bohdanova.jpg" alt="Daria Bohdanova" loading="lazy"></picture></div>
+      <h3>Daria Bohdanova</h3><p class="role">Technical Writing</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/serhii-lypko.webp" type="image/webp"><img src="images/serhii-lypko.jpg" alt="Serhii Lypko" loading="lazy"></picture></div>
+      <h3>Serhii Lypko</h3><p class="role">Language Tools</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Sergey Kryloff</h3><p class="role">MeTTaCycle</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"><picture><source srcset="images/christian-b-wells.webp" type="image/webp"><img src="images/christian-b-wells.jpg" alt="Christian B. Wells" loading="lazy"></picture></div>
+      <h3>Christian B. Wells</h3><p class="role">MeTTaCycle</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/adam-vandervorst.webp" type="image/webp"><img src="images/adam-vandervorst.jpg" alt="Adam Vandervorst" loading="lazy"></picture></div>
+      <h3>Adam Vandervorst</h3><p class="role">MORK</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/nazar-yanovets.webp" type="image/webp"><img src="images/nazar-yanovets.jpg" alt="Nazar Yanovets" loading="lazy"></picture></div>
+      <h3>Nazar Yanovets</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/andrii-stefaniv.webp" type="image/webp"><img src="images/andrii-stefaniv.jpg" alt="Andrii Stefaniv" loading="lazy"></picture></div>
+      <h3>Andrii Stefaniv</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/andrii-babentsev.webp" type="image/webp"><img src="images/andrii-babentsev.jpg" alt="Andrii Babentsev" loading="lazy"></picture></div>
+      <h3>Andrii Babentsev</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"><picture><source srcset="images/nash-foster.webp" type="image/webp"><img src="images/nash-foster.jpg" alt="Nash Foster" loading="lazy"></picture></div>
+      <h3>Nash Foster</h3><p class="role">Integration Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"><picture><source srcset="images/ihor-rudynskyi.webp" type="image/webp"><img src="images/ihor-rudynskyi.jpg" alt="Ihor Rudynskyi" loading="lazy"></picture></div>
+      <h3>Ihor Rudynskyi</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"><picture><source srcset="images/diana-yevitska.webp" type="image/webp"><img src="images/diana-yevitska.jpg" alt="Diana Yevitska" loading="lazy"></picture></div>
+      <h3>Diana Yevitska</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-2">
+      <div class="team-photo"><picture><source srcset="images/aidan-stay.webp" type="image/webp"><img src="images/aidan-stay.jpg" alt="Aidan Stay" loading="lazy"></picture></div>
+      <h3>Aidan Stay</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"><picture><source srcset="images/oleksandr-kyryliuk.webp" type="image/webp"><img src="images/oleksandr-kyryliuk.jpg" alt="Oleksandr Kyryliuk" loading="lazy"></picture></div>
+      <h3>Oleksandr Kyryliuk</h3><p class="role">F1R3SKY Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-3">
+      <div class="team-photo"></div>
+      <h3>Marcin Rzeźnik</h3><p class="role">Rholang Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-4">
+      <div class="team-photo"></div>
+      <h3>Adam Mańczuk</h3><p class="role">Rholang Team</p>
+    </div>
+    <div class="team-member animate-in from-bottom delay-1">
+      <div class="team-photo"></div>
+      <h3>Anton Piniaz</h3><p class="role">Rholang Team</p>
+    </div>
+  </div>
+</section>
+
+<!-- Join Us Band -->
+<div class="section-band neutral">
+  <section class="section">
+    <div class="label">Join Us</div>
+    <h2>Build What Comes Next</h2>
+    <h3>F1R3FLY is a small, focused team solving hard problems at the intersection of concurrent computing, formal verification, and decentralised infrastructure. We work in the open, move fast, and care about getting the foundations right.</h3>
+
+    <div class="text-grid" style="margin-top:40px;">
+      <div>
+        <h3>Who we're looking for.</h3>
+        <p>Engineers, researchers, and builders who think in systems — not just features. People who are drawn to hard problems in distributed computing, language design, and cryptographic trust.</p>
+        <p>You don't need a PhD, but you do need to care about why things work, not just that they work.</p>
+      </div>
+      <div>
+        <h3>How we work.</h3>
+        <p>Distributed team. Async-first. Weekly syncs, public repos, and a bias toward shipping. We pair mathematicians with product thinkers, and give everyone room to go deep on what matters.</p>
+        <p>Our stack spans Rholang, Scala, Docker, and a growing set of AI‑native tooling built on our own platform.</p>
+      </div>
+      <div>
+        <h3>Why it matters.</h3>
+        <p>Most blockchain infrastructure wasn't designed for the workloads coming next — autonomous agents, real-time coordination, verifiable AI. We're building the layer that makes those things possible.</p>
+        <p>If that sounds like your kind of problem, we'd like to hear from you.</p>
+      </div>
+    </div>
+
+    <div style="text-align:right; margin-top:40px;">
+      <a href="mailto:general.manager@f1r3fly.io?subject=Interested%20in%20joining%20F1R3FLY" class="gradient-btn btn-neutral">Get In Touch</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ BLOG ============ -->
+<section id="blog" class="section section-page">
+  <h2 class="fly-in-header">Blog: Ideas &amp; Research</h2>
+  <p class="section-intro fade-in delay-1">Technical deep dives from the F1R3FLY team on concurrent infrastructure, Rholang, and AI‑native systems.</p>
+
+  <div class="card-grid" id="blogGrid"></div>
+
+  <div style="text-align:right; margin-top:40px;">
+    <a href="https://f1r3fly.substack.com/" target="_blank" rel="noopener" class="gradient-btn btn-neutral">Subscribe on Substack &rarr;</a>
+  </div>
+</section>
+
+<script>
+(function(){
+  var articles=[
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Finding Mind: An Interlude to Catch Our Breath",desc:"A pause between technical pieces. Through Bach\u2019s Jonathan Livingston Seagull and Lewis\u2019s The Last Battle: vivified experience as a structural consequence of the conditions for Mind.",date:"Apr 2026",slug:"finding-mind-iii-interlude"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Finding Mind II: The Geometry of the Noumenal",desc:"Why term structure and the McBride derivative are the substrate the agent\u2019s logic and dynamics already run on \u2014 and the metric on bisimulation classes that follows.",date:"Apr 2026",slug:"finding-mind-ii-geometry-of-the-noumenal"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Finding Mind I: From Compressed Causal Graphs to a Future Metaphysics",desc:"A critique of Kant\u2019s Prolegomena through the lens of graph-structured lambda theories. Phenomena, noumena, and the synthetic a priori, reread as the structural commitments any predicting agent must make.",date:"Apr 2026",slug:"finding-mind-i-compressed-causal-graphs"},
+    {tag:"AI & Agents",tagClass:"blog-tag-ai",title:"The Tower of Babel problem: ontology vs epistemology in multi-agent systems",desc:"When messages degrade across a population, large groups fracture into clusters that can\u2019t agree on meaning.",date:"Mar 2026",slug:"tower-of-babel-message-corruption"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"What are the stakes of finding mind? Inner vs outer consequences of AI at scale",desc:"The biggest impacts of AI may not be economic \u2014 they may be psychological.",date:"Feb 2026",slug:"ai-stakes-inner-outer-consequences"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Mind and spirit: what \u2018breath\u2019 reveals about the kind of mind we might be building",desc:"Different definitions of mind imply different evaluation criteria for artificial minds.",date:"Feb 2026",slug:"pledge-part-v-mind-and-spirit"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Classification without sisyphean taxonomies: bisimulation as \u2018distinguishable by experiment\u2019",desc:"Define categories by experimental distinguishability, not endless labels.",date:"Feb 2026",slug:"pledge-part-iv-bisimulation-classification"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Relationships as multi-agent systems: why human dynamics are communities, not individuals",desc:"Outcomes emerge from networks of interactions, not isolated intentions.",date:"Feb 2026",slug:"pledge-part-iii-relationships-communities-agents"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Is agency compositional? Resource commitments, coalitions, and the myth of a single \u2018agent\u2019",desc:"Agency tied to commitments and constraints \u2014 not individual actors.",date:"Feb 2026",slug:"pledge-part-ii-agency-composition"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Compositionality as a blind spot: why \u2018the network is the computer\u2019 keeps reappearing",desc:"The hard problems show up at the seams where independent computations interact.",date:"Feb 2026",slug:"pledge-part-i-compositionality-blind-spot"},
+    {tag:"Philosophy",tagClass:"blog-tag-phil",title:"Finding mind: why the origin of mind requires updating our definition of computation",desc:"Computation is the connective tissue between life, mind, and computers.",date:"Feb 2026",slug:"finding-mind-update-computation"},
+    {tag:"AI & Agents",tagClass:"blog-tag-ai",title:"AI doomsday reframed: \u2018mind begets mind\u2019 and the real risk of misaligned autonomy",desc:"Disruption can be emergent, not intentional \u2014 like humanity\u2019s own impact on every other species.",date:"Oct 2025",slug:"mind-begets-mind-ai-risk-autonomy"},
+    {tag:"Developer",tagClass:"blog-tag-dev",title:"OSLF and spatial-behavioral types: querying code by behavior",desc:"Search for programs by what they do, not by metadata \u2014 turning type checking into a query engine.",date:"Jun 2025",slug:"spatial-behavioral-types-oslf"},
+    {tag:"Developer",tagClass:"blog-tag-dev",title:"The rho calculus explained: reflection, message-passing, and why Rholang enables compositional concurrency",desc:"Channels derived from processes \u2014 making concurrency compositional and implementable.",date:"Jun 2025",slug:"rho-calculus-rholang-concurrency"},
+    {tag:"Developer",tagClass:"blog-tag-dev",title:"Concurrency + complexity + completeness: four properties that scale in the real world",desc:"Why a scalable logical model must turn physical threads into throughput.",date:"Jun 2025",slug:"concurrency-complexity-completeness-computation"},
+    {tag:"Developer",tagClass:"blog-tag-dev",title:"What is a computer? A compositional definition (why networks change everything)",desc:"Modern computing power comes from how components are assembled, not from isolated machines.",date:"Jun 2025",slug:"what-is-a-computer-network-is-computer"},
+    {tag:"Compositionality",tagClass:"blog-tag-comp",title:"Model checking therapies: stochastic process calculi for interference and synergy",desc:"Computational checks that flag therapy interactions early \u2014 before expensive in-vivo work.",date:"Nov 2024",slug:"model-checking-therapies-process-calculi"},
+    {tag:"Compositionality",tagClass:"blog-tag-comp",title:"Compositional medicine: combining targeted therapies into whole-system treatments",desc:"Shifting focus from single interventions to how combinations behave together as a system.",date:"Nov 2024",slug:"compositional-medicine-overview"},
+    {tag:"AI & Agents",tagClass:"blog-tag-ai",title:"Compositional intelligence: bisimulation equivalence classes, HML, and practical implications for LLMs",desc:"From behavior comparison to behavior classification \u2014 and what it means for interpretability and safety.",date:"Oct 2024",slug:"bisimulation-equivalence-hml-llms"},
+    {tag:"AI & Agents",tagClass:"blog-tag-ai",title:"Bisimulation for AI: Why \u2018behavior, not structure\u2019 changes the story of intelligence",desc:"Bisimulation treats two systems as equivalent if no interaction can tell them apart \u2014 a practical lens for testing agentic AI.",date:"Oct 2024",slug:"bisimulation-hypothesis-ai"}
+  ];
+  var grid=document.getElementById('blogGrid');
+  articles.forEach(function(a){
+    var card=document.createElement('a');
+    card.className='blog-parent blog-link-card';
+    card.href='articles/'+a.slug+'.html';
+    card.innerHTML='<span class="blog-tag '+a.tagClass+'">'+a.tag+'</span><h3>'+a.title+'</h3><p class="blog-parent-desc">'+a.desc+'</p><span class="blog-parent-date">'+a.date+'</span><span class="blog-read-more">Read article \u2192</span>';
+    grid.appendChild(card);
+  });
+})();
+</script>
+
+<!-- ============ BRAIN CANDY ============ -->
+<section id="brain-candy" class="section section-page">
+  <h2 class="fly-in-header">Brain Candy</h2>
+  <p class="section-intro fade-in delay-1">Interactive explorations at the intersection of mathematics, music, computation, and perception — where the ideas behind F1R3FLY's technology meet art.</p>
+
+  <div class="card-grid" id="brainCandyGrid">
+
+    <a class="blog-parent blog-link-card" href="brain-candy/thompson-microtonal.html">
+      <span class="blog-tag blog-tag-comp">Math &amp; Music</span>
+      <h3>Thompson's Group <em>F</em> as a Theory of Microtonal Retunings</h3>
+      <p class="blog-parent-desc">A correspondence hiding in plain sight. Scale degrees are leaves of a binary tree; the tree records how the octave was carved up; an element of Thompson's group <em>F</em> is a pair of such trees and acts as a piecewise log-linear retuning. The Stein–Brown–Thompson family <em>F<sub>n₁,…,n<sub>k</sub></sub></em> turns out to be exactly the prime-limit hierarchy microtonalists already use — with an embedded xenpaper player so you can hear one F-element retune a five-note scale.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read &amp; listen &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="brain-candy/conformal-canons.html">
+      <span class="blog-tag blog-tag-comp">Math &amp; Music</span>
+      <h3>Conformal Canons: the Droste Effect in Music</h3>
+      <p class="blog-parent-desc">Represent notes as complex numbers z&nbsp;=&nbsp;duration&nbsp;+&nbsp;i·pitch, then apply the conformal map z<sup>(1+iα)</sup> from de&nbsp;Smit–Lenstra's analysis of Escher's <em>Print Gallery</em>. The melody becomes its own harmony — a self-similar canon where each voice is a conformally-warped echo of the source.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Launch interactive &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="brain-candy/graph-expansion.html">
+      <span class="blog-tag blog-tag-dev">Graphs &amp; Evolution</span>
+      <h3>Evolutionary Techniques on Graphs: Concept Mating via the Rho Calculus</h3>
+      <p class="blog-parent-desc">Instead of concept <em>blending</em>, why not concept <em>mating</em>? Encode graph vertices as rholang agents, cross their port structures to produce offspring, and watch the graph evolve. Vertex mating ⊕ becomes parallel composition |, and iterated evolution converges toward small-world graphs — with connections to Connes–Kreimer Hopf algebras and renormalization.</p>
+      <span class="blog-parent-date">Mar 2026</span>
+      <span class="blog-read-more">View paper &amp; slides &#x2192;</span>
+    </a>
+
+  </div>
+
+  <p class="fade-in delay-2" style="color:var(--color-text-faint); font-size:14px; margin-top:30px; font-style:italic;">More explorations coming soon — process calculi visualizations, generative music from the rho calculus, and interactive category theory.</p>
+</section>
+
+<!-- ============ WHITE PAPERS ============ -->
+<section id="white-papers" class="section section-page">
+  <h2 class="fly-in-header">White Papers</h2>
+  <p class="section-intro fade-in delay-1">Technical white papers detailing F1R3FLY's foundational technology, platform economics, and product architecture.</p>
+
+  <div class="card-grid" id="whitePaperGrid">
+
+    <a class="blog-parent blog-link-card" href="white-papers/algorithmic-scientists.html">
+      <span class="blog-tag blog-tag-ai">AI &amp; Foundations</span>
+      <h3>Algorithmic Scientists and the Foundations of Machine Intelligence</h3>
+      <p class="blog-parent-desc">A mathematical framework grounding AI in graph-structured lambda theories, where programs discover their world through experimentation and formulate hypotheses in an automatically generated logic.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="white-papers/tokenizing-coordination.html">
+      <span class="blog-tag blog-tag-comp">Platform &amp; Economics</span>
+      <h3>Tokenizing Coordination in Mixed Communities of Humans and Agentic AIs</h3>
+      <p class="blog-parent-desc">How phlogiston-metered friction creates value across F1R3FLY web properties by making coordination costs explicit at the points where friction improves outcomes.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+    <a class="blog-parent blog-link-card" href="white-papers/f1r3games-collective-intelligence.html">
+      <span class="blog-tag blog-tag-phil">Games &amp; Collective Intelligence</span>
+      <h3>F1R3GAMES: Collective Intelligence Through Play</h3>
+      <p class="blog-parent-desc">A suite of on-chain games designed to cultivate collective intelligence through structured, playful collaboration on F1R3FLY shard infrastructure.</p>
+      <span class="blog-parent-date">Apr 2026</span>
+      <span class="blog-read-more">Read white paper &#x2192;</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- Quote Band -->
+<div class="section-band neutral">
+  <section class="section quote-block">
+    <h2 class="fly-in-header">"The tantalizing promise of blockchain—to restore the Internet as a decentralized global compute and storage infrastructure—has been stymied by scaling limitations. F1R3FLY is the software that unlocks that promise."</h2>
+    <p class="quote-attribution">—Greg Meredith, CEO of F1R3FLY.io</p>
+  </section>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="section section-page">
+  <h2>Contact</h2>
+
+  <form name="contact" method="POST" action="https://formspree.io/f/mreabjwv" class="contact-grid">
+    <input type="hidden" name="_subject" value="F1R3FLY.io Website Inquiry">
+    <input type="text" name="_gotcha" style="display:none;">
+
+    <div>
+      <h3>Tell us what you're building.</h3>
+      <p>Whether you're exploring F1R3FLY for a new product, evaluating Rholang for an AI‑native backend, or looking for an ecosystem partnership, this is the fastest way to reach the team.</p>
+
+      <div class="contact-form" style="margin-top:25px;">
+        <p class="form-note">All fields are required.</p>
+        <div class="form-group">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" placeholder="Someone Wonderful" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" placeholder="name@company.com" required>
+        </div>
+        <div class="form-group">
+          <label for="org">Organization</label>
+          <input type="text" id="org" name="organization" placeholder="Acme Labs" required>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label for="role">I'm contacting as…</label>
+          <select id="role" name="role" required>
+            <option value="">Select one…</option>
+            <option>Developer / Architect</option>
+            <option>Client team (product, business, or operations)</option>
+            <option>Partner / Ecosystem / Investor</option>
+            <option>Research / Academic</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">How can we help?</label>
+          <textarea id="message" name="message" placeholder="What you're building and what you'd like to explore with F1R3FLY." required></textarea>
+        </div>
+        <div style="text-align:right; margin-top:5px;">
+          <button type="submit" class="gradient-btn btn-neutral">Send Message</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+<!-- Cross-link Banner -->
+<div class="crosslink-banner">
+  <span style="color:rgba(255,255,255,0.7); font-size:16px;">Looking for company overview, solutions, and partnership information?</span>
+  <a href="https://f1r3fly.com" target="_blank" rel="noopener" class="gradient-btn btn-nav-cta">Visit F1R3FLY Industries &rarr;</a>
+</div>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="section-band neutral site-footer" style="margin:0; padding:80px 20px 40px;">
+  <div class="footer-grid">
+
+    <!-- Column 1: Logo + tagline + socials -->
+    <div class="footer-brand">
+      <div style="margin-bottom:20px;">
+        <img src="images/f1r3fly-industries-vertical-logo-color-on-dark.svg" alt="F1R3FLY Industries" style="height:80px; width:auto;">
+      </div>
+      <p class="footer-tagline">Scalable. Searchable. Secure. Storable.<br>A Digital Evolution in concurrent computing.</p>
+      <div class="social-icons" style="margin-bottom:0;">
+        <a href="https://twitter.com/f1r3flyceo" target="_blank" rel="noopener" class="social-icon" aria-label="Twitter/X">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/company/f1r3fly-io/" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://github.com/F1R3FLY-io" target="_blank" rel="noopener" class="social-icon" aria-label="GitHub">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://discord.gg/Z4Mdzcsp" target="_blank" rel="noopener" class="social-icon" aria-label="Discord">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Column 3: Europe Office -->
+    <div class="footer-col">
+      <p class="footer-heading">Europe Office</p>
+      <p class="footer-address">4-5 Langham Place<br>London, W1B 3DG</p>
+      <p class="footer-address"><a href="tel:+442034320078">+44 (0)203 432 0078</a></p>
+      <p class="footer-address"><a href="mailto:info@f1r3fly.com">info@f1r3fly.com</a></p>
+    </div>
+
+    <!-- Column 4: US Office -->
+    <div class="footer-col">
+      <p class="footer-heading">US Office</p>
+      <p class="footer-address">Floor 17, 521 Fifth Avenue<br>New York, NY 10175</p>
+      <p class="footer-address"><a href="tel:+16464759644">+1 646 475 9644</a></p>
+      <p class="footer-address"><a href="mailto:info@f1r3fly.com">info@f1r3fly.com</a></p>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <p>&copy; 2026 F1R3FLY. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Terms of Service</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="#">Privacy Policy</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="https://f1r3fly.com" target="_blank" rel="noopener">F1R3FLY Industries</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
