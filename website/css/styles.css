@@ -905,7 +905,13 @@ h3 {
   padding: 0 0 8px;
   background: none;
   border: 0;
-  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: var(--leading-body);
+  letter-spacing: normal;
   text-align: left;
   color: var(--color-white);
   cursor: pointer;
