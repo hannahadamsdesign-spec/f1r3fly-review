@@ -1025,16 +1025,20 @@ h3 {
 main#app {
   opacity: 1;
 }
+/* Durations are mirrored in main.js navigateSPA() timeouts (350 / 450). */
 main#app.spa-fade-out {
   opacity: 0;
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 main#app.spa-fade-in {
-  animation: spaFadeIn 0.3s cubic-bezier(0, 0, 0.2, 1) forwards;
+  animation: spaFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+/* Small upward settle on arrival so the new page lands rather than pops.
+   The transform is animation-only and ends at none, so the default state
+   still has no transform (keeps scroll measurements honest). */
 @keyframes spaFadeIn {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: none; }
 }
 
 /* --- Blog Link Cards (link to individual article pages) --- */

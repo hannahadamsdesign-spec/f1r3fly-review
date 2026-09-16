@@ -49,12 +49,100 @@
   });
 
   // --- Shared Scroll Function ---
-  // Uses native scrollIntoView() which respects CSS scroll-margin-top.
-  // All scroll offset math is in CSS, not JS. Nothing to calculate.
+  // JS-driven scroll (2026-09-16). Native scrollIntoView({behavior:'smooth'})
+  // hands duration and easing to the browser: Chrome rips a long page in ~300ms,
+  // Safari differs, nothing is tunable. This owns the curve: ease-in-out cubic,
+  // duration scaled to distance (~550ms neighbour hop, capped at 1100ms).
+  // Still honours CSS scroll-margin-top (read from computed style, not hard-coded)
+  // and prefers-reduced-motion (instant jump).
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var scrollAnim = null;      // rAF handle for the scroll in flight
+  var scrollLock = false;     // true while a programmatic scroll is in flight
+  var pendingReveals = [];    // reveal targets that entered view mid-flight
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function sectionTop(section) {
+    var margin = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
+    return section.getBoundingClientRect().top + window.pageYOffset - margin;
+  }
+
+  function cancelScroll() {
+    if (scrollAnim) { cancelAnimationFrame(scrollAnim); scrollAnim = null; }
+  }
+
   function scrollToSection(sectionId, smooth) {
     var section = document.getElementById(sectionId);
     if (!section) return;
-    section.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+    cancelScroll();
+    var maxTop = document.documentElement.scrollHeight - window.innerHeight;
+    var target = Math.max(0, Math.min(sectionTop(section), maxTop));
+    var start = window.pageYOffset;
+    var distance = target - start;
+
+    if (!smooth || reduceMotion || Math.abs(distance) < 2) {
+      window.scrollTo(0, target);
+      finishScroll();
+      return;
+    }
+
+    var duration = Math.min(1100, Math.max(550, 400 + Math.abs(distance) * 0.35));
+    var t0 = null;
+    scrollLock = true;
+
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / duration);
+      window.scrollTo(0, start + distance * easeInOutCubic(p));
+      if (p < 1) {
+        scrollAnim = requestAnimationFrame(step);
+      } else {
+        scrollAnim = null;
+        finishScroll();
+      }
+    }
+    scrollAnim = requestAnimationFrame(step);
+  }
+
+  // User grabs the wheel, touches, or hits a key mid-flight: hand control
+  // back immediately instead of fighting them for the scroll position.
+  ['wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, function () {
+      if (scrollAnim) { cancelScroll(); finishScroll(); }
+    }, { passive: true });
+  });
+
+  // Called when a programmatic scroll lands (or is cancelled). Reveal targets
+  // that were passed mid-flight are settled silently (no transition) so nothing
+  // is left blank on the way back; anything now in view animates once, as the
+  // arrival moment, instead of half-firing while the page was still moving.
+  function finishScroll() {
+    scrollLock = false;
+    if (!pendingReveals.length) return;
+    var vh = window.innerHeight;
+    var queue = pendingReveals;
+    pendingReveals = [];
+    queue.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var inView = r.bottom > 0 && r.top < vh;
+      if (inView) {
+        el.classList.add('visible');
+      } else {
+        el.style.transition = 'none';
+        el.classList.add('visible');
+        void el.offsetWidth; // force reflow so the no-transition state commits
+        el.style.transition = '';
+      }
+    });
+  }
+
+  // Single reveal path for both observers (initial + SPA re-observe).
+  function revealTarget(el) {
+    if (scrollLock) { pendingReveals.push(el); return; }
+    el.classList.add('visible');
   }
 
   // --- Anchor Link Click Handler ---
@@ -150,7 +238,7 @@
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            revealTarget(entry.target);            // deferred if a scroll is in flight
             revealObserver.unobserve(entry.target); // animate once
           }
         });
@@ -463,7 +551,7 @@
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+          revealTarget(entry.target);
           observer.unobserve(entry.target);
         }
       });
@@ -554,9 +642,9 @@
         setTimeout(function() {
           mainEl.classList.remove('spa-fade-in');
           isTransitioning = false;
-        }, 300);
+        }, 450); // matches spaFadeIn duration in styles.css
 
-      }, 200); // matches fade-out duration
+      }, 350); // matches .spa-fade-out duration in styles.css
 
     }).catch(function(err) {
       console.error('SPA navigation failed, falling back:', err);
@@ -595,7 +683,7 @@
           var base = href.split('#')[0];
           var hash = href.split('#')[1] || '';
           window.location.href = base + (hash ? '?scrollto=' + hash : '');
-        }, 200);
+        }, 350); // matches .spa-fade-out duration in styles.css
       });
     });
   }
