@@ -1240,7 +1240,7 @@ button:focus-visible,
 
 /* Shared across site footer — tagline block under logo */
 .footer-tagline {
-  color: var(--color-text-faint);
+  color: var(--color-white);
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 24px;
@@ -1255,7 +1255,7 @@ button:focus-visible,
 .footer-links li { margin-bottom: 10px; }
 
 .footer-links a {
-  color: rgba(255,255,255,0.5);
+  color: var(--color-white);
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
@@ -1264,14 +1264,14 @@ button:focus-visible,
 .footer-links a:hover { color: var(--color-white); }
 
 .footer-address {
-  color: rgba(255,255,255,0.5);
+  color: var(--color-white);
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 8px;
 }
 
 .footer-address a {
-  color: rgba(255,255,255,0.5);
+  color: var(--color-white);
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -1289,7 +1289,7 @@ button:focus-visible,
 }
 
 .footer-bottom p {
-  color: var(--color-text-faint); /* a11y: raised from 0.4 — 13px body text needs AA contrast on neutral band */
+  color: var(--color-white);
   font-size: 13px;
 }
 
@@ -1300,7 +1300,7 @@ button:focus-visible,
 }
 
 .footer-bottom-links a {
-  color: var(--color-text-faint); /* a11y: raised from 0.4 — 13px link needs AA contrast on neutral band */
+  color: var(--color-white);
   text-decoration: none;
   font-size: 13px;
   transition: color 0.2s;
