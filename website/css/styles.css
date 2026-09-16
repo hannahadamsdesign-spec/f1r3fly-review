@@ -252,8 +252,13 @@ ul { list-style: none; }
   display: inline-block;
   margin-left: 20px;
   height: 36px;
-  line-height: 36px;
-  padding: 0 32px !important;
+  /* Josefin Sans sits high in its em box: with line-height 36 the glyphs
+     centre ~2.5px above the button's midline (measured Chrome + Safari,
+     2026-09-16). Padding-top + shorter line box pulls them onto centre.
+     Right padding trims the trailing letter-spacing so the text is
+     optically centred horizontally too. */
+  line-height: 31px;
+  padding: 5px calc(32px - var(--tracking-wide)) 0 32px !important;
   font-size: 15px !important;
   font-weight: 400 !important;
   letter-spacing: var(--tracking-wide) !important;
@@ -1409,6 +1414,10 @@ button:focus-visible,
     border-left: 1px solid rgba(255,255,255,0.2);
     margin-top: 0;
     font-size: 15px;
+    /* Baseline match with the wordmark. The SVG's box extends below the
+       letters (the bug's wings), so flex-end alone puts this text's baseline
+       2px below the F1R3FLY.IO baseline. Measured 2026-09-16. */
+    margin-bottom: 2px;
   }
   .nav-logo-area {
     flex-direction: row;
