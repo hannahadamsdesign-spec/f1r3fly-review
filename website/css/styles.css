@@ -1441,7 +1441,10 @@ button:focus-visible,
   .team-member h3 { font-size: 18px; }
   .team-member .role { font-size: 16px; }
 
-  .client-logo-grid { grid-template-columns: repeat(4, 1fr); }
+  /* 5 logos: 3 on the first row, 2 centred on the second (6 tracks, each tile spans 2) */
+  .client-logo-grid { grid-template-columns: repeat(6, 1fr); }
+  .client-logo-grid .carousel-logo { grid-column: span 2; }
+  .client-logo-grid .carousel-logo:nth-child(4) { grid-column: 2 / span 2; }
   .client-body-grid { grid-template-columns: 2fr 1fr; }
 
   .full-image { height: 400px; }
