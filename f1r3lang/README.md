@@ -32,7 +32,7 @@ f1r3lang is the overarching public name. The quantum reading is deliberately fen
 
 Logo: `images/f1r3lang-logo-v1.svg` (f1r3lang brand v1, 08.27.2026 — more options in progress).
 Palette: F1R3FLY system — Brand Yellow `#F3D630`, Brand Sky `#3FA9F5`, rule gradient Yellow→Sky, primary button uses the developer gradient `#007BC4 → #009188` from f1r3fly.io.
-Foundation: background `#0A0A0A`, Josefin Sans + Source Sans 3, JetBrains Mono for code.
+Foundation: background `#0A0A0A`, League Spartan + Source Sans 3 (League Spartan replaced Josefin Sans 2026-09-20; the CSS still loads Josefin until migrated), JetBrains Mono for code.
 The old Rholang logo SVGs remain in `images/` for reference and can be deleted.
 
 To iterate the brand: swap the logo SVG and the token values at the top of `css/styles.css` (`--accent`, `--accent-2`, `--rule-gradient`). Nothing else should need to change.
