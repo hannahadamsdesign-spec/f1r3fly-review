@@ -252,13 +252,12 @@ ul { list-style: none; }
   display: inline-block;
   margin-left: 20px;
   height: 36px;
-  /* The 2.5px vertical nudge below (padding-top + shorter line box) was
-     measured for the previous heading face on 2026-09-16. League Spartan
-     went in 2026-09-25: re-measure on stage and adjust padding-top /
-     line-height if the label sits off-centre. Right padding trims the
-     trailing letter-spacing so the text is optically centred horizontally. */
-  line-height: 31px;
-  padding: 5px calc(32px - var(--tracking-wide)) 0 32px !important;
+  /* League Spartan (2026-09-25) sits on centre with a plain 36px line box;
+     the 2.5px nudge the previous face needed (2026-09-16) is gone. Measured
+     on stage: text midline 18px of 36. Right padding trims the trailing
+     letter-spacing so the text is optically centred horizontally. */
+  line-height: 36px;
+  padding: 0 calc(32px - var(--tracking-wide)) 0 32px !important;
   font-size: 15px !important;
   font-weight: 400 !important;
   letter-spacing: var(--tracking-wide) !important;
