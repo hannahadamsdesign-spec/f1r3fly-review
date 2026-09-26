@@ -264,6 +264,10 @@ ul { list-style: none; }
   font-size: 18px !important;
   font-weight: 400 !important;
   letter-spacing: var(--tracking-caps) !important;
+  /* Text centre sat 2px above the pill centre (Safari + Chromium, 2026-09-26).
+     Lift the pill 2px; the label stays level with the nav links. */
+  position: relative;
+  top: -2px;
   background: var(--gradient-nav-cta) !important;
   border: none;
   border-radius: 50px;
@@ -324,7 +328,7 @@ ul { list-style: none; }
   font-size: 10px;
   color: rgba(255,255,255,0.6); /* a11y: raised from 0.3 — 10px uppercase label needs AA contrast */
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: var(--tracking-caps);
   padding: 14px 0 2px;
   pointer-events: none;
 }
@@ -388,7 +392,7 @@ ul { list-style: none; }
   font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 300;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   transition: color 0.3s ease;
   padding: 10px 0;
@@ -677,7 +681,7 @@ h3 {
 .label {
   font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
+  letter-spacing: var(--tracking-caps);
   background-size: 100% 100%;
   display: inline-block;
   margin-bottom: var(--eyebrow-to-h2);
@@ -997,7 +1001,7 @@ h3 {
 .blog-parent .blog-tag {
   font-size: 16px;
   font-weight: 700;
-  letter-spacing: var(--tracking-label);
+  letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   margin-bottom: 12px;
   display: block;
@@ -1102,7 +1106,7 @@ a.blog-link-card:hover .blog-read-more {
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
+  letter-spacing: var(--tracking-caps);
 }
 
 /* --- Partner / Team Image --- */
@@ -1234,7 +1238,7 @@ button:focus-visible,
 .footer-heading {
   font-weight: 700;
   font-size: 13px;
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   color: var(--color-white);
   margin-bottom: 20px;
@@ -1418,8 +1422,10 @@ button:focus-visible,
     font-size: 18px;
     /* Baseline match with the wordmark. The SVG's box extends below the
        letters (the bug's wings), so flex-end alone puts this text's baseline
-       2px below the F1R3FLY.IO baseline. Measured 2026-09-16. */
-    margin-bottom: 2px;
+       2px below the F1R3FLY.IO baseline. Measured 2026-09-16 (Josefin, 15px).
+       At League Spartan 18px the offset is gone: 0 puts the baselines level
+       (measured Safari + Chromium 2026-09-26). */
+    margin-bottom: 0;
   }
   .nav-logo-area {
     flex-direction: row;
