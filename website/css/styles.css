@@ -1475,6 +1475,15 @@ button:focus-visible,
 
 }
 
+/* Nav at 18px needs ~1400px. Between the hamburger breakpoint and 1440 the
+   nav text steps down to 16px so links and the CTA stay on one line
+   (measured on stage 2026-09-26: 18px wraps at 1280). */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .nav-logo-subtitle,
+  .nav-links a,
+  .nav-cta { font-size: 16px !important; }
+}
+
 /* ============================================
    RESPONSIVE: WIDE (1440px+)
    ============================================ */
