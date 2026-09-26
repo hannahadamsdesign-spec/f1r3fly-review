@@ -259,13 +259,14 @@ ul { list-style: none; }
      the 2.5px nudge the previous face needed (2026-09-16) is gone. Measured
      on stage: text midline 18px of 36. Right padding trims the trailing
      letter-spacing so the text is optically centred horizontally. */
-  line-height: 36px;
-  padding: 0 calc(32px - var(--tracking-caps)) 0 32px !important;
+  line-height: 32px;
+  padding: 4px calc(32px - var(--tracking-caps)) 0 32px !important;
   font-size: 18px !important;
   font-weight: 400 !important;
   letter-spacing: var(--tracking-caps) !important;
   /* Text centre sat 2px above the pill centre (Safari + Chromium, 2026-09-26).
-     Lift the pill 2px; the label stays level with the nav links. */
+     Pill lifts 2px (top) and the label drops 4px inside it (padding-top +
+     32px line box), so the label stays level with the nav links. */
   position: relative;
   top: -2px;
   background: var(--gradient-nav-cta) !important;
