@@ -49,6 +49,9 @@
   /* Nav text + hero subsidiary line share one tracking, in em so it scales
      with size (2026-09-26 trial: 18px nav, 0.06em). */
   --tracking-caps: 0.06em;
+  /* Body weight trial 2026-09-26: Light 300 was thin on low-DPI screens.
+     Source Sans 3 loads as a variable font (200..900) so 360 renders. */
+  --weight-body: 360;
 
   /* Spacing */
   --space-xs: 8px;
@@ -95,7 +98,7 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   line-height: var(--leading-body);
-  font-weight: 300;
+  font-weight: var(--weight-body);
   font-size: 16px;
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
@@ -1068,7 +1071,7 @@ a.blog-link-card:hover {
   display: block;
   margin-top: 16px;
   font-size: 16px;
-  font-weight: 300;
+  font-weight: var(--weight-body);
   color: var(--color-accent);
   transition: opacity 0.2s ease;
 }
