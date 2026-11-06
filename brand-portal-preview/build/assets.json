@@ -1,0 +1,119 @@
+{
+  "last_update": "November 6, 2026",
+  "brands": {
+    "ff.io": {
+      "title": "F1R3FLY.IO",
+      "short": "F1R3FLY.IO",
+      "group": "Primary logos", "group_anchor": "logos",
+      "folder": "logos/ff.io",
+      "source_folder": "F1R3FLY-IO-Brand-Assets",
+      "card_img": "ff.io-logo-wide-color-transp-dark.svg",
+      "card_desc": "The developer platform: the firefly bug and wordmark. Wide and stacked, with and without the circle, for dark and light backgrounds. 15 variants.",
+      "intro": "The developer platform. Every variant of the firefly bug and the F1R3FLY.IO wordmark, shown on the background it was made for. Each one downloads as PDF, JPG, SVG, PNG, or all four zipped.",
+      "sections": [
+        {"title": "Wide logo", "hint": "Bug beside the wordmark. The default for headers, footers, slides and signatures.", "assets": [
+          {"new": "ff.io-logo-wide-color-transp-dark", "old": "f1r3fly-io-horizontal-logo-color-on-dark", "name": "Wide, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.io-logo-wide-color-onblack", "old": "f1r3fly-io-horizontal-logo-color-on-black-solid", "name": "Wide, color, on a black panel", "bg": "dark"},
+          {"new": "ff.io-logo-wide-white-transp-dark", "old": "f1r3fly-io-horizontal-logo-white", "name": "Wide, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.io-logo-wide-circle-color-transp-light", "old": "f1r3fly-io-horizontal-logo-white-background", "name": "Wide, bug in a black circle, for light backgrounds", "bg": "light"},
+          {"new": "ff.io-logo-wide-circle-black-transp-light", "old": "f1r3fly-io-horizontal-logo-BW-white-background", "name": "Wide, black and white, for light backgrounds", "bg": "light"}
+        ]},
+        {"title": "Stacked logo", "hint": "Bug above the wordmark. For squares, covers, and anywhere tall.", "assets": [
+          {"new": "ff.io-logo-stacked-color-transp-dark", "old": "f1r3fly-io-vertical-logo-color-on-dark", "name": "Stacked, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.io-logo-stacked-circle-color-transp-dark", "old": null, "src_svg": "NEW/ff.io-logo-stacked-circle-color-transp.svg", "name": "Stacked, bug in a black circle, for dark backgrounds", "bg": "dark", "note": "New, 2026-11-06"},
+          {"new": "ff.io-logo-stacked-white-transp-dark", "old": "f1r3fly-io-vertical-logo-white", "name": "Stacked, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.io-logo-stacked-circle-color-transp-light", "old": "f1r3fly-io-vertical-logo-white-background", "name": "Stacked, bug in a black circle, for light backgrounds", "bg": "light"},
+          {"new": "ff.io-logo-stacked-circle-black-transp-light", "old": "f1r3fly-io-vertical-logo-BW-white-background", "name": "Stacked, black and white, for light backgrounds", "bg": "light"}
+        ]},
+        {"title": "Icons", "hint": "The bug on its own. Favicons, app tiles, badges. Use a full logo anywhere public.", "assets": [
+          {"new": "ff.io-icon-bug-color-transp", "old": "f1r3fly-io-bug-icon-color-on-dark", "name": "Bug, color, transparent", "bg": "dark"},
+          {"new": "ff.io-icon-circle-color-transp", "old": "f1r3fly-io-circle-icon-color-on-dark", "name": "Bug in a black circle, color", "bg": "light"},
+          {"new": "ff.io-icon-circle-white-transp", "old": "f1r3fly-io-circle-icon-white", "name": "Bug in a black circle, white", "bg": "light"}
+        ]},
+        {"title": "Profile pictures", "hint": "Made for the profile slot. Ring for YouTube, X and Bluesky; square for LinkedIn. 2000 x 2000.", "assets": [
+          {"new": "ff.io-avatar-ring-color-onblack", "old": "social-media/f1r3fly-io-avatar-bug-wordmark-ring", "name": "Ring: bug and wordmark on black", "bg": "dark", "shape": "round"},
+          {"new": "ff.io-avatar-square-color-onblack", "old": "social-media/f1r3fly-io-avatar-bug-square-black", "name": "Square: bug on black", "bg": "dark"}
+        ]}
+      ]
+    },
+    "ff.indust": {
+      "title": "F1R3FLY Industries",
+      "short": "F1R3FLY INDUSTRIES",
+      "group": "Primary logos", "group_anchor": "logos",
+      "folder": "logos/ff.indust",
+      "source_folder": "F1R3FLY-Industries-Brand-Assets",
+      "card_img": "ff.indust-logo-wide-color-transp-dark.svg",
+      "card_desc": "The parent brand: the trefoil knot and wordmark. Wide and stacked, with and without the circle, for dark and light backgrounds. 15 variants.",
+      "intro": "The parent brand. Every variant of the trefoil knot and the F1R3FLY Industries wordmark, shown on the background it was made for. Each one downloads as PDF, JPG, SVG, PNG, or all four zipped.",
+      "sections": [
+        {"title": "Wide logo", "hint": "Knot beside the wordmark. The default for headers, footers, slides and documents.", "assets": [
+          {"new": "ff.indust-logo-wide-color-transp-dark", "old": "f1r3fly-industries-horizontal-logo-color-on-dark", "name": "Wide, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.indust-logo-wide-color-onblack", "old": "f1r3fly-industries-horizontal-logo-color-on-black-solid", "name": "Wide, color, on a black panel", "bg": "dark"},
+          {"new": "ff.indust-logo-wide-white-transp-dark", "old": "f1r3fly-industries-horizontal-logo-white", "name": "Wide, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.indust-logo-wide-circle-color-transp-light", "old": "f1r3fly-industries-horizontal-logo-color-on-light", "name": "Wide, knot in a black circle, for light backgrounds", "bg": "light"},
+          {"new": "ff.indust-logo-wide-circle-black-transp-light", "old": "f1r3fly-industries-horizontal-logo-bw-on-light", "name": "Wide, black and white, for light backgrounds", "bg": "light"}
+        ]},
+        {"title": "Stacked logo", "hint": "Knot above the wordmark. For squares, covers, and anywhere tall.", "assets": [
+          {"new": "ff.indust-logo-stacked-color-transp-dark", "old": "f1r3fly-industries-vertical-logo-color-on-dark", "name": "Stacked, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.indust-logo-stacked-color-onblack", "old": "f1r3fly-industries-vertical-logo-color-on-black-solid", "name": "Stacked, color, on a black panel", "bg": "dark"},
+          {"new": "ff.indust-logo-stacked-circle-color-transp-dark", "old": "f1r3fly-industries-circle-icon-color-on-dark", "whiten_unfilled": true, "name": "Stacked, knot in a black circle, for dark backgrounds", "bg": "dark", "note": "New, 2026-11-06"},
+          {"new": "ff.indust-logo-stacked-white-transp-dark", "old": "f1r3fly-industries-vertical-logo-white", "name": "Stacked, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ff.indust-logo-stacked-circle-color-transp-light", "old": "f1r3fly-industries-circle-icon-color-on-dark", "name": "Stacked, knot in a black circle, for light backgrounds", "bg": "light"},
+          {"new": "ff.indust-logo-stacked-circle-black-transp-light", "old": "f1r3fly-industries-vertical-logo-bw-on-light", "name": "Stacked, black and white, for light backgrounds", "bg": "light"}
+        ]},
+        {"title": "Icons", "hint": "The knot on its own. Favicons, app tiles, badges. Use a full logo anywhere public.", "assets": [
+          {"new": "ff.indust-icon-knot-color-transp", "old": "f1r3fly-industries-knot-icon-color-on-dark", "name": "Knot, color, transparent", "bg": "dark"},
+          {"new": "ff.indust-icon-knot-white-transp", "old": "f1r3fly-industries-circle-icon-white", "name": "Knot, white, transparent", "bg": "dark"},
+          {"new": "ff.indust-icon-circle-color-transp", "old": "f1r3fly-industries-circle-logo-color-on-dark", "name": "Knot in a black circle, color", "bg": "light"}
+        ]}
+      ]
+    },
+    "flang": {
+      "title": "f1r3lang",
+      "short": "F1R3L@NG",
+      "group": "Primary logos", "group_anchor": "logos",
+      "folder": "logos/flang",
+      "source_folder": "F1r3lang-Brand-Assets",
+      "card_img": "flang-logo-color-transp-dark.svg",
+      "card_desc": "The language brand, formerly Rholang. The f1r3|@ng wordmark in color, white and black, transparent or on a solid panel. 8 variants.",
+      "intro": "The language brand, formerly Rholang. The f1r3|@ng wordmark in color, white and black, transparent or on a solid panel. Each one downloads as PDF, JPG, SVG, PNG, or all four zipped.",
+      "sections": [
+        {"title": "Wordmark", "hint": "There is one lockup: the wordmark with the gradient @.", "assets": [
+          {"new": "flang-logo-color-transp-dark", "old": "f1r3lang-logo-color-on-dark", "name": "Color, for dark backgrounds", "bg": "dark"},
+          {"new": "flang-logo-color-onblack", "old": "f1r3lang-logo-color-on-black-solid", "name": "Color, on a black panel", "bg": "dark"},
+          {"new": "flang-logo-white-transp-dark", "old": "f1r3lang-logo-white", "name": "All white, for dark backgrounds", "bg": "dark"},
+          {"new": "flang-logo-white-onblack", "old": "f1r3lang-logo-white-on-black-solid", "name": "All white, on a black panel", "bg": "dark"},
+          {"new": "flang-logo-color-transp-light", "old": "f1r3lang-logo-color-on-light", "name": "Color, for light backgrounds", "bg": "light"},
+          {"new": "flang-logo-color-onwhite", "old": "f1r3lang-logo-color-on-white-solid", "name": "Color, on a white panel", "bg": "light"},
+          {"new": "flang-logo-black-transp-light", "old": "f1r3lang-logo-black", "name": "All black, for light backgrounds", "bg": "light"},
+          {"new": "flang-logo-black-onwhite", "old": "f1r3lang-logo-black-on-white-solid", "name": "All black, on a white panel", "bg": "light"}
+        ]}
+      ]
+    },
+    "ign": {
+      "title": "ign1t10n",
+      "short": "ign1t10n",
+      "group": "Product logos", "group_anchor": "products",
+      "folder": "products/ign",
+      "source_folder": "ign1t10n-Brand-Assets",
+      "card_img": "ign-logo-wide-color-transp-dark.svg",
+      "card_desc": "The installer and local-shard app. The on-button and wordmark, wide and stacked, plus the app icon. Lockups are drafts pending sign-off. 7 variants.",
+      "intro": "The installer that sets up a local shard. The on-button mark with the ign1t10n wordmark in League Spartan, built to the F1R3FLY.IO lockup rules, plus the app icon. Lockups are drafts pending sign-off. Each one downloads as PDF, JPG, SVG, PNG, or all four zipped.",
+      "sections": [
+        {"title": "App icon", "hint": "The on-button on the black app tile, 1024 x 1024. Dock, taskbar, installer.", "assets": [
+          {"new": "ign-icon-app-color-onblack", "old": "ign1t10n-app-icon", "name": "App icon, color on black tile", "bg": "dark"}
+        ]},
+        {"title": "Wide logo", "hint": "Mark beside the wordmark. Draft, pending sign-off.", "assets": [
+          {"new": "ign-logo-wide-color-transp-dark", "old": "ign1t10n-horizontal-logo-color-on-dark", "name": "Wide, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ign-logo-wide-white-transp-dark", "old": "ign1t10n-horizontal-logo-white", "name": "Wide, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ign-logo-wide-black-transp-light", "old": "ign1t10n-horizontal-logo-black", "name": "Wide, all black, for light backgrounds", "bg": "light"}
+        ]},
+        {"title": "Stacked logo", "hint": "Mark above the wordmark. Draft, pending sign-off.", "assets": [
+          {"new": "ign-logo-stacked-color-transp-dark", "old": "ign1t10n-vertical-logo-color-on-dark", "name": "Stacked, color, for dark backgrounds", "bg": "dark"},
+          {"new": "ign-logo-stacked-white-transp-dark", "old": "ign1t10n-vertical-logo-white", "name": "Stacked, all white, for dark backgrounds", "bg": "dark"},
+          {"new": "ign-logo-stacked-black-transp-light", "old": "ign1t10n-vertical-logo-black", "name": "Stacked, all black, for light backgrounds", "bg": "light"}
+        ]}
+      ]
+    }
+  }
+}

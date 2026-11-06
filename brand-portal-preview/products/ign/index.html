@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ign1t10n assets · F1R3FLY Brand Portal</title><link rel="icon" href="../../logos/ff.io/ff.io-icon-bug-color-transp.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--panel:#001626;--panel-edge:#0d3050;--white:#fff;--yellow:#f3d630;--sky:#3fa9f5;--text:#f2f2f2;--text-dim:#d2dae0;
+--sig-gradient:linear-gradient(to right,#f3d630,#3fa9f5);--btn-gradient:linear-gradient(to right,#00528c,#009188);--font:"Source Sans 3",sans-serif;--head:"League Spartan",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.9em;color:var(--sky)}
+.wrap{width:100%;max-width:1700px;padding:0 clamp(16px,4vw,68px)}
+.eyebrow{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;color:transparent;background:var(--sig-gradient);-webkit-background-clip:text;background-clip:text;width:max-content}
+.crumbs{padding:34px 0 0;font-family:var(--head);font-weight:600;font-size:.86rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.crumbs a{color:var(--sky)}.crumbs a:hover{text-decoration:underline}.crumbs .sep{color:#4a5862}.crumbs .here{color:var(--white)}
+header.hero{padding:26px 0 22px}.hero-row{display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hero h1{font-family:var(--head);font-weight:700;text-transform:uppercase;font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.02}
+.last-update{font-family:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:.95rem}
+.grad-rule{height:1px;background:var(--sig-gradient);border:0;width:100%}
+.intro{padding:20px 0 4px}.intro p{font-size:1.12rem;color:var(--text-dim);max-width:52em}
+.which{margin:22px 0 6px;background:var(--panel);border:1px solid var(--panel-edge);border-radius:14px;padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 28px;max-width:1100px}
+.which h3{font-family:var(--head);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);grid-column:1/-1}
+.which div{font-size:.98rem;color:var(--text-dim)}.which b{color:var(--white)}
+section{padding:26px 0}.section-head{display:flex;align-items:baseline;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.section-head h2{font-family:var(--head);font-weight:700;font-size:1.5rem}.section-head .hint{color:var(--text-dim);font-size:.98rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--sky);transform:translateY(-2px)}
+.well{min-height:200px;padding:26px;display:flex;align-items:center;justify-content:center;gap:20px;border-bottom:1px solid var(--panel-edge);background:#0a0a0a}
+.well.light{background:#fff}.well.book{min-height:300px}
+.well img{max-height:150px;max-width:82%;display:block}.well img.round{border-radius:50%}.well img.tall{max-height:170px}
+.well img.panel{outline:1px solid #2e3a44}.well img.cover{max-height:248px;border:1px solid #4a5862;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.55)}
+.well img.post{max-height:230px;max-width:100%;border-radius:6px}.well img.shot{max-height:168px;max-width:46%;border-radius:6px}
+.body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex-grow:1}
+.body h3{font-family:var(--head);font-weight:700;font-size:1.12rem;line-height:1.3}
+.body .meta{font-family:var(--head);font-weight:700;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow)}
+.body .desc{font-size:.97rem;color:var(--text-dim)}
+.body .file{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.76rem;color:var(--sky);overflow-wrap:break-word}
+.btns{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:10px}
+.btn{font-family:var(--head);font-weight:700;font-size:.8rem;letter-spacing:.04em;padding:9px 13px;border-radius:8px;border:1px solid #20486b;color:var(--white);transition:all .18s;display:inline-block}
+.btn:hover{border-color:var(--sky);color:var(--sky)}.btn.primary{background:var(--btn-gradient);border:0}.btn.primary:hover{color:#fff;filter:brightness(1.1)}
+.more{margin-top:14px;font-family:var(--head);font-weight:600;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+.note{margin-top:18px;font-size:.97rem;color:var(--text-dim);max-width:60em;line-height:1.7}.note b{color:var(--white)}.note a{color:var(--sky);font-weight:600}
+.swrow{display:flex;width:100%;height:188px}.swrow span{flex:1}
+.well.thumbs{gap:10px;padding:18px;flex-wrap:wrap}.well.thumbs video{border-radius:6px;background:#000;display:block;object-fit:cover}
+.well.thumbs.two video{width:calc(50% - 5px)}.well.thumbs.four video{width:calc(25% - 8px)}.well.thumbs.five video{width:calc(33.333% - 7px)}
+.dl{font-size:.92rem;color:var(--text-dim);line-height:1.8}.dl b{color:var(--white)}.dl a{color:var(--sky);font-weight:600}.dl a:hover{text-decoration:underline}
+footer{margin-top:30px;padding:30px 0 60px;border-top:1px solid #0a2236}footer .frow{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer p{font-size:.86rem;color:var(--text-dim)}footer a{color:var(--sky);font-weight:600}
+/* home layout: left nav + content */
+.layout{display:grid;grid-template-columns:250px 1fr;gap:clamp(24px,4vw,64px);align-items:start}
+nav.side{position:sticky;top:28px;padding-top:6px;border-right:1px solid #0a2236}
+nav.side a{display:block;font-family:var(--head);font-weight:700;font-size:1.08rem;padding:6px 0;color:var(--white)}
+nav.side a.sub{font-weight:400;font-size:.98rem;padding:3px 0 3px 18px;color:var(--text-dim)}
+nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}nav.side{position:static;border-right:0;border-bottom:1px solid #0a2236;padding-bottom:14px;display:flex;flex-wrap:wrap;gap:4px 18px}nav.side a.sub{padding-left:0}nav.side .gap{display:none}}
+</style></head><body>
+<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="../../">Home</a><span class="sep">&rsaquo;</span><a href="../../#products">Product logos</a><span class="sep">&rsaquo;</span><a href="./">ign1t10n</a><span class="sep">&rsaquo;</span><span class="here">Assets</span></nav></div>
+<header class="hero"><div class="wrap"><div class="hero-row"><h1>ign1t10n assets</h1><div class="last-update">Last update: November 6, 2026</div></div></div></header><div class="wrap"><hr class="grad-rule"></div>
+<div class="intro"><div class="wrap"><p>The installer that sets up a local shard. The on-button mark with the ign1t10n wordmark in League Spartan, built to the F1R3FLY.IO lockup rules, plus the app icon. Lockups are drafts pending sign-off. Each one downloads as PDF, JPG, SVG, PNG, or all four zipped.</p><div class="which"><h3>Which file?</h3><div><b>Keynote, PowerPoint, Word, Pages, OmniGraffle:</b> PDF or PNG.</div><div><b>Web, Canva, Figma, Illustrator:</b> SVG.</div><div><b>Email signatures, quick drops:</b> JPG (background baked in).</div><div><b>Not sure:</b> ALL (zip) has every format.</div></div></div></div>
+<section><div class="wrap"><div class="section-head"><h2>App icon</h2><span class="hint">The on-button on the black app tile, 1024 x 1024. Dock, taskbar, installer.</span></div><div class="grid">
+<div class="card"><div class="well dark"><img class="panel" src="ign-icon-app-color-onblack.svg" alt="App icon, color on black tile" loading="lazy"></div>
+<div class="body"><h3>App icon, color on black tile</h3><div class="file">ign-icon-app-color-onblack</div><div class="btns"><a class="btn" href="ign-icon-app-color-onblack.pdf" download>PDF</a><a class="btn" href="ign-icon-app-color-onblack.jpg" download>JPG</a><a class="btn" href="ign-icon-app-color-onblack.svg" download>SVG</a><a class="btn" href="ign-icon-app-color-onblack.png" download>PNG</a><a class="btn primary" href="ign-icon-app-color-onblack.zip" download>ALL (zip)</a></div></div></div>
+</div></div></section>
+<section><div class="wrap"><div class="section-head"><h2>Wide logo</h2><span class="hint">Mark beside the wordmark. Draft, pending sign-off.</span></div><div class="grid">
+<div class="card"><div class="well dark"><img class="" src="ign-logo-wide-color-transp-dark.svg" alt="Wide, color, for dark backgrounds" loading="lazy"></div>
+<div class="body"><h3>Wide, color, for dark backgrounds</h3><div class="file">ign-logo-wide-color-transp-dark</div><div class="btns"><a class="btn" href="ign-logo-wide-color-transp-dark.pdf" download>PDF</a><a class="btn" href="ign-logo-wide-color-transp-dark.jpg" download>JPG</a><a class="btn" href="ign-logo-wide-color-transp-dark.svg" download>SVG</a><a class="btn" href="ign-logo-wide-color-transp-dark.png" download>PNG</a><a class="btn primary" href="ign-logo-wide-color-transp-dark.zip" download>ALL (zip)</a></div></div></div>
+<div class="card"><div class="well dark"><img class="" src="ign-logo-wide-white-transp-dark.svg" alt="Wide, all white, for dark backgrounds" loading="lazy"></div>
+<div class="body"><h3>Wide, all white, for dark backgrounds</h3><div class="file">ign-logo-wide-white-transp-dark</div><div class="btns"><a class="btn" href="ign-logo-wide-white-transp-dark.pdf" download>PDF</a><a class="btn" href="ign-logo-wide-white-transp-dark.jpg" download>JPG</a><a class="btn" href="ign-logo-wide-white-transp-dark.svg" download>SVG</a><a class="btn" href="ign-logo-wide-white-transp-dark.png" download>PNG</a><a class="btn primary" href="ign-logo-wide-white-transp-dark.zip" download>ALL (zip)</a></div></div></div>
+<div class="card"><div class="well light"><img class="" src="ign-logo-wide-black-transp-light.svg" alt="Wide, all black, for light backgrounds" loading="lazy"></div>
+<div class="body"><h3>Wide, all black, for light backgrounds</h3><div class="file">ign-logo-wide-black-transp-light</div><div class="btns"><a class="btn" href="ign-logo-wide-black-transp-light.pdf" download>PDF</a><a class="btn" href="ign-logo-wide-black-transp-light.jpg" download>JPG</a><a class="btn" href="ign-logo-wide-black-transp-light.svg" download>SVG</a><a class="btn" href="ign-logo-wide-black-transp-light.png" download>PNG</a><a class="btn primary" href="ign-logo-wide-black-transp-light.zip" download>ALL (zip)</a></div></div></div>
+</div></div></section>
+<section><div class="wrap"><div class="section-head"><h2>Stacked logo</h2><span class="hint">Mark above the wordmark. Draft, pending sign-off.</span></div><div class="grid">
+<div class="card"><div class="well dark"><img class="" src="ign-logo-stacked-color-transp-dark.svg" alt="Stacked, color, for dark backgrounds" loading="lazy"></div>
+<div class="body"><h3>Stacked, color, for dark backgrounds</h3><div class="file">ign-logo-stacked-color-transp-dark</div><div class="btns"><a class="btn" href="ign-logo-stacked-color-transp-dark.pdf" download>PDF</a><a class="btn" href="ign-logo-stacked-color-transp-dark.jpg" download>JPG</a><a class="btn" href="ign-logo-stacked-color-transp-dark.svg" download>SVG</a><a class="btn" href="ign-logo-stacked-color-transp-dark.png" download>PNG</a><a class="btn primary" href="ign-logo-stacked-color-transp-dark.zip" download>ALL (zip)</a></div></div></div>
+<div class="card"><div class="well dark"><img class="" src="ign-logo-stacked-white-transp-dark.svg" alt="Stacked, all white, for dark backgrounds" loading="lazy"></div>
+<div class="body"><h3>Stacked, all white, for dark backgrounds</h3><div class="file">ign-logo-stacked-white-transp-dark</div><div class="btns"><a class="btn" href="ign-logo-stacked-white-transp-dark.pdf" download>PDF</a><a class="btn" href="ign-logo-stacked-white-transp-dark.jpg" download>JPG</a><a class="btn" href="ign-logo-stacked-white-transp-dark.svg" download>SVG</a><a class="btn" href="ign-logo-stacked-white-transp-dark.png" download>PNG</a><a class="btn primary" href="ign-logo-stacked-white-transp-dark.zip" download>ALL (zip)</a></div></div></div>
+<div class="card"><div class="well light"><img class="" src="ign-logo-stacked-black-transp-light.svg" alt="Stacked, all black, for light backgrounds" loading="lazy"></div>
+<div class="body"><h3>Stacked, all black, for light backgrounds</h3><div class="file">ign-logo-stacked-black-transp-light</div><div class="btns"><a class="btn" href="ign-logo-stacked-black-transp-light.pdf" download>PDF</a><a class="btn" href="ign-logo-stacked-black-transp-light.jpg" download>JPG</a><a class="btn" href="ign-logo-stacked-black-transp-light.svg" download>SVG</a><a class="btn" href="ign-logo-stacked-black-transp-light.png" download>PNG</a><a class="btn primary" href="ign-logo-stacked-black-transp-light.zip" download>ALL (zip)</a></div></div></div>
+</div></div></section>
+<div class="wrap"><p class="note"><b>Names:</b> <code>transp-dark</code> is transparent and made for dark backgrounds (white wordmark); <code>transp-light</code> is transparent for light backgrounds (black wordmark); <code>onblack</code> and <code>onwhite</code> have the background baked in.</p></div>
+<footer><div class="wrap"><hr class="grad-rule" style="margin-bottom:26px"><div class="frow"><p>&copy; F1R3FLY Industries, 2026. All rights reserved.</p>
+<p>AI brand kit: <a href="../../kit/f1r3fly-brand-kit.skill" download>download the skill</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal/blob/main/kit/SKILL.md" target="_blank" rel="noopener">read the spec</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal" target="_blank" rel="noopener">repository &rarr;</a></p></div></div></footer></body></html>

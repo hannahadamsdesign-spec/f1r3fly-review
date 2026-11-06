@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1687.946 1040.54">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+        isolation: isolate;
+        stroke: #298db8;
+        stroke-width: 3px;
+      }
+
+      .st1 {
+        fill: #127bc0;
+        opacity: .1;
+      }
+
+      .st2 {
+        opacity: .51;
+      }
+    </style>
+  </defs>
+  <rect class="st1" width="138.674" height="1040.138"/>
+  <rect class="st1" x="1549.272" width="138.674" height="1040.138"/>
+  <g class="st2">
+    <line class="st0" x1="372.5" y1="0" x2="372.5" y2="1040.54"/>
+    <line class="st0" x1="388.5" y1="1040.54" x2="388.5" y2="0"/>
+    <line class="st0" x1="140.5" y1="0" x2="140.5" y2="1040.54"/>
+    <line class="st0" x1="156.5" y1="1040.54" x2="156.5" y2="0"/>
+    <line class="st0" x1="1532.5" y1="0" x2="1532.5" y2="1040.54"/>
+    <line class="st0" x1="1548.5" y1="1040.54" x2="1548.5" y2="0"/>
+    <line class="st0" x1="604.5" y1="0" x2="604.5" y2="1040.54"/>
+    <line class="st0" x1="620.5" y1="1040.54" x2="620.5" y2="0"/>
+    <line class="st0" x1="836.5" x2="836.5" y2="1040.54"/>
+    <line class="st0" x1="852.5" y1="1040.54" x2="852.5"/>
+    <line class="st0" x1="1068.5" x2="1068.5" y2="1040.54"/>
+    <line class="st0" x1="1084.5" y1="1040.54" x2="1084.5"/>
+    <line class="st0" x1="1300.5" x2="1300.5" y2="1040.54"/>
+    <line class="st0" x1="1316.5" y1="1040.54" x2="1316.5"/>
+  </g>
+</svg>
