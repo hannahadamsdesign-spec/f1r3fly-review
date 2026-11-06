@@ -87,10 +87,10 @@ header.hero{padding:26px 0 22px}.hero-row{display:flex;align-items:baseline;just
 section{padding:26px 0}.section-head{display:flex;align-items:baseline;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .section-head h2{font-family:var(--head);font-weight:700;font-size:1.5rem}.section-head .hint{color:var(--text-dim);font-size:.98rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
-.card:hover{border-color:var(--sky);transform:translateY(-2px)}
+.card{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}.card.linkcard{transition:border-color .2s,transform .2s}
+.card.linkcard:hover{border-color:var(--sky);transform:translateY(-2px)}
 .well{min-height:200px;padding:26px;display:flex;align-items:center;justify-content:center;gap:20px;border-bottom:1px solid var(--panel-edge);background:#0a0a0a}
-.well.light{background:#fff}.well.book{min-height:300px}
+.well.light{background:#fff}.well.book{min-height:300px}.well.checker{background-color:#cfcfcf;background-image:linear-gradient(45deg,#9a9a9a 25%,transparent 25%),linear-gradient(-45deg,#9a9a9a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#9a9a9a 75%),linear-gradient(-45deg,transparent 75%,#9a9a9a 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}.well.checker.dark{background-color:#3a3a3a;background-image:linear-gradient(45deg,#262626 25%,transparent 25%),linear-gradient(-45deg,#262626 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#262626 75%),linear-gradient(-45deg,transparent 75%,#262626 75%)}
 .well img{max-height:150px;max-width:82%;display:block}.well img.round{border-radius:50%}.well img.tall{max-height:170px}
 .well img.panel{outline:1px solid #2e3a44}.well img.cover{max-height:248px;border:1px solid #4a5862;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.55)}
 .well img.post{max-height:230px;max-width:100%;border-radius:6px}.well img.shot{max-height:168px;max-width:46%;border-radius:6px}
@@ -115,7 +115,7 @@ footer p{font-size:.86rem;color:var(--text-dim)}footer a{color:var(--sky);font-w
 nav.side{position:sticky;top:28px;padding-top:6px;border-right:1px solid #0a2236}
 nav.side a{display:block;font-family:var(--head);font-weight:700;font-size:1.08rem;padding:6px 0;color:var(--white)}
 nav.side a.sub{font-weight:400;font-size:.98rem;padding:3px 0 3px 18px;color:var(--text-dim)}
-nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}
+nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}nav.side .soon{display:block;font-family:var(--head);font-size:.86rem;padding:3px 0 3px 18px;color:#6f7d88;font-style:italic}
 @media (max-width:900px){.layout{grid-template-columns:1fr}nav.side{position:static;border-right:0;border-bottom:1px solid #0a2236;padding-bottom:14px;display:flex;flex-wrap:wrap;gap:4px 18px}nav.side a.sub{padding-left:0}nav.side .gap{display:none}}
 """
 HEAD = """<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -124,7 +124,7 @@ HEAD = """<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name=
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>{css}</style></head><body>"""
 FOOT = """<footer><div class="wrap"><hr class="grad-rule" style="margin-bottom:26px"><div class="frow"><p>&copy; F1R3FLY Industries, 2026. All rights reserved.</p>
-<p>AI brand kit: <a href="{root}kit/f1r3fly-brand-kit.skill" download>download the skill</a> &middot; <a href="{repo}/blob/main/kit/SKILL.md" target="_blank" rel="noopener">read the spec</a> &middot; <a href="{repo}" target="_blank" rel="noopener">repository &rarr;</a></p></div></div></footer>"""
+<p><a href="{root}index.html">Home</a> &middot; AI brand kit: <a href="{root}kit/f1r3fly-brand-kit.skill" download>download the skill</a> &middot; <a href="{repo}/blob/main/kit/SKILL.md" target="_blank" rel="noopener">read the spec</a> &middot; <a href="{repo}" target="_blank" rel="noopener">repository &rarr;</a></p></div></div></footer>"""
 
 def crumbs(root, items):
     out = []
@@ -140,9 +140,10 @@ def page_top(root, title, h1):
 def dl_card(base, name, bg, dims, exts=('pdf', 'jpg', 'svg', 'png'), note=None, img=None, imgcls=''):
     cls = imgcls or ('tall' if dims and dims['h'] > dims['w'] else '')
     if base.endswith(('-onblack', '-onwhite')): cls += ' panel'
+    wellcls = bg if base.endswith(('-onblack', '-onwhite')) or '-post-' in base else f'checker {bg}'
     n = f'<div class="meta">{html.escape(note)}</div>' if note else ''
     btns = ''.join(f'<a class="btn" href="{base}.{e}" download>{e.upper()}</a>' for e in exts)
-    return f"""<div class="card"><div class="well {bg}"><img class="{cls.strip()}" src="{img or base + '.svg'}" alt="{html.escape(name)}" loading="lazy"></div>
+    return f"""<div class="card"><div class="well {wellcls}"><img class="{cls.strip()}" src="{img or base + '.svg'}" alt="{html.escape(name)}" loading="lazy"></div>
 <div class="body"><h3>{html.escape(name)}</h3>{n}<div class="file">{base}</div><div class="btns">{btns}<a class="btn primary" href="{base}.zip" download>ALL (zip)</a></div></div></div>"""
 
 WHICH = ('<div class="which"><h3>Which file?</h3>'
@@ -154,11 +155,12 @@ WHICH = ('<div class="which"><h3>Which file?</h3>'
 def brand_page(brand, dims):
     root = '../' * (brand['folder'].count('/') + 1)
     out = [HEAD.format(title=f'{brand["title"]} assets · {SITE}', css=CSS, root=root),
-           crumbs(root, [('Home', root), (brand['group'], f'{root}#{brand["group_anchor"]}'), (brand['title'], './'), ('Assets', None)]),
+           crumbs(root, [('Home', root + 'index.html'), (brand['group'], f'{root}index.html#{brand["group_anchor"]}'), (brand['title'], 'index.html'), ('Assets', None)]),
            f'<header class="hero"><div class="wrap"><div class="hero-row"><h1>{html.escape(brand["title"])} assets</h1><div class="last-update">Last update: {UPDATE}</div></div></div></header><div class="wrap"><hr class="grad-rule"></div>',
            f'<div class="intro"><div class="wrap"><p>{html.escape(brand["intro"])}</p>{WHICH}</div></div>']
     for s in brand['sections']:
-        out.append(f'<section><div class="wrap"><div class="section-head"><h2>{html.escape(s["title"])}</h2><span class="hint">{html.escape(s["hint"])}</span></div><div class="grid">')
+        sid = ' id="profile"' if s['title'] == 'Profile pictures' else ''
+        out.append(f'<section{sid}><div class="wrap"><div class="section-head"><h2>{html.escape(s["title"])}</h2><span class="hint">{html.escape(s["hint"])}</span></div><div class="grid">')
         out += [dl_card(a['new'], a['name'], a['bg'], dims[a['new']], note=a.get('note'), imgcls='round' if a.get('shape') == 'round' else '') for a in s['assets']]
         out.append('</div></div></section>')
     out.append('<div class="wrap"><p class="note"><b>Names:</b> <code>transp-dark</code> is transparent and made for dark backgrounds (white wordmark); <code>transp-light</code> is transparent for light backgrounds (black wordmark); <code>onblack</code> and <code>onwhite</code> have the background baked in.</p></div>')
@@ -186,7 +188,7 @@ def build_posts(dest):
         cards.append(dl_card(base, f'{label}: {variant}', 'dark', None, img=base + '.png', imgcls='post'))
     root = '../../'
     page = [HEAD.format(title=f'Social post templates · {SITE}', css=CSS, root=root),
-            crumbs(root, [('Home', root), ('Social media assets', f'{root}#social'), ('Post templates', None)]),
+            crumbs(root, [('Home', root + 'index.html'), ('Social media assets', f'{root}index.html#social'), ('Post templates', None)]),
             f'<header class="hero"><div class="wrap"><div class="hero-row"><h1>Social post templates</h1><div class="last-update">Last update: {UPDATE}</div></div></div></header><div class="wrap"><hr class="grad-rule"></div>',
             '<div class="intro"><div class="wrap"><p>Ready-to-post 1080 x 1080 layouts for the F1R3FLY.IO feed: announcements, articles, quotes, events, stats and taglines, each in two or three background treatments. The PNG is the one to post. The SVG and PDF are the editable source for designers; headline type is outlined, so no fonts are needed. The text is placeholder copy: for a version with your own headline, ask Hannah.</p></div></div>',
             '<section><div class="wrap"><div class="grid">', *cards, '</div></div></section>', FOOT.format(root=root, repo=REPO), '</body></html>']
@@ -215,13 +217,13 @@ def home(dims):
     b = M['brands']
     def brand_card(key):
         br = b[key]; f = br['folder']
-        return f"""<div class="card"><a href="{f}/"><div class="well"><img src="{f}/{br['card_img']}" alt="{html.escape(br['title'])} logo" style="max-height:90px;max-width:76%"></div></a>
+        return f"""<div class="card linkcard"><a href="{f}/index.html"><div class="well"><img src="{f}/{br['card_img']}" alt="{html.escape(br['title'])} logo" style="max-height:90px;max-width:76%"></div></a>
 <div class="body"><h3>{html.escape(br['title'])}</h3><div class="desc">{html.escape(br['card_desc'])}</div>
-<div class="btns"><a class="btn primary" href="{f}/">See all variants</a><a class="btn" href="{f}/{br['card_img'][:-4]}.zip" download>Download the main logo</a></div></div></div>"""
+<div class="btns"><a class="btn primary" href="{f}/index.html">See all variants</a><a class="btn" href="{f}/{br['card_img'][:-4]}.zip" download>Download the main logo</a></div></div></div>"""
     nav = ('<nav class="side" aria-label="Sections">'
            '<a href="#books">Brand Books</a><div class="gap"></div>'
-           '<a href="#logos">Primary Logos</a><a class="sub" href="logos/ff.io/">F1R3FLY.IO</a><a class="sub" href="logos/ff.indust/">F1R3FLY INDUSTRIES</a><a class="sub" href="logos/flang/">F1R3L@NG</a><div class="gap"></div>'
-           '<a href="#products">Product Logos</a><a class="sub" href="products/ign/">ign1t10n</a><div class="gap"></div>'
+           '<a href="#logos">Primary Logos</a><a class="sub" href="logos/ff.io/index.html">F1R3FLY.IO</a><a class="sub" href="logos/ff.indust/index.html">F1R3FLY INDUSTRIES</a><a class="sub" href="logos/flang/index.html">F1R3L@NG</a><div class="gap"></div>'
+           '<a href="#products">Product Logos</a><a class="sub" href="products/ign/index.html">ign1t10n</a><span class="sub soon">More coming</span><div class="gap"></div>'
            '<a href="#system">Color, Fonts and Layout</a><div class="gap"></div>'
            '<a href="#social">Social Media Assets</a></nav>')
     main = []
@@ -239,8 +241,8 @@ def home(dims):
 <div class="card"><div class="well"><img class="cover" src="system/ff-grid-preview.png" alt="F1R3FLY layout grid over a social post" style="max-height:184px;border:0;box-shadow:none"></div><div class="body"><h3>Layout grid</h3><div class="desc">The 6-column grid behind every F1R3FLY layout, the same one in the brand books. Drop it over your artboard to keep margins, columns, and baselines consistent.</div><div class="btns"><a class="btn" href="system/ff-grid.pdf" download>PDF</a><a class="btn" href="system/ff-grid.svg" download>SVG</a><a class="btn" href="system/ff-grid.png" download>PNG</a><a class="btn primary" href="system/ff-grid.zip" download>ALL (zip)</a></div></div></div>
 </div></section>""")
     main.append(f"""<section id="social"><div class="section-head"><h2>Social media assets</h2><span class="hint">Profile pictures, post templates, and animated Canva templates</span></div><div class="grid">
-<div class="card"><a href="logos/ff.io/#profile"><div class="well"><img src="logos/ff.io/ff.io-avatar-ring-color-onblack.svg" alt="F1R3FLY.IO profile picture, ring" class="round" style="max-height:140px"><img src="logos/ff.io/ff.io-avatar-square-color-onblack.svg" alt="F1R3FLY.IO profile picture, square" style="max-height:140px;border-radius:10px"></div></a><div class="body"><h3>F1R3FLY.IO profile pictures</h3><div class="meta">YouTube &middot; X &middot; Bluesky &middot; LinkedIn</div><div class="desc">The bug and wordmark in a thin ring for YouTube, X and Bluesky; the bug alone on black for LinkedIn. 2000 x 2000.</div><div class="btns"><a class="btn primary" href="logos/ff.io/ff.io-avatar-ring-color-onblack.zip" download>Ring (zip)</a><a class="btn" href="logos/ff.io/ff.io-avatar-square-color-onblack.zip" download>Square (zip)</a><a class="btn" href="logos/ff.io/">All F1R3FLY.IO files</a></div></div></div>
-<div class="card"><a href="social/templates/"><div class="well"><img class="shot" src="social/templates/ff.io-post-square-tagline-bold-brand-ellipse.png" alt="social template"><img class="shot" src="social/templates/ff.io-post-square-stat-gradient-dark-orb.png" alt="social template"></div></a><div class="body"><h3>Social post templates</h3><div class="desc">Sixteen ready-to-post 1080 squares: announcements, articles, quotes, events, stats and taglines. Grab the PNG to post now, or the SVG or PDF source to customize.</div><div class="btns"><a class="btn primary" href="social/templates/">See all sixteen</a></div></div></div>
+<div class="card linkcard"><a href="logos/ff.io/index.html#profile"><div class="well"><img src="logos/ff.io/ff.io-avatar-ring-color-onblack.svg" alt="F1R3FLY.IO profile picture, ring" class="round" style="max-height:140px"><img src="logos/ff.io/ff.io-avatar-square-color-onblack.svg" alt="F1R3FLY.IO profile picture, square" style="max-height:140px;border-radius:10px"></div></a><div class="body"><h3>F1R3FLY.IO profile pictures</h3><div class="meta">YouTube &middot; X &middot; Bluesky &middot; LinkedIn</div><div class="desc">The bug and wordmark in a thin ring for YouTube, X and Bluesky; the bug alone on black for LinkedIn. 2000 x 2000.</div><div class="btns"><a class="btn primary" href="logos/ff.io/ff.io-avatar-ring-color-onblack.zip" download>Ring (zip)</a><a class="btn" href="logos/ff.io/ff.io-avatar-square-color-onblack.zip" download>Square (zip)</a><a class="btn" href="logos/ff.io/index.html">All F1R3FLY.IO files</a></div></div></div>
+<div class="card linkcard"><a href="social/templates/index.html"><div class="well"><img class="shot" src="social/templates/ff.io-post-square-tagline-bold-brand-ellipse.png" alt="social template"><img class="shot" src="social/templates/ff.io-post-square-stat-gradient-dark-orb.png" alt="social template"></div></a><div class="body"><h3>Social post templates</h3><div class="desc">Sixteen ready-to-post 1080 squares: announcements, articles, quotes, events, stats and taglines. Grab the PNG to post now, or the SVG or PDF source to customize.</div><div class="btns"><a class="btn primary" href="social/templates/index.html">See all sixteen</a></div></div></div>
 <div class="card"><div class="well thumbs two">{video('01','logo-intro')}{video('01','logo-intro','portrait')}</div><div class="body"><h3>Logo intro</h3><div class="meta">Animated Canva template 01 &middot; Square and Portrait</div><div class="desc">The F1R3FLY.IO logo rises in, then the eyebrow, headline, and bullets. Open it in Canva for your own editable copy. Hover or tap a preview to play it.</div><div class="btns"><a class="btn primary" href="https://canva.link/8gpidz1itwsumvk" target="_blank" rel="noopener">Open in Canva: Square</a><a class="btn" href="https://canva.link/ni2jv95vgtj2fw3" target="_blank" rel="noopener">Portrait</a></div><div class="dl"><b>MP4:</b> <a href="social/canva/ff.io-canva-01-logo-intro-square.mp4" download>Square</a> &middot; <a href="social/canva/ff.io-canva-01-logo-intro-portrait.mp4" download>Portrait</a></div></div></div>
 <div class="card"><div class="well thumbs four">{video('02','grey-to-navy')}{video('03','teal')}{video('04','magenta')}{video('05','green')}</div><div class="body"><h3>Gradient backgrounds</h3><div class="meta">Animated Canva templates 02 to 05 &middot; Square and Portrait</div><div class="desc">The four website section colors behind the same text animation: grey to navy, teal, magenta, and green. All four come in one Canva file; keep the page you need.</div><div class="btns"><a class="btn primary" href="https://canva.link/faibjulz5u3rop1" target="_blank" rel="noopener">Open in Canva: Square</a><a class="btn" href="https://canva.link/7pooqvi22t905u9" target="_blank" rel="noopener">Portrait</a></div><div class="dl"><b>MP4, square:</b> <a href="social/canva/ff.io-canva-02-grey-to-navy-square.mp4" download>02</a> &middot; <a href="social/canva/ff.io-canva-03-teal-square.mp4" download>03</a> &middot; <a href="social/canva/ff.io-canva-04-magenta-square.mp4" download>04</a> &middot; <a href="social/canva/ff.io-canva-05-green-square.mp4" download>05</a></div></div></div>
 <div class="card"><div class="well thumbs five">{video('06','panel-loop-grey-to-navy')}{video('07','panel-loop-teal')}{video('08','panel-loop-magenta')}{video('09','firefly-panel-straight')}{video('10','firefly-panel-curved')}</div><div class="body"><h3>Panel loops</h3><div class="meta">Animated Canva templates 06 to 10 &middot; Square</div><div class="desc">A looping video panel beside the text: three gradient loops and two firefly loops.</div><!--CANVA-06-10--><div class="dl"><b>MP4, square:</b> <a href="social/canva/ff.io-canva-06-panel-loop-grey-to-navy-square.mp4" download>06</a> &middot; <a href="social/canva/ff.io-canva-07-panel-loop-teal-square.mp4" download>07</a> &middot; <a href="social/canva/ff.io-canva-08-panel-loop-magenta-square.mp4" download>08</a> &middot; <a href="social/canva/ff.io-canva-09-firefly-panel-straight-square.mp4" download>09</a> &middot; <a href="social/canva/ff.io-canva-10-firefly-panel-curved-square.mp4" download>10</a></div></div></div>

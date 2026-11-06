@@ -23,10 +23,10 @@ header.hero{padding:26px 0 22px}.hero-row{display:flex;align-items:baseline;just
 section{padding:26px 0}.section-head{display:flex;align-items:baseline;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .section-head h2{font-family:var(--head);font-weight:700;font-size:1.5rem}.section-head .hint{color:var(--text-dim);font-size:.98rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
-.card:hover{border-color:var(--sky);transform:translateY(-2px)}
+.card{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}.card.linkcard{transition:border-color .2s,transform .2s}
+.card.linkcard:hover{border-color:var(--sky);transform:translateY(-2px)}
 .well{min-height:200px;padding:26px;display:flex;align-items:center;justify-content:center;gap:20px;border-bottom:1px solid var(--panel-edge);background:#0a0a0a}
-.well.light{background:#fff}.well.book{min-height:300px}
+.well.light{background:#fff}.well.book{min-height:300px}.well.checker{background-color:#cfcfcf;background-image:linear-gradient(45deg,#9a9a9a 25%,transparent 25%),linear-gradient(-45deg,#9a9a9a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#9a9a9a 75%),linear-gradient(-45deg,transparent 75%,#9a9a9a 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}.well.checker.dark{background-color:#3a3a3a;background-image:linear-gradient(45deg,#262626 25%,transparent 25%),linear-gradient(-45deg,#262626 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#262626 75%),linear-gradient(-45deg,transparent 75%,#262626 75%)}
 .well img{max-height:150px;max-width:82%;display:block}.well img.round{border-radius:50%}.well img.tall{max-height:170px}
 .well img.panel{outline:1px solid #2e3a44}.well img.cover{max-height:248px;border:1px solid #4a5862;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.55)}
 .well img.post{max-height:230px;max-width:100%;border-radius:6px}.well img.shot{max-height:168px;max-width:46%;border-radius:6px}
@@ -51,10 +51,10 @@ footer p{font-size:.86rem;color:var(--text-dim)}footer a{color:var(--sky);font-w
 nav.side{position:sticky;top:28px;padding-top:6px;border-right:1px solid #0a2236}
 nav.side a{display:block;font-family:var(--head);font-weight:700;font-size:1.08rem;padding:6px 0;color:var(--white)}
 nav.side a.sub{font-weight:400;font-size:.98rem;padding:3px 0 3px 18px;color:var(--text-dim)}
-nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}
+nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}nav.side .soon{display:block;font-family:var(--head);font-size:.86rem;padding:3px 0 3px 18px;color:#6f7d88;font-style:italic}
 @media (max-width:900px){.layout{grid-template-columns:1fr}nav.side{position:static;border-right:0;border-bottom:1px solid #0a2236;padding-bottom:14px;display:flex;flex-wrap:wrap;gap:4px 18px}nav.side a.sub{padding-left:0}nav.side .gap{display:none}}
 </style></head><body>
-<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="../../">Home</a><span class="sep">&rsaquo;</span><a href="../../#social">Social media assets</a><span class="sep">&rsaquo;</span><span class="here">Post templates</span></nav></div>
+<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="../../index.html">Home</a><span class="sep">&rsaquo;</span><a href="../../index.html#social">Social media assets</a><span class="sep">&rsaquo;</span><span class="here">Post templates</span></nav></div>
 <header class="hero"><div class="wrap"><div class="hero-row"><h1>Social post templates</h1><div class="last-update">Last update: November 6, 2026</div></div></div></header><div class="wrap"><hr class="grad-rule"></div>
 <div class="intro"><div class="wrap"><p>Ready-to-post 1080 x 1080 layouts for the F1R3FLY.IO feed: announcements, articles, quotes, events, stats and taglines, each in two or three background treatments. The PNG is the one to post. The SVG and PDF are the editable source for designers; headline type is outlined, so no fonts are needed. The text is placeholder copy: for a version with your own headline, ask Hannah.</p></div></div>
 <section><div class="wrap"><div class="grid">
@@ -92,5 +92,5 @@ nav.side a:hover{color:var(--sky)}nav.side .gap{height:12px}
 <div class="body"><h3>Tagline: thin section teal</h3><div class="file">ff.io-post-square-tagline-thin-section-teal</div><div class="btns"><a class="btn" href="ff.io-post-square-tagline-thin-section-teal.pdf" download>PDF</a><a class="btn" href="ff.io-post-square-tagline-thin-section-teal.jpg" download>JPG</a><a class="btn" href="ff.io-post-square-tagline-thin-section-teal.svg" download>SVG</a><a class="btn" href="ff.io-post-square-tagline-thin-section-teal.png" download>PNG</a><a class="btn primary" href="ff.io-post-square-tagline-thin-section-teal.zip" download>ALL (zip)</a></div></div></div>
 </div></div></section>
 <footer><div class="wrap"><hr class="grad-rule" style="margin-bottom:26px"><div class="frow"><p>&copy; F1R3FLY Industries, 2026. All rights reserved.</p>
-<p>AI brand kit: <a href="../../kit/f1r3fly-brand-kit.skill" download>download the skill</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal/blob/main/kit/SKILL.md" target="_blank" rel="noopener">read the spec</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal" target="_blank" rel="noopener">repository &rarr;</a></p></div></div></footer>
+<p><a href="../../index.html">Home</a> &middot; AI brand kit: <a href="../../kit/f1r3fly-brand-kit.skill" download>download the skill</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal/blob/main/kit/SKILL.md" target="_blank" rel="noopener">read the spec</a> &middot; <a href="https://github.com/hannahadamsdesign-spec/f1r3fly-brand-portal" target="_blank" rel="noopener">repository &rarr;</a></p></div></div></footer>
 </body></html>
